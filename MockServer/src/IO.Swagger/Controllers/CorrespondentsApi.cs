@@ -18,6 +18,9 @@ using IO.Swagger.Attributes;
 
 using Microsoft.AspNetCore.Authorization;
 using IO.Swagger.Models;
+using Paperless.BusinessLogic.Interfaces;
+using Paperless.BusinessLogic;
+using AutoMapper;
 
 namespace IO.Swagger.Controllers
 { 
@@ -26,7 +29,19 @@ namespace IO.Swagger.Controllers
     /// </summary>
     [ApiController]
     public class CorrespondentsApiController : ControllerBase
-    { 
+    {
+        ICorrespondentLogic _correspondentLogic = new CorrespondentLogic();
+        IMapper _mapper;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_mapper"></param>
+        public CorrespondentsApiController(IMapper _mapper)
+        {
+            this._mapper = _mapper;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -77,11 +92,14 @@ namespace IO.Swagger.Controllers
         [Route("/api/correspondents")]
         [ValidateModelState]
         [SwaggerOperation("GetCorrespondents")]
-        [SwaggerResponse(statusCode: 200, type: typeof(InlineResponse200), description: "Success")]
+        [SwaggerResponse(statusCode: 200, type: typeof(Correspondent), description: "Success")]
         public virtual IActionResult GetCorrespondents([FromQuery]int? page, [FromQuery]bool? fullPerms)
-        { 
+        {
+            Correspondent cor = _mapper.Map<Correspondent>(_correspondentLogic.GetCorrespondent());
+            return Ok(cor);
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(InlineResponse200));
+            /*
             string exampleJson = null;
             exampleJson = "{\n  \"next\" : 6,\n  \"all\" : [ 5, 5 ],\n  \"previous\" : 1,\n  \"count\" : 0,\n  \"results\" : [ {\n    \"owner\" : 9,\n    \"matching_algorithm\" : 2,\n    \"document_count\" : 7,\n    \"is_insensitive\" : true,\n    \"permissions\" : {\n      \"view\" : {\n        \"groups\" : [ \"\", \"\" ],\n        \"users\" : [ \"\", \"\" ]\n      }\n    },\n    \"name\" : \"name\",\n    \"match\" : \"match\",\n    \"id\" : 5,\n    \"last_correspondence\" : \"last_correspondence\",\n    \"slug\" : \"slug\"\n  }, {\n    \"owner\" : 9,\n    \"matching_algorithm\" : 2,\n    \"document_count\" : 7,\n    \"is_insensitive\" : true,\n    \"permissions\" : {\n      \"view\" : {\n        \"groups\" : [ \"\", \"\" ],\n        \"users\" : [ \"\", \"\" ]\n      }\n    },\n    \"name\" : \"name\",\n    \"match\" : \"match\",\n    \"id\" : 5,\n    \"last_correspondence\" : \"last_correspondence\",\n    \"slug\" : \"slug\"\n  } ]\n}";
             
@@ -89,6 +107,8 @@ namespace IO.Swagger.Controllers
                         ? JsonConvert.DeserializeObject<InlineResponse200>(exampleJson)
                         : default(InlineResponse200);            //TODO: Change the data returned
             return new ObjectResult(example);
+            */
+            
         }
 
         /// <summary>

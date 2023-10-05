@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Paperless.BusinessLogic.Entities\Paperless.BusinessLogic.Entities.csproj" />
+    <ProjectReference Include="..\Paperless.BusinessLogic.Interfaces\Paperless.BusinessLogic.Interfaces.csproj" />
+    <ProjectReference Include="..\Paperless.BusinessLogic.Tests\Paperless.BusinessLogic.Tests.csproj" />
+  </ItemGroup>
+
+</Project>

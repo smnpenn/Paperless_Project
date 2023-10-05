@@ -7,6 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaperlessRestService", "..\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IO.Swagger", "..\MockServer\src\IO.Swagger\IO.Swagger.csproj", "{1CDEEB4C-9B53-4CC8-B36B-9148EB679947}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.BusinessLogic", "..\Paperless.BusinessLogic\Paperless.BusinessLogic\Paperless.BusinessLogic.csproj", "{EBE1116A-150A-44A9-9F07-25539294EAE6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.BusinessLogic.Entities", "..\Paperless.BusinessLogic\Paperless.BusinessLogic.Entities\Paperless.BusinessLogic.Entities.csproj", "{E0DE5BAC-6B9A-4B9B-9B5D-C7B73CEC088D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.BusinessLogic.Interfaces", "..\Paperless.BusinessLogic\Paperless.BusinessLogic.Interfaces\Paperless.BusinessLogic.Interfaces.csproj", "{FC36E2E2-DBF5-49C4-9711-1AD7D752791E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.BusinessLogic.Tests", "..\Paperless.BusinessLogic\Paperless.BusinessLogic.Tests\Paperless.BusinessLogic.Tests.csproj", "{910AEA67-991F-4E55-A464-7F8B44321739}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +29,22 @@ Global
 		{1CDEEB4C-9B53-4CC8-B36B-9148EB679947}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CDEEB4C-9B53-4CC8-B36B-9148EB679947}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CDEEB4C-9B53-4CC8-B36B-9148EB679947}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBE1116A-150A-44A9-9F07-25539294EAE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBE1116A-150A-44A9-9F07-25539294EAE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBE1116A-150A-44A9-9F07-25539294EAE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBE1116A-150A-44A9-9F07-25539294EAE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0DE5BAC-6B9A-4B9B-9B5D-C7B73CEC088D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0DE5BAC-6B9A-4B9B-9B5D-C7B73CEC088D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0DE5BAC-6B9A-4B9B-9B5D-C7B73CEC088D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0DE5BAC-6B9A-4B9B-9B5D-C7B73CEC088D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC36E2E2-DBF5-49C4-9711-1AD7D752791E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC36E2E2-DBF5-49C4-9711-1AD7D752791E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC36E2E2-DBF5-49C4-9711-1AD7D752791E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC36E2E2-DBF5-49C4-9711-1AD7D752791E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{910AEA67-991F-4E55-A464-7F8B44321739}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{910AEA67-991F-4E55-A464-7F8B44321739}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{910AEA67-991F-4E55-A464-7F8B44321739}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{910AEA67-991F-4E55-A464-7F8B44321739}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
