@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using IO.Swagger.Models;
-using Paperless.BusinessLogic;
 
 namespace IO.Swagger
 {
@@ -21,7 +20,8 @@ namespace IO.Swagger
             CreateMap<Paperless.BusinessLogic.Entities.DocumentType, NewDocumentType>();
             CreateMap<Paperless.BusinessLogic.Entities.UserInfo, UserInfo>();
             CreateMap<Paperless.BusinessLogic.Entities.DocTag, DocTag>();
-            
+
+            CreateMap<Paperless.DAL.Entities.Correspondent, Paperless.BusinessLogic.Entities.Correspondent>();
         }
     }
 }

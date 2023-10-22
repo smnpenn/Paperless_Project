@@ -1,32 +1,24 @@
 ﻿using Paperless.BusinessLogic.Entities;
 using Paperless.BusinessLogic.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Paperless.DAL.Interfaces;
+using AutoMapper;
 
 namespace Paperless.BusinessLogic
 {
     public class CorrespondentLogic : ICorrespondentLogic
     {
-        public CorrespondentLogic() { }
+        ICorrespondentRepository _repo;
+        IMapper _mapper;
 
-        public Correspondent GetCorrespondent()
+        public CorrespondentLogic(ICorrespondentRepository repository, IMapper mapper)
         {
-            //Fetch correspondents from DB
-            //return results
-            //List<Correspondent> result = new List<Correspondent>();
-            Correspondent correspondent = new Correspondent();
-            correspondent.Name = "Test";
-            correspondent.Id = 1;
-            correspondent.MatchingAlgorithm = 2;
-            correspondent.IsInsensitive = true;
-            correspondent.DocumentCount = 1;
-            correspondent.LastCorrespondence = DateTime.Now;
-            
-            //result.Add(new Correspondent());
-            return correspondent;
+            _repo = repository;
+            _mapper = mapper;
+        }
+
+        public Correspondent GetCorrespondent(long id)
+        {
+            return _mapper.Map<Correspondent>(_repo.GetCorrespondentById(id));
         }
     }
 }

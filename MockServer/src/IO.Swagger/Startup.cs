@@ -23,7 +23,8 @@ using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using IO.Swagger.Filters;
 using AutoMapper;
-
+using Paperless.DAL.Interfaces;
+using Paperless.DAL.Sql;
 
 namespace IO.Swagger
 {
@@ -54,6 +55,13 @@ namespace IO.Swagger
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(AutoMapperProfile));
+
+            IConfiguration configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            services.AddSingleton<ICorrespondentRepository>(new CorrespondentRepository(configuration, "TestDBContext"));
+
             // Add framework services.
             services
                 .AddMvc(options =>

@@ -21,6 +21,7 @@ using IO.Swagger.Models;
 using Paperless.BusinessLogic.Interfaces;
 using Paperless.BusinessLogic;
 using AutoMapper;
+using Paperless.DAL.Interfaces;
 
 namespace IO.Swagger.Controllers
 { 
@@ -30,16 +31,17 @@ namespace IO.Swagger.Controllers
     [ApiController]
     public class CorrespondentsApiController : ControllerBase
     {
-        ICorrespondentLogic _correspondentLogic = new CorrespondentLogic();
+        ICorrespondentLogic _correspondentLogic;
         IMapper _mapper;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="_mapper"></param>
-        public CorrespondentsApiController(IMapper _mapper)
+        public CorrespondentsApiController(IMapper mapper, ICorrespondentRepository repository)
         {
-            this._mapper = _mapper;
+            _mapper = mapper;
+            _correspondentLogic = new CorrespondentLogic(repository, _mapper);
         }
 
         /// <summary>
@@ -95,7 +97,7 @@ namespace IO.Swagger.Controllers
         [SwaggerResponse(statusCode: 200, type: typeof(Correspondent), description: "Success")]
         public virtual IActionResult GetCorrespondents([FromQuery]int? page, [FromQuery]bool? fullPerms)
         {
-            Correspondent cor = _mapper.Map<Correspondent>(_correspondentLogic.GetCorrespondent());
+            Correspondent cor = _mapper.Map<Correspondent>(_correspondentLogic.GetCorrespondent(0));
             return Ok(cor);
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(InlineResponse200));
