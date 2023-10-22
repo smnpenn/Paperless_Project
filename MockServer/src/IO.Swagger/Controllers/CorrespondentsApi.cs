@@ -97,7 +97,10 @@ namespace IO.Swagger.Controllers
         [SwaggerResponse(statusCode: 200, type: typeof(Correspondent), description: "Success")]
         public virtual IActionResult GetCorrespondents([FromQuery]int? page, [FromQuery]bool? fullPerms)
         {
-            Correspondent cor = _mapper.Map<Correspondent>(_correspondentLogic.GetCorrespondent(0));
+            var cor = _mapper.Map<
+                ICollection<Paperless.BusinessLogic.Entities.Correspondent>, 
+                ICollection<Correspondent>>(
+                    _correspondentLogic.GetCorrespondents());
             return Ok(cor);
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(InlineResponse200));

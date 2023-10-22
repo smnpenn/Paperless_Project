@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: paperless
     ports:
-      - "1433:1433"
+      - "1433:5432"
   pgadmin:
     container_name: pgadmin4_container
     image: dpage/pgadmin4

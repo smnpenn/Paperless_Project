@@ -9,12 +9,31 @@ namespace Paperless.DAL.Sql
     {
         readonly string _contextString;
         readonly IConfiguration _config;
-        DbSet<Correspondent> correspondents;
+
+        public DbSet<Correspondent> Correspondents { get; set; }
 
         public CorrespondentRepository(IConfiguration configuration, string contextString)
         {
             _config = configuration;
             _contextString = contextString;
+        }
+
+        public void PopulateWithSampleData()
+        {
+            Database.EnsureDeleted();
+            Database.EnsureCreated();
+
+            for (int i = 0; i < 5; i++)
+                Correspondents.Add(new Correspondent 
+                {
+                    Name = $"TestCorrespondent{i}",
+                    MatchingAlgorithm = 2,
+                    IsInsensitive = true,
+                    DocumentCount = 1,
+                    //LastCorrespondence = DateTime.Now // not working
+                });
+
+            SaveChanges();
         }
 
         public void Create(Correspondent entity)
@@ -29,14 +48,7 @@ namespace Paperless.DAL.Sql
 
         public Correspondent GetCorrespondentById(Int64 id)
         {
-            var correspondent = new Correspondent();
-            correspondent.Name = "Test";
-            correspondent.Id = id;
-            correspondent.MatchingAlgorithm = 2;
-            correspondent.IsInsensitive = true;
-            correspondent.DocumentCount = 1;
-            correspondent.LastCorrespondence = DateTime.Now;
-            return correspondent;
+            return Correspondents.Find(id);
         }
 
         public void Update(Correspondent entity)
@@ -52,6 +64,11 @@ namespace Paperless.DAL.Sql
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
+        }
+
+        public ICollection<Correspondent> GetCorrespondents()
+        {
+            return Correspondents.ToArray();
         }
     }
 }

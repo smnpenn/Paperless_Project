@@ -27,4 +27,9 @@
     <ProjectReference Include="..\..\..\Paperless.BusinessLogic\Paperless.BusinessLogic\Paperless.BusinessLogic.csproj" />
     <ProjectReference Include="..\..\..\Paperless.DAL\Paperless.DAL.Sql\Paperless.DAL.Sql.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

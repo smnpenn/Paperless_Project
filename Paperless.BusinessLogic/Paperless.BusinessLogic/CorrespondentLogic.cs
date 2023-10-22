@@ -20,5 +20,12 @@ namespace Paperless.BusinessLogic
         {
             return _mapper.Map<Correspondent>(_repo.GetCorrespondentById(id));
         }
+
+        public ICollection<Correspondent> GetCorrespondents()
+        {
+            return _mapper.Map<
+                ICollection<DAL.Entities.Correspondent>,
+                ICollection<Correspondent>>( _repo.GetCorrespondents());
+        }
     }
 }

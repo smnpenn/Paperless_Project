@@ -60,7 +60,13 @@ namespace IO.Swagger
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
-            services.AddSingleton<ICorrespondentRepository>(new CorrespondentRepository(configuration, "TestDBContext"));
+            services.AddSingleton<IConfiguration>(configuration);
+
+            var repo = new CorrespondentRepository(configuration, "TestDBContext");
+
+            repo.PopulateWithSampleData();
+
+            services.AddSingleton<ICorrespondentRepository>(repo);
 
             // Add framework services.
             services
