@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaperlessRestService", "..\PaperlessRestService\PaperlessRestService\PaperlessRestService.csproj", "{27EA9EF4-C0A5-4A14-9AA4-06BD0E582158}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IO.Swagger", "..\MockServer\src\IO.Swagger\IO.Swagger.csproj", "{1CDEEB4C-9B53-4CC8-B36B-9148EB679947}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.BusinessLogic", "..\Paperless.BusinessLogic\Paperless.BusinessLogic\Paperless.BusinessLogic.csproj", "{EBE1116A-150A-44A9-9F07-25539294EAE6}"
@@ -15,16 +13,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.BusinessLogic.Int
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.BusinessLogic.Tests", "..\Paperless.BusinessLogic\Paperless.BusinessLogic.Tests\Paperless.BusinessLogic.Tests.csproj", "{910AEA67-991F-4E55-A464-7F8B44321739}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.DAL.Entities", "..\Paperless.DAL\Paperless.DAL.Entities\Paperless.DAL.Entities.csproj", "{AFEC7AF5-E6E3-4DD6-9484-755339246551}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.DAL.Interfaces", "..\Paperless.DAL\Paperless.DAL.Interfaces\Paperless.DAL.Interfaces.csproj", "{A0F3CEDD-09EE-422A-A41F-10A8EE50081A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.DAL.Sql", "..\Paperless.DAL\Paperless.DAL.Sql\Paperless.DAL.Sql.csproj", "{D36D530B-5DC7-4348-851C-DC206EC8F17C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.DAL.Tests", "..\Paperless.DAL\Paperless.DAL.Tests\Paperless.DAL.Tests.csproj", "{006ED79D-E7B5-424A-8EF5-27C3460F52AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{27EA9EF4-C0A5-4A14-9AA4-06BD0E582158}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{27EA9EF4-C0A5-4A14-9AA4-06BD0E582158}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{27EA9EF4-C0A5-4A14-9AA4-06BD0E582158}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{27EA9EF4-C0A5-4A14-9AA4-06BD0E582158}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1CDEEB4C-9B53-4CC8-B36B-9148EB679947}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1CDEEB4C-9B53-4CC8-B36B-9148EB679947}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CDEEB4C-9B53-4CC8-B36B-9148EB679947}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +47,22 @@ Global
 		{910AEA67-991F-4E55-A464-7F8B44321739}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{910AEA67-991F-4E55-A464-7F8B44321739}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{910AEA67-991F-4E55-A464-7F8B44321739}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFEC7AF5-E6E3-4DD6-9484-755339246551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFEC7AF5-E6E3-4DD6-9484-755339246551}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFEC7AF5-E6E3-4DD6-9484-755339246551}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFEC7AF5-E6E3-4DD6-9484-755339246551}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0F3CEDD-09EE-422A-A41F-10A8EE50081A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0F3CEDD-09EE-422A-A41F-10A8EE50081A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0F3CEDD-09EE-422A-A41F-10A8EE50081A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0F3CEDD-09EE-422A-A41F-10A8EE50081A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D36D530B-5DC7-4348-851C-DC206EC8F17C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D36D530B-5DC7-4348-851C-DC206EC8F17C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D36D530B-5DC7-4348-851C-DC206EC8F17C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D36D530B-5DC7-4348-851C-DC206EC8F17C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{006ED79D-E7B5-424A-8EF5-27C3460F52AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{006ED79D-E7B5-424A-8EF5-27C3460F52AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{006ED79D-E7B5-424A-8EF5-27C3460F52AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{006ED79D-E7B5-424A-8EF5-27C3460F52AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
