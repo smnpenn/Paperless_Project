@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Paperless.DAL.Entities\Paperless.DAL.Entities.csproj" />
+  </ItemGroup>
+
 </Project>

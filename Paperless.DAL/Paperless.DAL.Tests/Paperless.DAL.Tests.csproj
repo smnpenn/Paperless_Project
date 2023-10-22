@@ -16,4 +16,10 @@
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Paperless.DAL.Entities\Paperless.DAL.Entities.csproj" />
+    <ProjectReference Include="..\Paperless.DAL.Interfaces\Paperless.DAL.Interfaces.csproj" />
+    <ProjectReference Include="..\Paperless.DAL.Sql\Paperless.DAL.Sql.csproj" />
+  </ItemGroup>
+
 </Project>
