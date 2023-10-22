@@ -1,9 +1,4 @@
-﻿using Paperless.BusinessLogic.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Paperless.DAL.Entities;
 
 namespace Paperless.DAL.Interfaces
 {
