@@ -19,3 +19,14 @@ services:
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
       - "8080:80"
+
+  rabbitmq:
+    container_name: rabbitmq_container
+    image: "rabbitmq:management"
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    ports:
+      - "5672:5672"
+      - "15672:15672"
