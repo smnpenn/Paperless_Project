@@ -25,6 +25,9 @@ using IO.Swagger.Filters;
 using AutoMapper;
 using Paperless.DAL.Interfaces;
 using Paperless.DAL.Sql;
+using Paperless.BusinessLogic;
+using RabbitMQ.Client;
+using Paperless.BusinessLogic.Interfaces;
 
 namespace IO.Swagger
 {
@@ -63,6 +66,17 @@ namespace IO.Swagger
             services.AddSingleton<IConfiguration>(configuration);
 
             var repo = new CorrespondentRepository(configuration, "TestDBContext");
+
+            services.AddSingleton<IRabbitMQService>(
+                new RabbitMQService(
+                    new ConnectionFactory
+                    {
+                        HostName = "localhost",
+                        Port = 5672,
+                        UserName = "admin",
+                        Password = "admin"
+                    }, 
+                    "TestQueue"));
 
             repo.PopulateWithSampleData();
 

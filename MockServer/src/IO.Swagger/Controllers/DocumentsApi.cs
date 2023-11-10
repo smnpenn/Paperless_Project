@@ -18,15 +18,24 @@ using IO.Swagger.Attributes;
 
 using Microsoft.AspNetCore.Authorization;
 using IO.Swagger.Models;
+using Paperless.BusinessLogic;
+using Paperless.BusinessLogic.Interfaces;
 
 namespace IO.Swagger.Controllers
-{ 
+{
     /// <summary>
     /// 
     /// </summary>
     [ApiController]
     public class DocumentsApiController : ControllerBase
-    { 
+    {
+        private readonly IRabbitMQService rabbitMQService;
+
+        public DocumentsApiController(IRabbitMQService rabbitMQService) 
+        { 
+            this.rabbitMQService = rabbitMQService;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -267,17 +276,34 @@ namespace IO.Swagger.Controllers
         [ValidateModelState]
         [SwaggerOperation("UpdateDocument")]
         [SwaggerResponse(statusCode: 200, type: typeof(InlineResponse2004), description: "Success")]
-        public virtual IActionResult UpdateDocument([FromRoute][Required]int? id, [FromBody]DocumentsIdBody body)
-        { 
+        public virtual IActionResult UpdateDocument([FromRoute][Required]int? id)//, [FromBody]DocumentsIdBody body)
+        {
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200, default(InlineResponse2004));
-            string exampleJson = null;
-            exampleJson = "{\n  \"owner\" : 7,\n  \"user_can_change\" : true,\n  \"archive_serial_number\" : 2,\n  \"notes\" : [ \"\", \"\" ],\n  \"added\" : \"added\",\n  \"created\" : \"created\",\n  \"title\" : \"title\",\n  \"content\" : \"content\",\n  \"tags\" : [ 5, 5 ],\n  \"storage_path\" : 5,\n  \"archived_file_name\" : \"archived_file_name\",\n  \"modified\" : \"modified\",\n  \"correspondent\" : 6,\n  \"original_file_name\" : \"original_file_name\",\n  \"id\" : 0,\n  \"created_date\" : \"created_date\",\n  \"document_type\" : 1\n}";
-            
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<InlineResponse2004>(exampleJson)
-                        : default(InlineResponse2004);            //TODO: Change the data returned
-            return new ObjectResult(example);
+            //string exampleJson = null;
+            //exampleJson = "{\n  \"owner\" : 7,\n  \"user_can_change\" : true,\n  \"archive_serial_number\" : 2,\n  \"notes\" : [ \"\", \"\" ],\n  \"added\" : \"added\",\n  \"created\" : \"created\",\n  \"title\" : \"title\",\n  \"content\" : \"content\",\n  \"tags\" : [ 5, 5 ],\n  \"storage_path\" : 5,\n  \"archived_file_name\" : \"archived_file_name\",\n  \"modified\" : \"modified\",\n  \"correspondent\" : 6,\n  \"original_file_name\" : \"original_file_name\",\n  \"id\" : 0,\n  \"created_date\" : \"created_date\",\n  \"document_type\" : 1\n}";
+            //            var example = exampleJson != null
+            //            ? JsonConvert.DeserializeObject<InlineResponse2004>(exampleJson)
+            //            : default(InlineResponse2004);            //TODO: Change the data returned
+
+            rabbitMQService.SendDocumentToQueue(
+                JsonConvert.SerializeObject(
+                    new Paperless.BusinessLogic.Entities.Document
+                    {
+                        Id = 1,
+                        Correspondent = 123,
+                        DocumentType = 456,
+                        Title = "Sample Document",
+                        Content = "This is a sample content",
+                        Created = DateTime.Now,
+                        CreatedDate = DateTime.Now,
+                        Modified = DateTime.Now,
+                        Added = DateTime.Now,
+                        OriginalFileName = "sample.txt",
+                        ArchivedFileName = "archived_sample.txt"
+                    }));
+
+            return Ok();
         }
 
     }

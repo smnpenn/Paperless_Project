@@ -38,10 +38,10 @@ namespace IO.Swagger.Controllers
         /// 
         /// </summary>
         /// <param name="_mapper"></param>
-        public CorrespondentsApiController(IMapper mapper, ICorrespondentRepository repository)
+        public CorrespondentsApiController(IMapper mapper, ICorrespondentRepository repository, IRabbitMQService rabbitMQService)
         {
             _mapper = mapper;
-            _correspondentLogic = new CorrespondentLogic(repository, _mapper);
+            _correspondentLogic = new CorrespondentLogic(repository, _mapper, rabbitMQService);
         }
 
         /// <summary>
