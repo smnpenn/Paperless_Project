@@ -8,13 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.6.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Paperless.DAL\Paperless.DAL.Interfaces\Paperless.DAL.Interfaces.csproj" />
     <ProjectReference Include="..\Paperless.BusinessLogic.Entities\Paperless.BusinessLogic.Entities.csproj" />
     <ProjectReference Include="..\Paperless.BusinessLogic.Interfaces\Paperless.BusinessLogic.Interfaces.csproj" />
-    <ProjectReference Include="..\Paperless.BusinessLogic.Tests\Paperless.BusinessLogic.Tests.csproj" />
   </ItemGroup>
 
 </Project>
