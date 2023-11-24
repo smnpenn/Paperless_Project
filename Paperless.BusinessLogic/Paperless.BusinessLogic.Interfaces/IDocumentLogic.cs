@@ -3,9 +3,10 @@ using Paperless.BusinessLogic.Entities;
 
 namespace Paperless.BusinessLogic.Interfaces
 {
-	public interface IRabbitMQService
+	public interface IDocumentLogic
 	{
-		void SendDocumentToQueue(Document document);
+		void SaveDocument(Document document);
+		void PublishOCRJob(Document document);
 	}
 }
 

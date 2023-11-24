@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paperless.ServiceAgents", "Paperless.ServiceAgents\Paperless.ServiceAgents.csproj", "{01645CA0-5A55-46F3-B3D0-A8F26E8B7C78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paperless.ServiceAgents.Interfaces", "Paperless.ServiceAgents.Interfaces\Paperless.ServiceAgents.Interfaces.csproj", "{C6B1FF4B-C74A-4A5E-AD66-D5CA870EEF40}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paperless.ServiceAgents.Tests", "Paperless.ServiceAgents.Tests\Paperless.ServiceAgents.Tests.csproj", "{85926A63-CD9C-491E-9788-0A8DFC5A1ABB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01645CA0-5A55-46F3-B3D0-A8F26E8B7C78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01645CA0-5A55-46F3-B3D0-A8F26E8B7C78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01645CA0-5A55-46F3-B3D0-A8F26E8B7C78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01645CA0-5A55-46F3-B3D0-A8F26E8B7C78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6B1FF4B-C74A-4A5E-AD66-D5CA870EEF40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6B1FF4B-C74A-4A5E-AD66-D5CA870EEF40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6B1FF4B-C74A-4A5E-AD66-D5CA870EEF40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6B1FF4B-C74A-4A5E-AD66-D5CA870EEF40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85926A63-CD9C-491E-9788-0A8DFC5A1ABB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85926A63-CD9C-491E-9788-0A8DFC5A1ABB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85926A63-CD9C-491E-9788-0A8DFC5A1ABB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85926A63-CD9C-491E-9788-0A8DFC5A1ABB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {41B1AEC5-5900-4AB3-8CA9-4A3A39F66CDC}
+	EndGlobalSection
+EndGlobal
