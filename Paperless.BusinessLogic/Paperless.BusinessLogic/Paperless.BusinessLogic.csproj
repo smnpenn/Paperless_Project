@@ -9,12 +9,14 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="RabbitMQ.Client" Version="6.6.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="FluentValidation" Version="11.8.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Paperless.DAL\Paperless.DAL.Interfaces\Paperless.DAL.Interfaces.csproj" />
     <ProjectReference Include="..\Paperless.BusinessLogic.Entities\Paperless.BusinessLogic.Entities.csproj" />
     <ProjectReference Include="..\Paperless.BusinessLogic.Interfaces\Paperless.BusinessLogic.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Paperless.DAL\Paperless.DAL.Interfaces\Paperless.DAL.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

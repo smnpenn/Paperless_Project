@@ -29,11 +29,11 @@ namespace IO.Swagger.Controllers
     [ApiController]
     public class DocumentsApiController : ControllerBase
     {
-        private readonly IRabbitMQService rabbitMQService;
+        private readonly IDocumentLogic documentLogic;
 
-        public DocumentsApiController(IRabbitMQService rabbitMQService) 
+        public DocumentsApiController(IDocumentLogic documentLogic) 
         { 
-            this.rabbitMQService = rabbitMQService;
+            this.documentLogic = documentLogic;
         }
 
         /// <summary>
@@ -286,9 +286,7 @@ namespace IO.Swagger.Controllers
             //            ? JsonConvert.DeserializeObject<InlineResponse2004>(exampleJson)
             //            : default(InlineResponse2004);            //TODO: Change the data returned
 
-            rabbitMQService.SendDocumentToQueue(
-                JsonConvert.SerializeObject(
-                    new Paperless.BusinessLogic.Entities.Document
+            documentLogic.PublishOCRJob(new Paperless.BusinessLogic.Entities.Document
                     {
                         Id = 1,
                         Correspondent = 123,
@@ -301,7 +299,7 @@ namespace IO.Swagger.Controllers
                         Added = DateTime.Now,
                         OriginalFileName = "sample.txt",
                         ArchivedFileName = "archived_sample.txt"
-                    }));
+                    });
 
             return Ok();
         }
