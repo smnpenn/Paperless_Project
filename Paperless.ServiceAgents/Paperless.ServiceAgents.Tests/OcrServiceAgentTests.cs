@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Paperless.ServiceAgents.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Paperless.ServiceAgents.Tests
         [Test]
         public void PerformOcr_InputPdf_ReturnsRecognizedText()
         {
-            var options = Options.Create(new OcrOptions());
+            var options = Microsoft.Extensions.Options.Options.Create(new OcrOptions());
 
             var serviceProvider = new ServiceCollection()
             .AddSingleton<IOptions<OcrOptions>>(options)

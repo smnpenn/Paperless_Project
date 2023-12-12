@@ -1,6 +1,6 @@
 using System;
 
-namespace Paperless.ServiceAgents;
+namespace Paperless.ServiceAgents.Options;
 
 public class OcrOptions
 {

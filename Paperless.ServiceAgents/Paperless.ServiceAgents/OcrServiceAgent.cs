@@ -8,6 +8,7 @@ using Paperless.ServiceAgents.Interfaces;
 using Microsoft.Extensions.Options;
 using Tesseract;
 using ImageMagick;
+using Paperless.ServiceAgents.Options;
 
 namespace Paperless.ServiceAgents
 {
