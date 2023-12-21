@@ -73,8 +73,9 @@ namespace Paperless.ServiceAgents
         }
 
         //Get Document by Objectname
-        public async Task<ObjectStat> GetDocument(string objectName)
+        public async Task<Stream> GetDocument(string objectName)
         {
+            /*
             try
             {
                 var args = new GetObjectArgs()
@@ -92,6 +93,35 @@ namespace Paperless.ServiceAgents
                 Console.WriteLine($"[Bucket]  Exception: {e}");
                 return null;
             }
+            */
+
+            try
+            {
+                var statArgs = new StatObjectArgs()
+                    .WithBucket(bucketName)
+                    .WithObject(objectName);
+                var objectStat = await client.StatObjectAsync(statArgs).ConfigureAwait(false);
+
+                if (objectStat != null)
+                {
+                    var memoryStream = new MemoryStream();
+                    var getArgs = new GetObjectArgs()
+                        .WithBucket(bucketName)
+                        .WithObject(objectName)
+                        .WithCallbackStream(s => s.CopyTo(memoryStream));
+
+                    await client.GetObjectAsync(getArgs).ConfigureAwait(false);
+
+                    memoryStream.Position = 0;
+                    return memoryStream;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"[Bucket]  Exception: {e}");
+            }
+
+            return null;
         }
 
         //Deletes document in minIO

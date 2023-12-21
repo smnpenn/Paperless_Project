@@ -10,7 +10,7 @@ namespace Paperless.ServiceAgents.Interfaces
     public interface IMinIOServiceAgent
     {
         Task UploadDocument(string filePath, string fileName);
-        Task<ObjectStat> GetDocument(string objectName);
+        Task<Stream> GetDocument(string objectName);
         Task DeleteDocument(string objectName);
 
     }
