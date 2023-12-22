@@ -35,7 +35,7 @@ public class Worker : BackgroundService
                             Content = ocrResult
                         };
 
-                        await _elasticSearchServiceAgent.IndexDocumentAsync("my-index-001", documentToIndex);
+                        await _elasticSearchServiceAgent.IndexDocumentAsync("paperless-index", documentToIndex);
 
                         _logger.LogInformation("Processed and indexed document {DocumentName} at: {Time}", documentName, DateTimeOffset.Now);
 
