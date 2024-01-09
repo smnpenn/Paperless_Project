@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Description>IO.Swagger</Description>
     <Copyright>IO.Swagger</Copyright>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <AssemblyName>IO.Swagger</AssemblyName>
@@ -10,8 +10,6 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'web' " />
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="12.0.1" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.5.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.5.1" />
@@ -24,13 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Paperless.BusinessLogic\Paperless.BusinessLogic.Entities\Paperless.BusinessLogic.Entities.csproj" />
     <ProjectReference Include="..\..\..\Paperless.BusinessLogic\Paperless.BusinessLogic.Interfaces\Paperless.BusinessLogic.Interfaces.csproj" />
-    <ProjectReference Include="..\..\..\Paperless.BusinessLogic\Paperless.BusinessLogic.Tests\Paperless.BusinessLogic.Tests.csproj" />
     <ProjectReference Include="..\..\..\Paperless.BusinessLogic\Paperless.BusinessLogic\Paperless.BusinessLogic.csproj" />
-    <ProjectReference Include="..\..\..\Paperless.DAL\Paperless.DAL.Sql\Paperless.DAL.Sql.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Update="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 </Project>

@@ -19,7 +19,7 @@ namespace Paperless.BusinessLogic.Entities
         public DateTime CreatedDate { get; set; }
         public DateTime Modified { get; set; }
         public DateTime Added { get; set; }
-        public string? ArchiveSerialNumber { get; set; }
+        public string? ArchiveSerialNumber { get; set; } = "420";
         public string? OriginalFileName { get; set; }
         public string? ArchivedFileName { get; set; }
     }
