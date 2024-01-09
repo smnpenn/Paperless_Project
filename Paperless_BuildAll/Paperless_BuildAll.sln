@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.ServiceAgents.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.OcrWorker", "Paperless.OcrWorker\Paperless.OcrWorker.csproj", "{AAFF881E-6B36-4BB6-A6B4-C742B2830D58}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IO.Swagger", "..\PaperlessRestService\src\IO.Swagger\IO.Swagger.csproj", "{88AAC7EB-B4FD-4D10-9267-600EAD6D67F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IO.Swagger", "..\Swagger.RestService\src\IO.Swagger\IO.Swagger.csproj", "{052CE08E-AA0E-4D4B-A327-6DD71AF56370}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,10 +83,10 @@ Global
 		{AAFF881E-6B36-4BB6-A6B4-C742B2830D58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAFF881E-6B36-4BB6-A6B4-C742B2830D58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAFF881E-6B36-4BB6-A6B4-C742B2830D58}.Release|Any CPU.Build.0 = Release|Any CPU
-		{88AAC7EB-B4FD-4D10-9267-600EAD6D67F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{88AAC7EB-B4FD-4D10-9267-600EAD6D67F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{88AAC7EB-B4FD-4D10-9267-600EAD6D67F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{88AAC7EB-B4FD-4D10-9267-600EAD6D67F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{052CE08E-AA0E-4D4B-A327-6DD71AF56370}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{052CE08E-AA0E-4D4B-A327-6DD71AF56370}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{052CE08E-AA0E-4D4B-A327-6DD71AF56370}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{052CE08E-AA0E-4D4B-A327-6DD71AF56370}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
