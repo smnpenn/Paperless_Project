@@ -1,0 +1,2611 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "Paperless Rest Server",
+    "version" : "1.0"
+  },
+  "servers" : [ {
+    "url" : "/"
+  } ],
+  "paths" : {
+    "/api/correspondents" : {
+      "get" : {
+        "tags" : [ "Correspondents" ],
+        "operationId" : "GetCorrespondents",
+        "parameters" : [ {
+          "name" : "page",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "full_perms",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200"
+                },
+                "examples" : {
+                  "default" : {
+                    "value" : "{\"count\":2,\"next\":null,\"previous\":null,\"all\":[2,1],\"results\":[{\"id\":2,\"slug\":\"edcorr2\",\"name\":\"edcorr2\",\"match\":\"\",\"matching_algorithm\":0,\"is_insensitive\":true,\"document_count\":0,\"last_correspondence\":null,\"owner\":3,\"permissions\":{\"view\":{\"users\":[],\"groups\":[]},\"change\":{\"users\":[],\"groups\":[]}}},{\"id\":1,\"slug\":\"edtest\",\"name\":\"edtest\",\"match\":\"\",\"matching_algorithm\":6,\"is_insensitive\":true,\"document_count\":1,\"last_correspondence\":\"2023-09-08T00:00:00Z\",\"owner\":3,\"permissions\":{\"view\":{\"users\":[],\"groups\":[]},\"change\":{\"users\":[],\"groups\":[]}}}]}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Correspondents" ],
+        "operationId" : "CreateCorrespondent",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api_correspondents_body"
+              },
+              "examples" : {
+                "default" : {
+                  "value" : "{\"name\":\"edcorr2\",\"matching_algorithm\":0,\"match\":\"\",\"is_insensitive\":true,\"owner\":3}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api_correspondents_body"
+                },
+                "examples" : {
+                  "default" : {
+                    "value" : "{\"id\":2,\"slug\":\"edcorr2\",\"name\":\"edcorr2\",\"match\":\"\",\"matching_algorithm\":0,\"is_insensitive\":true,\"owner\":3,\"user_can_change\":true}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/correspondents/{id}" : {
+      "put" : {
+        "tags" : [ "Correspondents" ],
+        "operationId" : "UpdateCorrespondent",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/correspondents_id_body"
+              },
+              "examples" : {
+                "default" : {
+                  "value" : "{\"id\":2,\"slug\":\"edcorr2\",\"name\":\"edcorr2\",\"match\":\"corr\",\"matching_algorithm\":3,\"is_insensitive\":true,\"document_count\":0,\"last_correspondence\":null,\"owner\":3,\"permissions\":{\"view\":{\"users\":[],\"groups\":[]},\"change\":{\"users\":[],\"groups\":[]}},\"set_permissions\":{\"view\":{\"users\":[],\"groups\":[]},\"change\":{\"users\":[],\"groups\":[]}},\"permissions_form\":{\"owner\":3,\"set_permissions\":{\"view\":{\"users\":[],\"groups\":[]},\"change\":{\"users\":[],\"groups\":[]}}}}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_1"
+                },
+                "examples" : {
+                  "default" : {
+                    "value" : "{\"id\":2,\"slug\":\"edcorr2\",\"name\":\"edcorr2\",\"match\":\"corr\",\"matching_algorithm\":3,\"is_insensitive\":true,\"document_count\":0,\"last_correspondence\":null,\"owner\":3,\"user_can_change\":true}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Correspondents" ],
+        "operationId" : "DeleteCorrespondent",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Success"
+          }
+        }
+      }
+    },
+    "/api/documents" : {
+      "get" : {
+        "tags" : [ "Documents" ],
+        "operationId" : "GetDocuments",
+        "parameters" : [ {
+          "name" : "Page",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "page_size",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "query",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "ordering",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "tags__id__all",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          }
+        }, {
+          "name" : "document_type__id",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "storage_path__id__in",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "correspondent__id",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "truncate_content",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_2"
+                },
+                "examples" : {
+                  "default" : {
+                    "value" : "{\"count\":1,\"next\":null,\"previous\":null,\"all\":[1],\"results\":[{\"id\":1,\"correspondent\":1,\"document_type\":1,\"storage_path\":1,\"title\":\"test\",\"content\":\"test\",\"tags\":[1],\"created\":\"2023-09-08T00:00:00Z\",\"created_date\":\"2023-09-08\",\"modified\":\"2023-09-08T12:15:24.652098Z\",\"added\":\"2023-09-08T12:05:28.338799Z\",\"archive_serial_number\":1,\"original_file_name\":\"test.pdf\",\"archived_file_name\":\"2023-09-08 edtest test.pdf\",\"owner\":3,\"user_can_change\":true,\"notes\":[{\"id\":1,\"note\":\"pdf in testdir\",\"created\":\"2023-09-08T12:11:05.848131Z\",\"document\":1,\"user\":3},{\"id\":2,\"note\":\"pdf 2 in test\",\"created\":\"2023-09-08T12:15:12.328015Z\",\"document\":1,\"user\":3}]}]}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/documents/{id}" : {
+      "get" : {
+        "tags" : [ "Documents" ],
+        "operationId" : "GetDocument",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "full_perms",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_3"
+                },
+                "examples" : {
+                  "default" : {
+                    "value" : "{\"id\":1,\"correspondent\":1,\"document_type\":1,\"storage_path\":1,\"title\":\"test\",\"content\":\"test\",\"tags\":[1],\"created\":\"2023-09-08T00:00:00Z\",\"created_date\":\"2023-09-08\",\"modified\":\"2023-09-08T12:15:24.652098Z\",\"added\":\"2023-09-08T12:05:28.338799Z\",\"archive_serial_number\":1,\"original_file_name\":\"test.pdf\",\"archived_file_name\":\"2023-09-08 edtest test.pdf\",\"owner\":3,\"permissions\":{\"view\":{\"users\":[3],\"groups\":[1]},\"change\":{\"users\":[3],\"groups\":[1]}},\"notes\":[{\"id\":1,\"note\":\"pdf in testdir\",\"created\":\"2023-09-08T12:11:05.848131Z\",\"document\":1,\"user\":3},{\"id\":2,\"note\":\"pdf 2 in test\",\"created\":\"2023-09-08T12:15:12.328015Z\",\"document\":1,\"user\":3}]}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Documents" ],
+        "operationId" : "UpdateDocument",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/documents_id_body"
+              },
+              "examples" : {
+                "default" : {
+                  "value" : "{\"id\":2,\"correspondent\":null,\"document_type\":null,\"storage_path\":null,\"title\":\"toom BauMarkt GmbH Kassenzettel 15.07.2023 (1)\",\"content\":\"toomft toomit\nRespekt, wet’s selber macht.\ntoqm Baumarkt GmbH Respekt, wer’s selber macht\nGotti leb-Daimler-Str. 6\n28816 Stuhr-Brinkum\n0421 258430 toom Baumarkt GmbH\nNutzen Sie schon unsere Gott 1 i eb-Dai fitj’er-Str. 6\nVorteilskarte? 28816 Stuhr-Brinkum\n0421 258430\n4388858925116 EINKAUFSKAR-TQN . Nutzen Sie schon unsere\n1.000 STK\n0.99 19 Vorteilskarte?\n4004014794012 Innenspachtel 1\n1.000 STK 4388858925116 EINKAUFSKART0N\n3.89 19 1.000 STK\n4004624146300 i-lT Plexschlaueh 0.99 19\n1.000 STK 9.99 19 4004014794012 Innenspachtel 1\n1.000 STK\n4006209942598 Uni versa Idiibel ni 3.89 19\n2 000 STK a 3.99 7.98 19 4004624146300 HT Flexschiauch\n1.000 STK\n4013307727064 Nahtroller 9.99 19\n1.000 STK 4.99 19 4006209942598 Uni versaidubel ra\n4048962238969 DU0P0WER 2.000 STK a 3.99 7.98 19\n1.000 STK 4013307727064 Nahtroller\n3. 89 19 1.000 STK\n4048962238952 DU0P0KER 4. 89 19\n1.000 STK 4048962238969 EMPOWER\n3.99 19 1.000 STK\n4032526917230 FI achverbi iides' 3.99 19\n3.000 STK a 2.09 6.27 19 4048962238952 DU0PQWER\n1.000 STK\n4337256145251 SPS Pan. 5. fix 20 3 99 1.9\n1.000 STK 4032526917230 Flachverbinder\n6.19 IS\n4032526756006 K-Scheme DIN 90 3.000 STK a 2.09 6.27 19\n1.000 STK 4337256145251 SPS Pan. 5, Ox 20\n6.19 19 1.000 STK\n4032526657556 Aufh-Ose 24x 36 6.19 19\n1.000 STK 4032526756006 K-Schetbe DIN 90\n3.19 19 1.000 STK\n4002593412020 Gipserspachtei 6.19 19\n1.000 STK 4032526657566 Aufh-Ose 24x 36\n8.29 19 1.000 STK\n4006596162186 Gabelstuck verch 3.19 19\n1.000 STK 4002593412020 Gipserspachte1\n7.99 19 1.000 STK\n4006596161206 Doppein1ppe1 8.29 19\n2.000 STK a 3.59 7.18 19 4006596162166 Gabel stuck verch\n40G6596255042 Gewinded1 chiband 1.000 STK\n1.000 STK 7.99 19\n3.29 19 4006596161206 Doppe1nippe!\n4004624846200 Getaieanschlusss 2.000 STK a 3.59 7.18 19\n1.000 STK 8.98 19 4006596255042 Gewindedichiband\n4007591143020 Schneiispachtel 1.000 STK\n1.000 STK 3.29 19\n4.99 19 4004624846200 Get ateansch1usss\n4004014781166 Premium Buntlack 1.000 STK\n1.000 STK 8.99 19\n4.99 19 4007591143020 Schneiispachtel\n4013307727231 Abbrechklingen 1.000 STK\n1.000 STK 4.99 19\n6.29 19 4004014781166 Premium Bunt lack\n4015000428217 Pattex Montage P 1.000 STK\n1.000 STK 4.99 19\n7.99 19 4013307727231 Abbrechklingen\n00000071101OS API 410x60x3, Bern 1.000 STK\n6.28 19\n4.100 LFH a 29.99 122.96 19 4015000428211 Pattex Montage P\n1.000 STK\nSUMME 7.99 19\nEUR 240.62 0000007110109 APL 410x60x3, Scat\n4. TOO LFM a 29.99 122.96 19\nGEGEBEN EC-Cash 240.62\nSUMME\nEUR 240.62\nDatum:\n* * Kundenbeleg * *\n15.07.2023 GEGEBEN EC-Cash\nUhrzeit: 240. 62\n10:47:17 Uhr\nBeleg-Nr.\nTrace-Nr.\n6751\nDatum-' * * Kundenbeleg * *\n726487 15. 07. 2023\n—Kar terizahl Uhrzeit:\nBeleg-Nr. 10:47:17 Uhr\nContactless 6751\ngirocard Trace-Nr,\nNr. 726487\nTerminal-ID *#«MMiw«MM8O00 oooo Kartenzahlung\n56014757 Contactless\nPos-Info girocard\n00 075 00\nAS-Zeit 15 07. 10:47 Uhr\nNr.\nBet rag EUR Termina1 -ID WW«W##i?ft80QQ 0000\n240,62 56014757\nZahlung erfolgt Pos-Info\nAS-Zeit 15.07. 00 075 00\nMINST CODE Bet rag EUR 10:47 Uhr\n19.00 % NEITO-Entgelt HWST-Betray 240,62\n202.20 38. 42 Zahlung erfolgt\nSteuer.Nr. : 215/5940/2539 MUST CODE\nNETTO-Entye It\nUID Nr. : DE812720447 19.00 %\n202.20\n\nSteuer.Nr.:\nUID 215/5940/2539\nNr ' nroio-wnii-\",\"tags\":[1],\"created_date\":\"2023-07-15\",\"modified\":\"2023-09-08T18:23:17.751946Z\",\"added\":\"2023-09-08T18:23:17.470212Z\",\"archive_serial_number\":34,\"original_file_name\":\"toom BauMarkt GmbH Kassenzettel 15.07.2023 (1).pdf\",\"archived_file_name\":\"2023-07-15 toom BauMarkt GmbH Kassenzettel 15.07.2023 (1).pdf\",\"owner\":3,\"permissions\":{\"view\":{\"users\":[],\"groups\":[]},\"change\":{\"users\":[],\"groups\":[]}},\"notes\":[],\"set_permissions\":{\"view\":{\"users\":[],\"groups\":[]},\"change\":{\"users\":[],\"groups\":[]}}}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_4"
+                },
+                "examples" : {
+                  "default" : {
+                    "value" : "{\"id\":2,\"correspondent\":null,\"document_type\":null,\"storage_path\":null,\"title\":\"toom BauMarkt GmbH Kassenzettel 15.07.2023 (1)\",\"content\":\"toomft toomit\nRespekt, wet’s selber macht.\ntoqm Baumarkt GmbH Respekt, wer’s selber macht\nGotti leb-Daimler-Str. 6\n28816 Stuhr-Brinkum\n0421 258430 toom Baumarkt GmbH\nNutzen Sie schon unsere Gott 1 i eb-Dai fitj’er-Str. 6\nVorteilskarte? 28816 Stuhr-Brinkum\n0421 258430\n4388858925116 EINKAUFSKAR-TQN . Nutzen Sie schon unsere\n1.000 STK\n0.99 19 Vorteilskarte?\n4004014794012 Innenspachtel 1\n1.000 STK 4388858925116 EINKAUFSKART0N\n3.89 19 1.000 STK\n4004624146300 i-lT Plexschlaueh 0.99 19\n1.000 STK 9.99 19 4004014794012 Innenspachtel 1\n1.000 STK\n4006209942598 Uni versa Idiibel ni 3.89 19\n2 000 STK a 3.99 7.98 19 4004624146300 HT Flexschiauch\n1.000 STK\n4013307727064 Nahtroller 9.99 19\n1.000 STK 4.99 19 4006209942598 Uni versaidubel ra\n4048962238969 DU0P0WER 2.000 STK a 3.99 7.98 19\n1.000 STK 4013307727064 Nahtroller\n3. 89 19 1.000 STK\n4048962238952 DU0P0KER 4. 89 19\n1.000 STK 4048962238969 EMPOWER\n3.99 19 1.000 STK\n4032526917230 FI achverbi iides' 3.99 19\n3.000 STK a 2.09 6.27 19 4048962238952 DU0PQWER\n1.000 STK\n4337256145251 SPS Pan. 5. fix 20 3 99 1.9\n1.000 STK 4032526917230 Flachverbinder\n6.19 IS\n4032526756006 K-Scheme DIN 90 3.000 STK a 2.09 6.27 19\n1.000 STK 4337256145251 SPS Pan. 5, Ox 20\n6.19 19 1.000 STK\n4032526657556 Aufh-Ose 24x 36 6.19 19\n1.000 STK 4032526756006 K-Schetbe DIN 90\n3.19 19 1.000 STK\n4002593412020 Gipserspachtei 6.19 19\n1.000 STK 4032526657566 Aufh-Ose 24x 36\n8.29 19 1.000 STK\n4006596162186 Gabelstuck verch 3.19 19\n1.000 STK 4002593412020 Gipserspachte1\n7.99 19 1.000 STK\n4006596161206 Doppein1ppe1 8.29 19\n2.000 STK a 3.59 7.18 19 4006596162166 Gabel stuck verch\n40G6596255042 Gewinded1 chiband 1.000 STK\n1.000 STK 7.99 19\n3.29 19 4006596161206 Doppe1nippe!\n4004624846200 Getaieanschlusss 2.000 STK a 3.59 7.18 19\n1.000 STK 8.98 19 4006596255042 Gewindedichiband\n4007591143020 Schneiispachtel 1.000 STK\n1.000 STK 3.29 19\n4.99 19 4004624846200 Get ateansch1usss\n4004014781166 Premium Buntlack 1.000 STK\n1.000 STK 8.99 19\n4.99 19 4007591143020 Schneiispachtel\n4013307727231 Abbrechklingen 1.000 STK\n1.000 STK 4.99 19\n6.29 19 4004014781166 Premium Bunt lack\n4015000428217 Pattex Montage P 1.000 STK\n1.000 STK 4.99 19\n7.99 19 4013307727231 Abbrechklingen\n00000071101OS API 410x60x3, Bern 1.000 STK\n6.28 19\n4.100 LFH a 29.99 122.96 19 4015000428211 Pattex Montage P\n1.000 STK\nSUMME 7.99 19\nEUR 240.62 0000007110109 APL 410x60x3, Scat\n4. TOO LFM a 29.99 122.96 19\nGEGEBEN EC-Cash 240.62\nSUMME\nEUR 240.62\nDatum:\n* * Kundenbeleg * *\n15.07.2023 GEGEBEN EC-Cash\nUhrzeit: 240. 62\n10:47:17 Uhr\nBeleg-Nr.\nTrace-Nr.\n6751\nDatum-' * * Kundenbeleg * *\n726487 15. 07. 2023\n—Kar terizahl Uhrzeit:\nBeleg-Nr. 10:47:17 Uhr\nContactless 6751\ngirocard Trace-Nr,\nNr. 726487\nTerminal-ID *#«MMiw«MM8O00 oooo Kartenzahlung\n56014757 Contactless\nPos-Info girocard\n00 075 00\nAS-Zeit 15 07. 10:47 Uhr\nNr.\nBet rag EUR Termina1 -ID WW«W##i?ft80QQ 0000\n240,62 56014757\nZahlung erfolgt Pos-Info\nAS-Zeit 15.07. 00 075 00\nMINST CODE Bet rag EUR 10:47 Uhr\n19.00 % NEITO-Entgelt HWST-Betray 240,62\n202.20 38. 42 Zahlung erfolgt\nSteuer.Nr. : 215/5940/2539 MUST CODE\nNETTO-Entye It\nUID Nr. : DE812720447 19.00 %\n202.20\n\nSteuer.Nr.:\nUID 215/5940/2539\nNr ' nroio-wnii-\"\",\"tags\":[1],\"created\":\"2023-07-15T00:00:00Z\",\"created_date\":\"2023-07-15\",\"modified\":\"2023-09-08T19:40:43.833922Z\",\"added\":\"2023-09-08T18:23:17.470212Z\",\"archive_serial_number\":34,\"original_file_name\":\"toom BauMarkt GmbH Kassenzettel 15.07.2023 (1).pdf\",\"archived_file_name\":\"2023-07-15 toom BauMarkt GmbH Kassenzettel 15.07.2023 (1).pdf\",\"owner\":3,\"user_can_change\":true,\"notes\":[]}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Documents" ],
+        "operationId" : "DeleteDocument",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Success"
+          }
+        }
+      }
+    },
+    "/api/documents/upload" : {
+      "post" : {
+        "tags" : [ "Documents" ],
+        "operationId" : "UploadDocument",
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/documents_upload_body"
+              },
+              "encoding" : {
+                "title" : {
+                  "style" : "form"
+                },
+                "created" : {
+                  "style" : "form"
+                },
+                "document_type" : {
+                  "style" : "form"
+                },
+                "tags" : {
+                  "style" : "form"
+                },
+                "correspondent" : {
+                  "style" : "form"
+                },
+                "document" : {
+                  "style" : "form"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success"
+          }
+        }
+      }
+    },
+    "/api/documents/{id}/download" : {
+      "get" : {
+        "tags" : [ "Documents" ],
+        "operationId" : "DownloadDocument",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "original",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/pdf" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary",
+                  "x-content-type" : "application/pdf"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/documents/{id}/metadata" : {
+      "get" : {
+        "tags" : [ "Documents" ],
+        "operationId" : "GetDocumentMetadata",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_5"
+                },
+                "examples" : {
+                  "default" : {
+                    "value" : "{\"original_checksum\":\"39b80972dc7f1e975d9d2e8b92ce4e8b\",\"original_size\":11868,\"original_mime_type\":\"application/pdf\",\"media_filename\":\"testdirp.pdf\",\"has_archive_version\":true,\"original_metadata\":[],\"archive_checksum\":\"3597d60204a4b200b97e728622f704ab\",\"archive_media_filename\":\"testdirp.pdf\",\"original_filename\":\"test.pdf\",\"lang\":\"et\",\"archive_size\":15561,\"archive_metadata\":[{\"namespace\":\"http://ns.adobe.com/pdf/1.3/\",\"prefix\":\"pdf\",\"key\":\"Producer\",\"value\":\"pikepdf 7.2.0\"},{\"namespace\":\"http://ns.adobe.com/xap/1.0/\",\"prefix\":\"xmp\",\"key\":\"ModifyDate\",\"value\":\"2023-09-08T12:04:59+00:00\"},{\"namespace\":\"http://ns.adobe.com/xap/1.0/\",\"prefix\":\"xmp\",\"key\":\"CreateDate\",\"value\":\"2023-09-08T11:46:26+00:00\"},{\"namespace\":\"http://ns.adobe.com/xap/1.0/\",\"prefix\":\"xmp\",\"key\":\"CreatorTool\",\"value\":\"ocrmypdf 14.3.0 / Tesseract OCR-PDF 5.3.0\"},{\"namespace\":\"http://ns.adobe.com/xap/1.0/mm/\",\"prefix\":\"xmpMM\",\"key\":\"DocumentID\",\"value\":\"uuid:7af613b2-865c-11f9-0000-925a0e2aa608\"},{\"namespace\":\"http://purl.org/dc/elements/1.1/\",\"prefix\":\"dc\",\"key\":\"format\",\"value\":\"application/pdf\"},{\"namespace\":\"http://purl.org/dc/elements/1.1/\",\"prefix\":\"dc\",\"key\":\"title\",\"value\":\"Ohne Titel\"},{\"namespace\":\"http://www.aiim.org/pdfa/ns/id/\",\"prefix\":\"pdfaid\",\"key\":\"part\",\"value\":\"2\"},{\"namespace\":\"http://www.aiim.org/pdfa/ns/id/\",\"prefix\":\"pdfaid\",\"key\":\"conformance\",\"value\":\"B\"},{\"namespace\":\"http://purl.org/dc/elements/1.1/\",\"prefix\":\"dc\",\"key\":\"creator\",\"value\":\"None\"},{\"namespace\":\"http://ns.adobe.com/xap/1.0/\",\"prefix\":\"xmp\",\"key\":\"MetadataDate\",\"value\":\"2023-09-08T12:04:59.067651+00:00\"}]}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/document_types" : {
+      "get" : {
+        "tags" : [ "DocumentTypes" ],
+        "operationId" : "GetDocumentTypes",
+        "parameters" : [ {
+          "name" : "page",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "full_perms",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_6"
+                },
+                "examples" : {
+                  "default" : {
+                    "value" : "{\"count\":2,\"next\":null,\"previous\":null,\"all\":[1,2],\"results\":[{\"id\":1,\"slug\":\"testdoc\",\"name\":\"testdoc\",\"match\":\"\",\"matching_algorithm\":6,\"is_insensitive\":true,\"document_count\":1,\"owner\":3,\"permissions\":{\"view\":{\"users\":[3],\"groups\":[]},\"change\":{\"users\":[3],\"groups\":[]}}},{\"id\":2,\"slug\":\"testdocdel\",\"name\":\"testdocdel\",\"match\":\"del\",\"matching_algorithm\":1,\"is_insensitive\":true,\"document_count\":0,\"owner\":3,\"permissions\":{\"view\":{\"users\":[],\"groups\":[]},\"change\":{\"users\":[],\"groups\":[]}}}]}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "DocumentTypes" ],
+        "operationId" : "CreateDocumentType",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api_document_types_body"
+              },
+              "examples" : {
+                "default" : {
+                  "value" : "{\"name\":\"testdocdel\",\"matching_algorithm\":1,\"match\":\"del\",\"is_insensitive\":true,\"owner\":3}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_7"
+                },
+                "examples" : {
+                  "default" : {
+                    "value" : "{\"id\":2,\"slug\":\"testdocdel\",\"name\":\"testdocdel\",\"match\":\"del\",\"matching_algorithm\":1,\"is_insensitive\":true,\"owner\":3,\"user_can_change\":true}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/document_types/{id}" : {
+      "put" : {
+        "tags" : [ "DocumentTypes" ],
+        "operationId" : "UpdateDocumentType",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/document_types_id_body"
+              },
+              "examples" : {
+                "default" : {
+                  "value" : "{\"id\":2,\"slug\":\"testdocdel\",\"name\":\"testdocdel\",\"match\":\"del.*\",\"matching_algorithm\":4,\"is_insensitive\":true,\"document_count\":0,\"owner\":3,\"permissions\":{\"view\":{\"users\":[],\"groups\":[]},\"change\":{\"users\":[],\"groups\":[]}},\"set_permissions\":{\"view\":{\"users\":[],\"groups\":[]},\"change\":{\"users\":[],\"groups\":[]}},\"permissions_form\":{\"owner\":3,\"set_permissions\":{\"view\":{\"users\":[],\"groups\":[]},\"change\":{\"users\":[],\"groups\":[]}}}}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_8"
+                },
+                "examples" : {
+                  "default" : {
+                    "value" : "{\"id\":2,\"slug\":\"testdocdel\",\"name\":\"testdocdel\",\"match\":\"del.*\",\"matching_algorithm\":4,\"is_insensitive\":true,\"document_count\":0,\"owner\":3,\"user_can_change\":true}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "DocumentTypes" ],
+        "operationId" : "DeleteDocumentType",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Success"
+          }
+        }
+      }
+    },
+    "/api/search/autocomplete" : {
+      "get" : {
+        "tags" : [ "Search" ],
+        "operationId" : "AutoComplete",
+        "parameters" : [ {
+          "name" : "term",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "x-content-type" : "application/json"
+                },
+                "examples" : {
+                  "default" : {
+                    "value" : "[\"term1\", \"term3\", \"term6\", \"term4\"]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tags" : {
+      "get" : {
+        "tags" : [ "Tags" ],
+        "operationId" : "GetTags",
+        "parameters" : [ {
+          "name" : "page",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "full_perms",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_9"
+                },
+                "examples" : {
+                  "default" : {
+                    "value" : "{\"count\":2,\"next\":null,\"previous\":null,\"all\":[2,1],\"results\":[{\"id\":2,\"slug\":\"deltag\",\"name\":\"deltag\",\"color\":\"#b62d74\",\"text_color\":\"#ffffff\",\"match\":\"test\",\"matching_algorithm\":5,\"is_insensitive\":true,\"is_inbox_tag\":false,\"document_count\":0,\"owner\":3,\"permissions\":{\"view\":{\"users\":[],\"groups\":[]},\"change\":{\"users\":[],\"groups\":[]}}},{\"id\":1,\"slug\":\"testtag\",\"name\":\"testtag\",\"color\":\"#ddd977\",\"text_color\":\"#000000\",\"match\":\"\",\"matching_algorithm\":6,\"is_insensitive\":true,\"is_inbox_tag\":true,\"document_count\":1,\"owner\":3,\"permissions\":{\"view\":{\"users\":[],\"groups\":[]},\"change\":{\"users\":[],\"groups\":[]}}}]}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Tags" ],
+        "operationId" : "CreateTag",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api_tags_body"
+              },
+              "examples" : {
+                "default" : {
+                  "value" : "{\"name\":\"deltag\",\"color\":\"#b62d74\",\"is_inbox_tag\":false,\"matching_algorithm\":5,\"match\":\"test\",\"is_insensitive\":true,\"owner\":3}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_10"
+                },
+                "examples" : {
+                  "default" : {
+                    "value" : "{\"id\":2,\"slug\":\"deltag\",\"name\":\"deltag\",\"color\":\"#b62d74\",\"text_color\":\"#ffffff\",\"match\":\"test\",\"matching_algorithm\":5,\"is_insensitive\":true,\"is_inbox_tag\":false,\"owner\":3,\"user_can_change\":true}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tags/{id}" : {
+      "put" : {
+        "tags" : [ "Tags" ],
+        "operationId" : "UpdateTag",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/tags_id_body"
+              },
+              "examples" : {
+                "default" : {
+                  "value" : "{\"id\":2,\"slug\":\"deltag\",\"name\":\"deltag2\",\"color\":\"#b62d74\",\"text_color\":\"#ffffff\",\"match\":\"test\",\"matching_algorithm\":5,\"is_insensitive\":true,\"is_inbox_tag\":false,\"document_count\":0,\"owner\":3,\"permissions\":{\"view\":{\"users\":[],\"groups\":[]},\"change\":{\"users\":[],\"groups\":[]}},\"set_permissions\":{\"view\":{\"users\":[],\"groups\":[]},\"change\":{\"users\":[],\"groups\":[]}},\"permissions_form\":{\"owner\":3,\"set_permissions\":{\"view\":{\"users\":[],\"groups\":[]},\"change\":{\"users\":[],\"groups\":[]}}}}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_11"
+                },
+                "examples" : {
+                  "default" : {
+                    "value" : "{\"id\":2,\"slug\":\"deltag2\",\"name\":\"deltag2\",\"color\":\"#b62d74\",\"text_color\":\"#ffffff\",\"match\":\"test\",\"matching_algorithm\":5,\"is_insensitive\":true,\"is_inbox_tag\":false,\"document_count\":0,\"owner\":3,\"user_can_change\":true}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Tags" ],
+        "operationId" : "DeleteTag",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Success"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Correspondent" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "slug" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "name" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "match" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "matching_algorithm" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "document_count" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "last_correspondence" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        },
+        "additionalProperties" : false
+      },
+      "Document" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "correspondent" : {
+            "type" : "integer",
+            "format" : "int32",
+            "nullable" : true
+          },
+          "document_type" : {
+            "type" : "integer",
+            "format" : "int32",
+            "nullable" : true
+          },
+          "storage_path" : {
+            "type" : "integer",
+            "format" : "int32",
+            "nullable" : true
+          },
+          "title" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "content" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "tags" : {
+            "type" : "array",
+            "nullable" : true,
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          },
+          "created" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "created_date" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "modified" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "added" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "archive_serial_number" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "original_file_name" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "archived_file_name" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        },
+        "additionalProperties" : false
+      },
+      "DocumentType" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "slug" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "name" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "match" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "matching_algorithm" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "document_count" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "additionalProperties" : false
+      },
+      "NewCorrespondent" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "match" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "matching_algorithm" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "document_count" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "last_correspondence" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        },
+        "additionalProperties" : false
+      },
+      "NewDocumentType" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "match" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "matching_algorithm" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          }
+        },
+        "additionalProperties" : false
+      },
+      "NewTag" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "color" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "match" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "matching_algorithm" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "is_inbox_tag" : {
+            "type" : "boolean"
+          }
+        },
+        "additionalProperties" : false
+      },
+      "DocTag" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "slug" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "name" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "color" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "match" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "matching_algorithm" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "is_inbox_tag" : {
+            "type" : "boolean"
+          },
+          "document_count" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "additionalProperties" : false
+      },
+      "UserInfo" : {
+        "type" : "object",
+        "properties" : {
+          "username" : {
+            "type" : "string",
+            "nullable" : true
+          },
+          "password" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        },
+        "additionalProperties" : false
+      },
+      "inline_response_200" : {
+        "required" : [ "all", "count", "next", "previous", "results" ],
+        "type" : "object",
+        "properties" : {
+          "count" : {
+            "type" : "integer"
+          },
+          "next" : {
+            "type" : "integer"
+          },
+          "previous" : {
+            "type" : "integer"
+          },
+          "all" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer"
+            }
+          },
+          "results" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/inline_response_200_results"
+            }
+          }
+        },
+        "example" : {
+          "next" : 6,
+          "all" : [ 5, 5 ],
+          "previous" : 1,
+          "count" : 0,
+          "results" : [ {
+            "owner" : 9,
+            "matching_algorithm" : 2,
+            "document_count" : 7,
+            "is_insensitive" : true,
+            "permissions" : {
+              "view" : {
+                "groups" : [ "", "" ],
+                "users" : [ "", "" ]
+              },
+              "change" : null
+            },
+            "name" : "name",
+            "match" : "match",
+            "id" : 5,
+            "last_correspondence" : "last_correspondence",
+            "slug" : "slug"
+          }, {
+            "owner" : 9,
+            "matching_algorithm" : 2,
+            "document_count" : 7,
+            "is_insensitive" : true,
+            "permissions" : {
+              "view" : {
+                "groups" : [ "", "" ],
+                "users" : [ "", "" ]
+              },
+              "change" : null
+            },
+            "name" : "name",
+            "match" : "match",
+            "id" : 5,
+            "last_correspondence" : "last_correspondence",
+            "slug" : "slug"
+          } ]
+        }
+      },
+      "api_correspondents_body" : {
+        "required" : [ "is_insensitive", "match", "matching_algorithm", "name", "owner" ],
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "matching_algorithm" : {
+            "type" : "integer"
+          },
+          "match" : {
+            "type" : "string"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "owner" : {
+            "type" : "integer"
+          }
+        },
+        "example" : {
+          "owner" : 6,
+          "matching_algorithm" : 0,
+          "is_insensitive" : true,
+          "name" : "name",
+          "match" : "match"
+        }
+      },
+      "apicorrespondentsid_permissions_view" : {
+        "required" : [ "groups", "users" ],
+        "type" : "object",
+        "properties" : {
+          "users" : {
+            "type" : "array",
+            "items" : { }
+          },
+          "groups" : {
+            "type" : "array",
+            "items" : { }
+          }
+        },
+        "example" : {
+          "groups" : [ "", "" ],
+          "users" : [ "", "" ]
+        }
+      },
+      "apicorrespondentsid_permissions" : {
+        "required" : [ "change", "view" ],
+        "type" : "object",
+        "properties" : {
+          "view" : {
+            "$ref" : "#/components/schemas/apicorrespondentsid_permissions_view"
+          },
+          "change" : {
+            "$ref" : "#/components/schemas/apicorrespondentsid_permissions_view"
+          }
+        },
+        "example" : {
+          "view" : {
+            "groups" : [ "", "" ],
+            "users" : [ "", "" ]
+          },
+          "change" : null
+        }
+      },
+      "apicorrespondentsid_permissions_form" : {
+        "required" : [ "owner", "set_permissions" ],
+        "type" : "object",
+        "properties" : {
+          "owner" : {
+            "type" : "integer"
+          },
+          "set_permissions" : {
+            "$ref" : "#/components/schemas/apicorrespondentsid_permissions"
+          }
+        }
+      },
+      "correspondents_id_body" : {
+        "required" : [ "document_count", "id", "is_insensitive", "last_correspondence", "match", "matching_algorithm", "name", "owner", "permissions", "permissions_form", "set_permissions", "slug" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "slug" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "match" : {
+            "type" : "string"
+          },
+          "matching_algorithm" : {
+            "type" : "integer"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "document_count" : {
+            "type" : "integer"
+          },
+          "last_correspondence" : {
+            "type" : "integer"
+          },
+          "owner" : {
+            "type" : "integer"
+          },
+          "permissions" : {
+            "$ref" : "#/components/schemas/apicorrespondentsid_permissions"
+          },
+          "set_permissions" : {
+            "$ref" : "#/components/schemas/apicorrespondentsid_permissions"
+          },
+          "permissions_form" : {
+            "$ref" : "#/components/schemas/apicorrespondentsid_permissions_form"
+          }
+        }
+      },
+      "inline_response_200_1" : {
+        "required" : [ "document_count", "id", "is_insensitive", "last_correspondence", "match", "matching_algorithm", "name", "owner", "slug", "user_can_change" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "slug" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "match" : {
+            "type" : "string"
+          },
+          "matching_algorithm" : {
+            "type" : "integer"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "document_count" : {
+            "type" : "integer"
+          },
+          "last_correspondence" : {
+            "type" : "integer"
+          },
+          "owner" : {
+            "type" : "integer"
+          },
+          "user_can_change" : {
+            "type" : "boolean"
+          }
+        },
+        "example" : {
+          "owner" : 5,
+          "matching_algorithm" : 6,
+          "user_can_change" : true,
+          "document_count" : 1,
+          "is_insensitive" : true,
+          "name" : "name",
+          "match" : "match",
+          "id" : 0,
+          "last_correspondence" : 5,
+          "slug" : "slug"
+        }
+      },
+      "inline_response_200_2" : {
+        "required" : [ "all", "count", "next", "previous", "results" ],
+        "type" : "object",
+        "properties" : {
+          "count" : {
+            "type" : "integer"
+          },
+          "next" : {
+            "type" : "integer"
+          },
+          "previous" : {
+            "type" : "integer"
+          },
+          "all" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer"
+            }
+          },
+          "results" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/inline_response_200_2_results"
+            }
+          }
+        },
+        "example" : {
+          "next" : 6,
+          "all" : [ 5, 5 ],
+          "previous" : 1,
+          "count" : 0,
+          "results" : [ {
+            "owner" : 4,
+            "user_can_change" : true,
+            "archive_serial_number" : 2,
+            "notes" : [ {
+              "note" : "note",
+              "created" : "created",
+              "document" : 1,
+              "id" : 7,
+              "user" : 1
+            }, {
+              "note" : "note",
+              "created" : "created",
+              "document" : 1,
+              "id" : 7,
+              "user" : 1
+            } ],
+            "added" : "added",
+            "created" : "created",
+            "title" : "title",
+            "content" : "content",
+            "tags" : [ 3, 3 ],
+            "storage_path" : 9,
+            "archived_file_name" : "archived_file_name",
+            "modified" : "modified",
+            "correspondent" : 2,
+            "original_file_name" : "original_file_name",
+            "id" : 5,
+            "created_date" : "created_date",
+            "document_type" : 7
+          }, {
+            "owner" : 4,
+            "user_can_change" : true,
+            "archive_serial_number" : 2,
+            "notes" : [ {
+              "note" : "note",
+              "created" : "created",
+              "document" : 1,
+              "id" : 7,
+              "user" : 1
+            }, {
+              "note" : "note",
+              "created" : "created",
+              "document" : 1,
+              "id" : 7,
+              "user" : 1
+            } ],
+            "added" : "added",
+            "created" : "created",
+            "title" : "title",
+            "content" : "content",
+            "tags" : [ 3, 3 ],
+            "storage_path" : 9,
+            "archived_file_name" : "archived_file_name",
+            "modified" : "modified",
+            "correspondent" : 2,
+            "original_file_name" : "original_file_name",
+            "id" : 5,
+            "created_date" : "created_date",
+            "document_type" : 7
+          } ]
+        }
+      },
+      "inline_response_200_3" : {
+        "required" : [ "added", "archive_serial_number", "archived_file_name", "content", "correspondent", "created", "created_date", "document_type", "id", "modified", "notes", "original_file_name", "owner", "permissions", "storage_path", "tags", "title" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "correspondent" : {
+            "type" : "integer"
+          },
+          "document_type" : {
+            "type" : "integer"
+          },
+          "storage_path" : {
+            "type" : "integer"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "content" : {
+            "type" : "string"
+          },
+          "tags" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer"
+            }
+          },
+          "created" : {
+            "type" : "string"
+          },
+          "created_date" : {
+            "type" : "string"
+          },
+          "modified" : {
+            "type" : "string"
+          },
+          "added" : {
+            "type" : "string"
+          },
+          "archive_serial_number" : {
+            "type" : "integer"
+          },
+          "original_file_name" : {
+            "type" : "string"
+          },
+          "archived_file_name" : {
+            "type" : "string"
+          },
+          "owner" : {
+            "type" : "integer"
+          },
+          "permissions" : {
+            "$ref" : "#/components/schemas/inline_response_200_3_permissions"
+          },
+          "notes" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/inline_response_200_2_notes"
+            }
+          }
+        },
+        "example" : {
+          "owner" : 7,
+          "archive_serial_number" : 2,
+          "notes" : [ {
+            "note" : "note",
+            "created" : "created",
+            "document" : 1,
+            "id" : 7,
+            "user" : 1
+          }, {
+            "note" : "note",
+            "created" : "created",
+            "document" : 1,
+            "id" : 7,
+            "user" : 1
+          } ],
+          "added" : "added",
+          "created" : "created",
+          "title" : "title",
+          "content" : "content",
+          "tags" : [ 5, 5 ],
+          "storage_path" : 5,
+          "permissions" : {
+            "view" : {
+              "groups" : [ 3, 3 ],
+              "users" : [ 9, 9 ]
+            },
+            "change" : null
+          },
+          "archived_file_name" : "archived_file_name",
+          "modified" : "modified",
+          "correspondent" : 6,
+          "original_file_name" : "original_file_name",
+          "id" : 0,
+          "created_date" : "created_date",
+          "document_type" : 1
+        }
+      },
+      "documents_id_body" : {
+        "required" : [ "added", "archive_serial_number", "archived_file_name", "content", "correspondent", "created_date", "document_type", "id", "modified", "notes", "original_file_name", "owner", "permissions", "set_permissions", "storage_path", "tags", "title" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "correspondent" : {
+            "type" : "integer"
+          },
+          "document_type" : {
+            "type" : "integer"
+          },
+          "storage_path" : {
+            "type" : "integer"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "content" : {
+            "type" : "string"
+          },
+          "tags" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer"
+            }
+          },
+          "created_date" : {
+            "type" : "string"
+          },
+          "modified" : {
+            "type" : "string"
+          },
+          "added" : {
+            "type" : "string"
+          },
+          "archive_serial_number" : {
+            "type" : "integer"
+          },
+          "original_file_name" : {
+            "type" : "string"
+          },
+          "archived_file_name" : {
+            "type" : "string"
+          },
+          "owner" : {
+            "type" : "integer"
+          },
+          "permissions" : {
+            "$ref" : "#/components/schemas/apicorrespondentsid_permissions"
+          },
+          "notes" : {
+            "type" : "array",
+            "items" : { }
+          },
+          "set_permissions" : {
+            "$ref" : "#/components/schemas/apicorrespondentsid_permissions"
+          }
+        }
+      },
+      "inline_response_200_4" : {
+        "required" : [ "added", "archive_serial_number", "archived_file_name", "content", "correspondent", "created", "created_date", "document_type", "id", "modified", "notes", "original_file_name", "owner", "storage_path", "tags", "title", "user_can_change" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "correspondent" : {
+            "type" : "integer"
+          },
+          "document_type" : {
+            "type" : "integer"
+          },
+          "storage_path" : {
+            "type" : "integer"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "content" : {
+            "type" : "string"
+          },
+          "tags" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer"
+            }
+          },
+          "created" : {
+            "type" : "string"
+          },
+          "created_date" : {
+            "type" : "string"
+          },
+          "modified" : {
+            "type" : "string"
+          },
+          "added" : {
+            "type" : "string"
+          },
+          "archive_serial_number" : {
+            "type" : "integer"
+          },
+          "original_file_name" : {
+            "type" : "string"
+          },
+          "archived_file_name" : {
+            "type" : "string"
+          },
+          "owner" : {
+            "type" : "integer"
+          },
+          "user_can_change" : {
+            "type" : "boolean"
+          },
+          "notes" : {
+            "type" : "array",
+            "items" : { }
+          }
+        },
+        "example" : {
+          "owner" : 7,
+          "user_can_change" : true,
+          "archive_serial_number" : 2,
+          "notes" : [ "", "" ],
+          "added" : "added",
+          "created" : "created",
+          "title" : "title",
+          "content" : "content",
+          "tags" : [ 5, 5 ],
+          "storage_path" : 5,
+          "archived_file_name" : "archived_file_name",
+          "modified" : "modified",
+          "correspondent" : 6,
+          "original_file_name" : "original_file_name",
+          "id" : 0,
+          "created_date" : "created_date",
+          "document_type" : 1
+        }
+      },
+      "documents_upload_body" : {
+        "type" : "object",
+        "properties" : {
+          "title" : {
+            "type" : "string"
+          },
+          "created" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "document_type" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "tags" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          },
+          "correspondent" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "document" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "format" : "binary"
+            }
+          }
+        }
+      },
+      "inline_response_200_5" : {
+        "required" : [ "archive_checksum", "archive_media_filename", "archive_metadata", "archive_size", "has_archive_version", "lang", "media_filename", "original_checksum", "original_filename", "original_metadata", "original_mime_type", "original_size" ],
+        "type" : "object",
+        "properties" : {
+          "original_checksum" : {
+            "type" : "string"
+          },
+          "original_size" : {
+            "type" : "integer"
+          },
+          "original_mime_type" : {
+            "type" : "string"
+          },
+          "media_filename" : {
+            "type" : "string"
+          },
+          "has_archive_version" : {
+            "type" : "boolean"
+          },
+          "original_metadata" : {
+            "type" : "array",
+            "items" : { }
+          },
+          "archive_checksum" : {
+            "type" : "string"
+          },
+          "archive_media_filename" : {
+            "type" : "string"
+          },
+          "original_filename" : {
+            "type" : "string"
+          },
+          "lang" : {
+            "type" : "string"
+          },
+          "archive_size" : {
+            "type" : "integer"
+          },
+          "archive_metadata" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/inline_response_200_5_archive_metadata"
+            }
+          }
+        },
+        "example" : {
+          "archive_size" : 6,
+          "archive_metadata" : [ {
+            "prefix" : "prefix",
+            "namespace" : "namespace",
+            "value" : "value",
+            "key" : "key"
+          }, {
+            "prefix" : "prefix",
+            "namespace" : "namespace",
+            "value" : "value",
+            "key" : "key"
+          } ],
+          "original_metadata" : [ "", "" ],
+          "original_filename" : "original_filename",
+          "original_mime_type" : "original_mime_type",
+          "archive_checksum" : "archive_checksum",
+          "original_checksum" : "original_checksum",
+          "lang" : "lang",
+          "media_filename" : "media_filename",
+          "has_archive_version" : true,
+          "archive_media_filename" : "archive_media_filename",
+          "original_size" : 0
+        }
+      },
+      "inline_response_200_6" : {
+        "required" : [ "all", "count", "next", "previous", "results" ],
+        "type" : "object",
+        "properties" : {
+          "count" : {
+            "type" : "integer"
+          },
+          "next" : {
+            "type" : "integer"
+          },
+          "previous" : {
+            "type" : "integer"
+          },
+          "all" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer"
+            }
+          },
+          "results" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/inline_response_200_6_results"
+            }
+          }
+        },
+        "example" : {
+          "next" : 6,
+          "all" : [ 5, 5 ],
+          "previous" : 1,
+          "count" : 0,
+          "results" : [ {
+            "owner" : 9,
+            "matching_algorithm" : 2,
+            "document_count" : 7,
+            "is_insensitive" : true,
+            "permissions" : {
+              "view" : {
+                "groups" : [ "", "" ],
+                "users" : [ "", "" ]
+              },
+              "change" : null
+            },
+            "name" : "name",
+            "match" : "match",
+            "id" : 5,
+            "slug" : "slug"
+          }, {
+            "owner" : 9,
+            "matching_algorithm" : 2,
+            "document_count" : 7,
+            "is_insensitive" : true,
+            "permissions" : {
+              "view" : {
+                "groups" : [ "", "" ],
+                "users" : [ "", "" ]
+              },
+              "change" : null
+            },
+            "name" : "name",
+            "match" : "match",
+            "id" : 5,
+            "slug" : "slug"
+          } ]
+        }
+      },
+      "api_document_types_body" : {
+        "required" : [ "is_insensitive", "match", "matching_algorithm", "name", "owner" ],
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "matching_algorithm" : {
+            "type" : "integer"
+          },
+          "match" : {
+            "type" : "string"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "owner" : {
+            "type" : "integer"
+          }
+        }
+      },
+      "inline_response_200_7" : {
+        "required" : [ "id", "is_insensitive", "match", "matching_algorithm", "name", "owner", "slug", "user_can_change" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "slug" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "match" : {
+            "type" : "string"
+          },
+          "matching_algorithm" : {
+            "type" : "integer"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "owner" : {
+            "type" : "integer"
+          },
+          "user_can_change" : {
+            "type" : "boolean"
+          }
+        },
+        "example" : {
+          "owner" : 1,
+          "matching_algorithm" : 6,
+          "user_can_change" : true,
+          "is_insensitive" : true,
+          "name" : "name",
+          "match" : "match",
+          "id" : 0,
+          "slug" : "slug"
+        }
+      },
+      "document_types_id_body" : {
+        "required" : [ "document_count", "id", "is_insensitive", "match", "matching_algorithm", "name", "owner", "permissions", "permissions_form", "set_permissions", "slug" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "slug" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "match" : {
+            "type" : "string"
+          },
+          "matching_algorithm" : {
+            "type" : "integer"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "document_count" : {
+            "type" : "integer"
+          },
+          "owner" : {
+            "type" : "integer"
+          },
+          "permissions" : {
+            "$ref" : "#/components/schemas/apicorrespondentsid_permissions"
+          },
+          "set_permissions" : {
+            "$ref" : "#/components/schemas/apicorrespondentsid_permissions"
+          },
+          "permissions_form" : {
+            "$ref" : "#/components/schemas/apicorrespondentsid_permissions_form"
+          }
+        }
+      },
+      "inline_response_200_8" : {
+        "required" : [ "document_count", "id", "is_insensitive", "match", "matching_algorithm", "name", "owner", "slug", "user_can_change" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "slug" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "match" : {
+            "type" : "string"
+          },
+          "matching_algorithm" : {
+            "type" : "integer"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "document_count" : {
+            "type" : "integer"
+          },
+          "owner" : {
+            "type" : "integer"
+          },
+          "user_can_change" : {
+            "type" : "boolean"
+          }
+        },
+        "example" : {
+          "owner" : 5,
+          "matching_algorithm" : 6,
+          "user_can_change" : true,
+          "document_count" : 1,
+          "is_insensitive" : true,
+          "name" : "name",
+          "match" : "match",
+          "id" : 0,
+          "slug" : "slug"
+        }
+      },
+      "inline_response_200_9" : {
+        "required" : [ "all", "count", "next", "previous", "results" ],
+        "type" : "object",
+        "properties" : {
+          "count" : {
+            "type" : "integer"
+          },
+          "next" : {
+            "type" : "integer"
+          },
+          "previous" : {
+            "type" : "integer"
+          },
+          "all" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer"
+            }
+          },
+          "results" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/inline_response_200_9_results"
+            }
+          }
+        },
+        "example" : {
+          "next" : 6,
+          "all" : [ 5, 5 ],
+          "previous" : 1,
+          "count" : 0,
+          "results" : [ {
+            "owner" : 9,
+            "matching_algorithm" : 2,
+            "document_count" : 7,
+            "color" : "color",
+            "is_insensitive" : true,
+            "permissions" : {
+              "view" : {
+                "groups" : [ "", "" ],
+                "users" : [ "", "" ]
+              },
+              "change" : null
+            },
+            "name" : "name",
+            "match" : "match",
+            "id" : 5,
+            "text_color" : "text_color",
+            "is_inbox_tag" : true,
+            "slug" : "slug"
+          }, {
+            "owner" : 9,
+            "matching_algorithm" : 2,
+            "document_count" : 7,
+            "color" : "color",
+            "is_insensitive" : true,
+            "permissions" : {
+              "view" : {
+                "groups" : [ "", "" ],
+                "users" : [ "", "" ]
+              },
+              "change" : null
+            },
+            "name" : "name",
+            "match" : "match",
+            "id" : 5,
+            "text_color" : "text_color",
+            "is_inbox_tag" : true,
+            "slug" : "slug"
+          } ]
+        }
+      },
+      "api_tags_body" : {
+        "required" : [ "color", "is_inbox_tag", "is_insensitive", "match", "matching_algorithm", "name", "owner" ],
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "color" : {
+            "type" : "string"
+          },
+          "is_inbox_tag" : {
+            "type" : "boolean"
+          },
+          "matching_algorithm" : {
+            "type" : "integer"
+          },
+          "match" : {
+            "type" : "string"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "owner" : {
+            "type" : "integer"
+          }
+        }
+      },
+      "inline_response_200_10" : {
+        "required" : [ "color", "id", "is_inbox_tag", "is_insensitive", "match", "matching_algorithm", "name", "owner", "slug", "text_color", "user_can_change" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "slug" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "color" : {
+            "type" : "string"
+          },
+          "text_color" : {
+            "type" : "string"
+          },
+          "match" : {
+            "type" : "string"
+          },
+          "matching_algorithm" : {
+            "type" : "integer"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "is_inbox_tag" : {
+            "type" : "boolean"
+          },
+          "owner" : {
+            "type" : "integer"
+          },
+          "user_can_change" : {
+            "type" : "boolean"
+          }
+        },
+        "example" : {
+          "owner" : 1,
+          "matching_algorithm" : 6,
+          "user_can_change" : true,
+          "color" : "color",
+          "is_insensitive" : true,
+          "name" : "name",
+          "match" : "match",
+          "id" : 0,
+          "text_color" : "text_color",
+          "is_inbox_tag" : true,
+          "slug" : "slug"
+        }
+      },
+      "tags_id_body" : {
+        "required" : [ "color", "document_count", "id", "is_inbox_tag", "is_insensitive", "match", "matching_algorithm", "name", "owner", "permissions", "permissions_form", "set_permissions", "slug", "text_color" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "slug" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "color" : {
+            "type" : "string"
+          },
+          "text_color" : {
+            "type" : "string"
+          },
+          "match" : {
+            "type" : "string"
+          },
+          "matching_algorithm" : {
+            "type" : "integer"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "is_inbox_tag" : {
+            "type" : "boolean"
+          },
+          "document_count" : {
+            "type" : "integer"
+          },
+          "owner" : {
+            "type" : "integer"
+          },
+          "permissions" : {
+            "$ref" : "#/components/schemas/apicorrespondentsid_permissions"
+          },
+          "set_permissions" : {
+            "$ref" : "#/components/schemas/apicorrespondentsid_permissions"
+          },
+          "permissions_form" : {
+            "$ref" : "#/components/schemas/apicorrespondentsid_permissions_form"
+          }
+        }
+      },
+      "inline_response_200_11" : {
+        "required" : [ "color", "document_count", "id", "is_inbox_tag", "is_insensitive", "match", "matching_algorithm", "name", "owner", "slug", "text_color", "user_can_change" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "slug" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "color" : {
+            "type" : "string"
+          },
+          "text_color" : {
+            "type" : "string"
+          },
+          "match" : {
+            "type" : "string"
+          },
+          "matching_algorithm" : {
+            "type" : "integer"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "is_inbox_tag" : {
+            "type" : "boolean"
+          },
+          "document_count" : {
+            "type" : "integer"
+          },
+          "owner" : {
+            "type" : "integer"
+          },
+          "user_can_change" : {
+            "type" : "boolean"
+          }
+        },
+        "example" : {
+          "owner" : 5,
+          "matching_algorithm" : 6,
+          "user_can_change" : true,
+          "document_count" : 1,
+          "color" : "color",
+          "is_insensitive" : true,
+          "name" : "name",
+          "match" : "match",
+          "id" : 0,
+          "text_color" : "text_color",
+          "is_inbox_tag" : true,
+          "slug" : "slug"
+        }
+      },
+      "inline_response_200_results" : {
+        "required" : [ "document_count", "id", "is_insensitive", "last_correspondence", "match", "matching_algorithm", "name", "owner", "permissions", "slug" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "slug" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "match" : {
+            "type" : "string"
+          },
+          "matching_algorithm" : {
+            "type" : "integer"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "document_count" : {
+            "type" : "integer"
+          },
+          "last_correspondence" : {
+            "type" : "string"
+          },
+          "owner" : {
+            "type" : "integer"
+          },
+          "permissions" : {
+            "$ref" : "#/components/schemas/apicorrespondentsid_permissions"
+          }
+        },
+        "example" : {
+          "owner" : 9,
+          "matching_algorithm" : 2,
+          "document_count" : 7,
+          "is_insensitive" : true,
+          "permissions" : {
+            "view" : {
+              "groups" : [ "", "" ],
+              "users" : [ "", "" ]
+            },
+            "change" : null
+          },
+          "name" : "name",
+          "match" : "match",
+          "id" : 5,
+          "last_correspondence" : "last_correspondence",
+          "slug" : "slug"
+        }
+      },
+      "inline_response_200_2_notes" : {
+        "required" : [ "created", "document", "id", "note", "user" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "note" : {
+            "type" : "string"
+          },
+          "created" : {
+            "type" : "string"
+          },
+          "document" : {
+            "type" : "integer"
+          },
+          "user" : {
+            "type" : "integer"
+          }
+        },
+        "example" : {
+          "note" : "note",
+          "created" : "created",
+          "document" : 1,
+          "id" : 7,
+          "user" : 1
+        }
+      },
+      "inline_response_200_2_results" : {
+        "required" : [ "added", "archive_serial_number", "archived_file_name", "content", "correspondent", "created", "created_date", "document_type", "id", "modified", "notes", "original_file_name", "owner", "storage_path", "tags", "title", "user_can_change" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "correspondent" : {
+            "type" : "integer"
+          },
+          "document_type" : {
+            "type" : "integer"
+          },
+          "storage_path" : {
+            "type" : "integer"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "content" : {
+            "type" : "string"
+          },
+          "tags" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer"
+            }
+          },
+          "created" : {
+            "type" : "string"
+          },
+          "created_date" : {
+            "type" : "string"
+          },
+          "modified" : {
+            "type" : "string"
+          },
+          "added" : {
+            "type" : "string"
+          },
+          "archive_serial_number" : {
+            "type" : "integer"
+          },
+          "original_file_name" : {
+            "type" : "string"
+          },
+          "archived_file_name" : {
+            "type" : "string"
+          },
+          "owner" : {
+            "type" : "integer"
+          },
+          "user_can_change" : {
+            "type" : "boolean"
+          },
+          "notes" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/inline_response_200_2_notes"
+            }
+          }
+        },
+        "example" : {
+          "owner" : 4,
+          "user_can_change" : true,
+          "archive_serial_number" : 2,
+          "notes" : [ {
+            "note" : "note",
+            "created" : "created",
+            "document" : 1,
+            "id" : 7,
+            "user" : 1
+          }, {
+            "note" : "note",
+            "created" : "created",
+            "document" : 1,
+            "id" : 7,
+            "user" : 1
+          } ],
+          "added" : "added",
+          "created" : "created",
+          "title" : "title",
+          "content" : "content",
+          "tags" : [ 3, 3 ],
+          "storage_path" : 9,
+          "archived_file_name" : "archived_file_name",
+          "modified" : "modified",
+          "correspondent" : 2,
+          "original_file_name" : "original_file_name",
+          "id" : 5,
+          "created_date" : "created_date",
+          "document_type" : 7
+        }
+      },
+      "inline_response_200_3_permissions_view" : {
+        "required" : [ "groups", "users" ],
+        "type" : "object",
+        "properties" : {
+          "users" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer"
+            }
+          },
+          "groups" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer"
+            }
+          }
+        },
+        "example" : {
+          "groups" : [ 3, 3 ],
+          "users" : [ 9, 9 ]
+        }
+      },
+      "inline_response_200_3_permissions" : {
+        "required" : [ "change", "view" ],
+        "type" : "object",
+        "properties" : {
+          "view" : {
+            "$ref" : "#/components/schemas/inline_response_200_3_permissions_view"
+          },
+          "change" : {
+            "$ref" : "#/components/schemas/inline_response_200_3_permissions_view"
+          }
+        },
+        "example" : {
+          "view" : {
+            "groups" : [ 3, 3 ],
+            "users" : [ 9, 9 ]
+          },
+          "change" : null
+        }
+      },
+      "inline_response_200_5_archive_metadata" : {
+        "required" : [ "key", "namespace", "prefix", "value" ],
+        "type" : "object",
+        "properties" : {
+          "namespace" : {
+            "type" : "string"
+          },
+          "prefix" : {
+            "type" : "string"
+          },
+          "key" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
+          }
+        },
+        "example" : {
+          "prefix" : "prefix",
+          "namespace" : "namespace",
+          "value" : "value",
+          "key" : "key"
+        }
+      },
+      "inline_response_200_6_results" : {
+        "required" : [ "document_count", "id", "is_insensitive", "match", "matching_algorithm", "name", "owner", "permissions", "slug" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "slug" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "match" : {
+            "type" : "string"
+          },
+          "matching_algorithm" : {
+            "type" : "integer"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "document_count" : {
+            "type" : "integer"
+          },
+          "owner" : {
+            "type" : "integer"
+          },
+          "permissions" : {
+            "$ref" : "#/components/schemas/apicorrespondentsid_permissions"
+          }
+        },
+        "example" : {
+          "owner" : 9,
+          "matching_algorithm" : 2,
+          "document_count" : 7,
+          "is_insensitive" : true,
+          "permissions" : {
+            "view" : {
+              "groups" : [ "", "" ],
+              "users" : [ "", "" ]
+            },
+            "change" : null
+          },
+          "name" : "name",
+          "match" : "match",
+          "id" : 5,
+          "slug" : "slug"
+        }
+      },
+      "inline_response_200_9_results" : {
+        "required" : [ "color", "document_count", "id", "is_inbox_tag", "is_insensitive", "match", "matching_algorithm", "name", "owner", "permissions", "slug", "text_color" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "slug" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "color" : {
+            "type" : "string"
+          },
+          "text_color" : {
+            "type" : "string"
+          },
+          "match" : {
+            "type" : "string"
+          },
+          "matching_algorithm" : {
+            "type" : "integer"
+          },
+          "is_insensitive" : {
+            "type" : "boolean"
+          },
+          "is_inbox_tag" : {
+            "type" : "boolean"
+          },
+          "document_count" : {
+            "type" : "integer"
+          },
+          "owner" : {
+            "type" : "integer"
+          },
+          "permissions" : {
+            "$ref" : "#/components/schemas/apicorrespondentsid_permissions"
+          }
+        },
+        "example" : {
+          "owner" : 9,
+          "matching_algorithm" : 2,
+          "document_count" : 7,
+          "color" : "color",
+          "is_insensitive" : true,
+          "permissions" : {
+            "view" : {
+              "groups" : [ "", "" ],
+              "users" : [ "", "" ]
+            },
+            "change" : null
+          },
+          "name" : "name",
+          "match" : "match",
+          "id" : 5,
+          "text_color" : "text_color",
+          "is_inbox_tag" : true,
+          "slug" : "slug"
+        }
+      }
+    }
+  }
+}
