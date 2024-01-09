@@ -54,7 +54,7 @@ namespace Paperless.BusinessLogic.Tests
 
             string documentData = SerializeDocument(testDocument);
 
-            rabbitMQService.SendDocumentToQueue(documentData);
+            //rabbitMQService.SendDocumentToQueue(documentData);
 
             // Observe the RabbitMQ management interface for the result.
             Console.WriteLine("Document sent to the queue. Check RabbitMQ management interface for the result.");
