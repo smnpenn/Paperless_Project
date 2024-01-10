@@ -18,12 +18,36 @@ namespace Paperless.BusinessLogic
             _queueName = queueName;
 		}
 
+        public Document RetrieveOCRJob()
+        {
+            using (var connection = _connectionFactory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                channel.QueueDeclare(queue: _queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
+
+                BasicGetResult result = channel.BasicGet(_queueName, autoAck: true);
+                if(result != null)
+                {
+                    var body = result.Body.ToArray();
+                    var documentData = Encoding.UTF8.GetString(body);
+                    var document = JsonConvert.DeserializeObject<Document>(documentData);
+                    Console.WriteLine("Retrieved document from queue");
+                    return document;
+                }
+                else
+                {
+                    Console.WriteLine("No document found in queue");
+                    return null;
+                }
+            }
+        }
+
         public void SendDocumentToQueue(Document document)
         {
             using (var connection = _connectionFactory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: _queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+                channel.QueueDeclare(queue: _queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
 
                 var documentData = JsonConvert.SerializeObject(document);
                 var body = Encoding.UTF8.GetBytes(documentData);
