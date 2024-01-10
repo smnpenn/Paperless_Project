@@ -57,7 +57,7 @@ namespace IO.Swagger.Controllers
         [HttpPost]
         [Route("/api/documents")]
         [ValidateModelState]
-        [SwaggerOperation("UpdateDocument")]
+        [SwaggerOperation("UploadDocument")]
         public virtual IActionResult UpdateDocument([FromBody]Document body)
         {
             int res = documentLogic.SaveDocument(_mapper.Map<Paperless.BusinessLogic.Entities.Document>(body));

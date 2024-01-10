@@ -30,7 +30,7 @@ public class Worker : BackgroundService
 
                 if(ocrJob != null)
                 {
-                    var documentStream = await _minIOServiceAgent.GetDocument(ocrJob.OriginalFileName);
+                    var documentStream = await _minIOServiceAgent.GetDocument(Path.GetFileName(ocrJob.Path));
                     if(documentStream != null)
                     {
                         try

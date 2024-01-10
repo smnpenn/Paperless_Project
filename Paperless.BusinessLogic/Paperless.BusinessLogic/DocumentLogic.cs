@@ -35,8 +35,8 @@ namespace Paperless.BusinessLogic
             string fileName = Path.GetFileNameWithoutExtension(document.Path);
 
             _minIOService.UploadDocument(document.Path, fileName);
-            _repo.Create(_mapper.Map<DAL.Entities.Document>(document));
-            _rabbitMQService.SendDocumentToQueue(document);
+            Document doc = _mapper.Map<Document>(_repo.Create(_mapper.Map<DAL.Entities.Document>(document)));
+            _rabbitMQService.SendDocumentToQueue(doc);
 
             return 0;
         }
@@ -55,11 +55,12 @@ namespace Paperless.BusinessLogic
 
             if (!File.Exists(newDoc.Path))
                 return -1;
+
             string fileName = Path.GetFileNameWithoutExtension(newDoc.Path);
 
-            _repo.Update(id, _mapper.Map<DAL.Entities.Document>(newDoc));
-            _minIOService.UploadDocument(newDoc.Path, fileName);
-            _rabbitMQService.SendDocumentToQueue(newDoc);
+            Document updatedDoc = _mapper.Map<Document>(_repo.Update(id, _mapper.Map<DAL.Entities.Document>(newDoc)));
+            _minIOService.UploadDocument(updatedDoc.Path, fileName);
+            _rabbitMQService.SendDocumentToQueue(updatedDoc);
             return 0;
         }
 
@@ -91,23 +92,6 @@ namespace Paperless.BusinessLogic
             string metadata = doc.Title + "\n" + "Tags: " + doc.Tags;
 
             return metadata;
-        }
-
-        public void PublishOCRJob(Document document)
-        {
-            ValidateDocument(document);
-            _rabbitMQService.SendDocumentToQueue(document);
-        }
-
-        private void ValidateDocument(Document document)
-        {
-            var validationResult = _documentValidator.Validate(document);
-
-            if (!validationResult.IsValid)
-            {
-                var validationErrors = string.Join(", ", validationResult.Errors.Select(error => error.ErrorMessage));
-                throw new ArgumentException($"Document validation failed: {validationErrors}");
-            }
         }
 
         public int DeleteDocument(long id)

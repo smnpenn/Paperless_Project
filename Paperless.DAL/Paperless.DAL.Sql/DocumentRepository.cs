@@ -37,9 +37,11 @@ namespace Paperless.DAL.Sql
             SaveChanges();
         }
 
-        public void Create(Document entity)
+        public Document Create(Document entity)
         {
             Documents.Add(entity);
+            SaveChanges();
+            return entity;
         }
 
         public int DeleteDocument(Int64 id)
@@ -65,7 +67,7 @@ namespace Paperless.DAL.Sql
             return Documents.ToList();
         }
 
-        public int Update(Int64 id, Document entity)
+        public Document? Update(Int64 id, Document entity)
         {
             Document? doc = GetDocumentById(id);
             if (doc != null)
@@ -74,9 +76,9 @@ namespace Paperless.DAL.Sql
                 Documents.Remove(doc);
                 Documents.Add(entity);
                 SaveChanges();
-                return 0;
+                return entity;
             }
-            return -1;
+            return null;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

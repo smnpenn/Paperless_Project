@@ -23,7 +23,7 @@ namespace Paperless.BusinessLogic
             using (var connection = _connectionFactory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: _queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
+                channel.QueueDeclare(queue: _queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
 
                 BasicGetResult result = channel.BasicGet(_queueName, autoAck: true);
                 if(result != null)
@@ -47,7 +47,7 @@ namespace Paperless.BusinessLogic
             using (var connection = _connectionFactory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: _queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
+                channel.QueueDeclare(queue: _queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
 
                 var documentData = JsonConvert.SerializeObject(document);
                 var body = Encoding.UTF8.GetBytes(documentData);

@@ -29,11 +29,8 @@ namespace Paperless.BusinessLogic.Tests
                 Title = "Sample Document",
                 Content = "This is a sample content",
                 Created = DateTime.Now,
-                CreatedDate = DateTime.Now,
                 Modified = DateTime.Now,
-                Added = DateTime.Now,
-                OriginalFileName = "sample.txt",
-                ArchivedFileName = "archived_sample.txt"
+                Added = DateTime.Now
             };
 
             string testQueueName = "TestQueue";
