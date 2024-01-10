@@ -22,8 +22,8 @@ namespace Paperless.ServiceAgents.Tests
             .BuildServiceProvider();
 
             var minIOService = serviceProvider.GetService<MinIOServiceAgent>();
-            string filePath = "./files/LoremIpsumDolor.pdf";
-            string fileName = "LoremIpsum";
+            string filePath = "C:\\Users\\Simon\\source\\repos\\SWKOM\\Paperless_Project\\Swagger.RestService\\testFiles\\HelloWorld.pdf";
+            string fileName = "HelloWorld";
 
             await minIOService.UploadDocument(filePath, fileName);
 
@@ -43,8 +43,8 @@ namespace Paperless.ServiceAgents.Tests
             .BuildServiceProvider();
 
             var minIOService = serviceProvider.GetService<MinIOServiceAgent>();
-            string filePath = "./files/LoremIpsumDolor.pdf";
-            string fileName = "LoremIpsum";
+            string filePath = "./files/HelloWorld.pdf";
+            string fileName = "HelloWorld";
             string objectName = fileName + ".pdf";
             await minIOService.UploadDocument(filePath, fileName);
 

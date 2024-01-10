@@ -48,13 +48,6 @@ namespace IO.Swagger.Models
         public int? DocumentType { get; set; }
 
         /// <summary>
-        /// Gets or Sets StoragePath
-        /// </summary>
-
-        [DataMember(Name="storage_path")]
-        public int? StoragePath { get; set; }
-
-        /// <summary>
         /// Gets or Sets Title
         /// </summary>
 
@@ -83,13 +76,6 @@ namespace IO.Swagger.Models
         public DateTime? Created { get; set; }
 
         /// <summary>
-        /// Gets or Sets CreatedDate
-        /// </summary>
-
-        [DataMember(Name="created_date")]
-        public DateTime? CreatedDate { get; set; }
-
-        /// <summary>
         /// Gets or Sets Modified
         /// </summary>
 
@@ -103,26 +89,9 @@ namespace IO.Swagger.Models
         [DataMember(Name="added")]
         public DateTime? Added { get; set; }
 
-        /// <summary>
-        /// Gets or Sets ArchiveSerialNumber
-        /// </summary>
+        [DataMember(Name ="path")]
+        public  string Path { get; set; }
 
-        [DataMember(Name="archive_serial_number")]
-        public string ArchiveSerialNumber { get; set; }
-
-        /// <summary>
-        /// Gets or Sets OriginalFileName
-        /// </summary>
-
-        [DataMember(Name="original_file_name")]
-        public string OriginalFileName { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ArchivedFileName
-        /// </summary>
-
-        [DataMember(Name="archived_file_name")]
-        public string ArchivedFileName { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -135,17 +104,13 @@ namespace IO.Swagger.Models
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  Correspondent: ").Append(Correspondent).Append("\n");
             sb.Append("  DocumentType: ").Append(DocumentType).Append("\n");
-            sb.Append("  StoragePath: ").Append(StoragePath).Append("\n");
             sb.Append("  Title: ").Append(Title).Append("\n");
             sb.Append("  Content: ").Append(Content).Append("\n");
             sb.Append("  Tags: ").Append(Tags).Append("\n");
             sb.Append("  Created: ").Append(Created).Append("\n");
-            sb.Append("  CreatedDate: ").Append(CreatedDate).Append("\n");
             sb.Append("  Modified: ").Append(Modified).Append("\n");
             sb.Append("  Added: ").Append(Added).Append("\n");
-            sb.Append("  ArchiveSerialNumber: ").Append(ArchiveSerialNumber).Append("\n");
-            sb.Append("  OriginalFileName: ").Append(OriginalFileName).Append("\n");
-            sb.Append("  ArchivedFileName: ").Append(ArchivedFileName).Append("\n");
+            sb.Append("  Path: ").Append(Path).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -198,11 +163,6 @@ namespace IO.Swagger.Models
                     DocumentType.Equals(other.DocumentType)
                 ) && 
                 (
-                    StoragePath == other.StoragePath ||
-                    StoragePath != null &&
-                    StoragePath.Equals(other.StoragePath)
-                ) && 
-                (
                     Title == other.Title ||
                     Title != null &&
                     Title.Equals(other.Title)
@@ -223,11 +183,6 @@ namespace IO.Swagger.Models
                     Created.Equals(other.Created)
                 ) && 
                 (
-                    CreatedDate == other.CreatedDate ||
-                    CreatedDate != null &&
-                    CreatedDate.Equals(other.CreatedDate)
-                ) && 
-                (
                     Modified == other.Modified ||
                     Modified != null &&
                     Modified.Equals(other.Modified)
@@ -236,21 +191,11 @@ namespace IO.Swagger.Models
                     Added == other.Added ||
                     Added != null &&
                     Added.Equals(other.Added)
-                ) && 
+                ) &&
                 (
-                    ArchiveSerialNumber == other.ArchiveSerialNumber ||
-                    ArchiveSerialNumber != null &&
-                    ArchiveSerialNumber.Equals(other.ArchiveSerialNumber)
-                ) && 
-                (
-                    OriginalFileName == other.OriginalFileName ||
-                    OriginalFileName != null &&
-                    OriginalFileName.Equals(other.OriginalFileName)
-                ) && 
-                (
-                    ArchivedFileName == other.ArchivedFileName ||
-                    ArchivedFileName != null &&
-                    ArchivedFileName.Equals(other.ArchivedFileName)
+                    Path == other.Path ||
+                    Path != null &&
+                    Path.Equals(other.Path)
                 );
         }
 
@@ -270,8 +215,6 @@ namespace IO.Swagger.Models
                     hashCode = hashCode * 59 + Correspondent.GetHashCode();
                     if (DocumentType != null)
                     hashCode = hashCode * 59 + DocumentType.GetHashCode();
-                    if (StoragePath != null)
-                    hashCode = hashCode * 59 + StoragePath.GetHashCode();
                     if (Title != null)
                     hashCode = hashCode * 59 + Title.GetHashCode();
                     if (Content != null)
@@ -280,18 +223,10 @@ namespace IO.Swagger.Models
                     hashCode = hashCode * 59 + Tags.GetHashCode();
                     if (Created != null)
                     hashCode = hashCode * 59 + Created.GetHashCode();
-                    if (CreatedDate != null)
-                    hashCode = hashCode * 59 + CreatedDate.GetHashCode();
                     if (Modified != null)
                     hashCode = hashCode * 59 + Modified.GetHashCode();
                     if (Added != null)
                     hashCode = hashCode * 59 + Added.GetHashCode();
-                    if (ArchiveSerialNumber != null)
-                    hashCode = hashCode * 59 + ArchiveSerialNumber.GetHashCode();
-                    if (OriginalFileName != null)
-                    hashCode = hashCode * 59 + OriginalFileName.GetHashCode();
-                    if (ArchivedFileName != null)
-                    hashCode = hashCode * 59 + ArchivedFileName.GetHashCode();
                 return hashCode;
             }
         }

@@ -4,9 +4,10 @@ namespace Paperless.DAL.Interfaces
 {
     public interface IDocumentRepository
     {
-        Document GetDocumentById(Int64 id);
+        List<Document> GetDocuments();
+        Document? GetDocumentById(Int64 id);
         public void Create(Document entity);
-        public void Update(Document entity);
-        public void Delete(Document entity);
+        public int Update(Int64 id, Document entity);
+        public int DeleteDocument(Int64 id);
     }
 }
