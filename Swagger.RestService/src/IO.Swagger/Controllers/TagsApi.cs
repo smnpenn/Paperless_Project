@@ -18,6 +18,8 @@ using IO.Swagger.Attributes;
 
 using Microsoft.AspNetCore.Authorization;
 using IO.Swagger.Models;
+using Paperless.BusinessLogic.Interfaces;
+using AutoMapper;
 
 namespace IO.Swagger.Controllers
 { 
@@ -26,7 +28,16 @@ namespace IO.Swagger.Controllers
     /// </summary>
     [ApiController]
     public class TagsApiController : ControllerBase
-    { 
+    {
+        IDocTagLogic _docTagLogic;
+        IMapper _mapper;
+
+        public TagsApiController(IDocTagLogic docTagLogic, IMapper mapper)
+        {
+            _docTagLogic = docTagLogic;
+            _mapper = mapper;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -38,16 +49,22 @@ namespace IO.Swagger.Controllers
         [SwaggerOperation("CreateTag")]
         [SwaggerResponse(statusCode: 200, type: typeof(void), description: "Success")]
         public virtual IActionResult CreateTag([FromBody]ApiTagsBody body)
-        { 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(InlineResponse20017));
-            string exampleJson = null;
-            exampleJson = "{\n  \"owner\" : 1,\n  \"matching_algorithm\" : 6,\n  \"user_can_change\" : true,\n  \"color\" : \"color\",\n  \"is_insensitive\" : true,\n  \"name\" : \"name\",\n  \"match\" : \"match\",\n  \"id\" : 0,\n  \"text_color\" : \"text_color\",\n  \"is_inbox_tag\" : true,\n  \"slug\" : \"slug\"\n}";
-            
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<InlineResponse20017>(exampleJson)
-                        : default(InlineResponse20017);            //TODO: Change the data returned
-            return new ObjectResult(example);
+        {
+            var newTag = new DocTag
+            {
+                Name = body.Name,
+                Color = body.Color,
+                IsInboxTag = body.IsInboxTag,
+                MatchingAlgorithm = body.MatchingAlgorithm,
+                Match = body.Match,
+                IsInsensitive = body.IsInsensitive,
+            };
+
+            return Ok(
+                _docTagLogic.CreateDocTag(
+                    _mapper.Map<
+                        DocTag,
+                        Paperless.BusinessLogic.Entities.DocTag>(newTag)));
         }
 
         /// <summary>
@@ -59,12 +76,10 @@ namespace IO.Swagger.Controllers
         [Route("/api/tags/{id}")]
         [ValidateModelState]
         [SwaggerOperation("DeleteTag")]
-        public virtual IActionResult DeleteTag([FromRoute][Required]int? id)
-        { 
-            //TODO: Uncomment the next line to return response 204 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(204);
-
-            throw new NotImplementedException();
+        public virtual IActionResult DeleteTag([FromRoute][Required]long id)
+        {
+            _docTagLogic.DeleteDocTag(id);
+            return Ok();
         }
 
         /// <summary>
@@ -79,16 +94,11 @@ namespace IO.Swagger.Controllers
         [SwaggerOperation("GetTags")]
         [SwaggerResponse(statusCode: 200, type: typeof(InlineResponse20016), description: "Success")]
         public virtual IActionResult GetTags([FromQuery]int? page, [FromQuery]bool? fullPerms)
-        { 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(InlineResponse20016));
-            string exampleJson = null;
-            exampleJson = "{\n  \"next\" : 6,\n  \"all\" : [ 5, 5 ],\n  \"previous\" : 1,\n  \"count\" : 0,\n  \"results\" : [ {\n    \"owner\" : 9,\n    \"matching_algorithm\" : 2,\n    \"document_count\" : 7,\n    \"color\" : \"color\",\n    \"is_insensitive\" : true,\n    \"permissions\" : {\n      \"view\" : {\n        \"groups\" : [ \"\", \"\" ],\n        \"users\" : [ \"\", \"\" ]\n      }\n    },\n    \"name\" : \"name\",\n    \"match\" : \"match\",\n    \"id\" : 5,\n    \"text_color\" : \"text_color\",\n    \"is_inbox_tag\" : true,\n    \"slug\" : \"slug\"\n  }, {\n    \"owner\" : 9,\n    \"matching_algorithm\" : 2,\n    \"document_count\" : 7,\n    \"color\" : \"color\",\n    \"is_insensitive\" : true,\n    \"permissions\" : {\n      \"view\" : {\n        \"groups\" : [ \"\", \"\" ],\n        \"users\" : [ \"\", \"\" ]\n      }\n    },\n    \"name\" : \"name\",\n    \"match\" : \"match\",\n    \"id\" : 5,\n    \"text_color\" : \"text_color\",\n    \"is_inbox_tag\" : true,\n    \"slug\" : \"slug\"\n  } ]\n}";
-            
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<InlineResponse20016>(exampleJson)
-                        : default(InlineResponse20016);            //TODO: Change the data returned
-            return new ObjectResult(example);
+        {
+            var result = _mapper.Map<
+                ICollection<Paperless.BusinessLogic.Entities.DocTag>,
+                ICollection<DocTag>>(_docTagLogic.GetDocTags());
+            return Ok(result);
         }
 
         /// <summary>

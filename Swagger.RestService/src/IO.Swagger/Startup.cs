@@ -89,12 +89,16 @@ namespace IO.Swagger
 
             //AppContext.SetSwitch("")
             correspondentRepo.PopulateWithSampleData();
-
+            
             services.AddSingleton<ICorrespondentRepository>(correspondentRepo);
+            services.AddSingleton<IDocTagRepository>(correspondentRepo);
 
             var documentRepo = new DocumentRepository(configuration, "TestDBContext");
             documentRepo.PopulateWithSampleData();
+
             services.AddSingleton<IDocumentRepository>(documentRepo);
+            
+            services.AddSingleton<IDocTagLogic, DocTagLogic>();
 
             // Add framework services.
             services
