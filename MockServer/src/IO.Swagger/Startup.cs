@@ -81,6 +81,8 @@ namespace IO.Swagger
             repo.PopulateWithSampleData();
 
             services.AddSingleton<ICorrespondentRepository>(repo);
+            services.AddSingleton<IDocTagRepository>(repo);
+            services.AddSingleton<IDocTagLogic, DocTagLogic>();
 
             // Add framework services.
             services

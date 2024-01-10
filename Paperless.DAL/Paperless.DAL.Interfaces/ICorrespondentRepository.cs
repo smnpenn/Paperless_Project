@@ -6,8 +6,8 @@ namespace Paperless.DAL.Interfaces
     {
         Correspondent GetCorrespondentById(Int64 id);
         ICollection<Correspondent> GetCorrespondents();
-        public void Create(Correspondent entity);
+        public long? Create(Correspondent entity);
         public void Update(Correspondent entity);
-        public void Delete(Correspondent entity);
+        public void Delete(Int64 id);
     }
 }

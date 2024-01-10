@@ -16,6 +16,16 @@ namespace Paperless.BusinessLogic
             _mapper = mapper;
         }
 
+        public long? CreateCorrespondent(Correspondent newCorrespondent)
+        {
+            return _repo.Create(_mapper.Map<DAL.Entities.Correspondent>(newCorrespondent));
+        }
+
+        public void DeleteCorrespondent(long id)
+        {
+            _repo.Delete(id);
+        }
+
         public Correspondent GetCorrespondent(long id)
         {
             return _mapper.Map<Correspondent>(_repo.GetCorrespondentById(id));

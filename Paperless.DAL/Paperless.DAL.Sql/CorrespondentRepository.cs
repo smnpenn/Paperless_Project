@@ -1,16 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Npgsql;
 using Paperless.DAL.Entities;
 using Paperless.DAL.Interfaces;
 
 namespace Paperless.DAL.Sql
 {
-    public class CorrespondentRepository : DbContext, ICorrespondentRepository
+    public class CorrespondentRepository : DbContext, ICorrespondentRepository, IDocTagRepository
     {
         readonly string _contextString;
         readonly IConfiguration _config;
 
         public DbSet<Correspondent> Correspondents { get; set; }
+        public DbSet<DocTag> DocTags { get; set; }
 
         public CorrespondentRepository(IConfiguration configuration, string contextString)
         {
@@ -36,14 +38,18 @@ namespace Paperless.DAL.Sql
             SaveChanges();
         }
 
-        public void Create(Correspondent entity)
+        public long? Create(Correspondent entity)
         {
-            throw new NotImplementedException();
+            Correspondents.Add(entity);
+            SaveChanges();
+            return entity.Id;
         }
 
-        public void Delete(Correspondent entity)
+        public void Delete(Int64 id)
         {
-            throw new NotImplementedException();
+            var temp = Correspondents.Find(id);
+            Correspondents.Remove(temp);
+            SaveChanges();
         }
 
         public Correspondent GetCorrespondentById(Int64 id)
@@ -69,6 +75,35 @@ namespace Paperless.DAL.Sql
         public ICollection<Correspondent> GetCorrespondents()
         {
             return Correspondents.ToArray();
+        }
+
+        public DocTag GetDocTagById(long id)
+        {
+            return DocTags.Find(id);
+        }
+
+        public Int64 Create(DocTag entity)
+        {
+            DocTags.Add(entity);
+            SaveChanges();
+            return entity.Id;
+        }
+
+        public void Update(DocTag entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(DocTag entity)
+        {
+            var temp = DocTags.Find(entity.Id);
+            DocTags.Remove(temp);
+            SaveChanges();
+        }
+
+        public ICollection<DocTag> GetDocTags()
+        {
+            return DocTags.ToArray();
         }
     }
 }

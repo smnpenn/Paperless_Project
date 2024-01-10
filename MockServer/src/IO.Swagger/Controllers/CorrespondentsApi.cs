@@ -55,16 +55,19 @@ namespace IO.Swagger.Controllers
         [SwaggerOperation("CreateCorrespondent")]
         [SwaggerResponse(statusCode: 200, type: typeof(ApiCorrespondentsBody), description: "Success")]
         public virtual IActionResult CreateCorrespondent([FromBody]ApiCorrespondentsBody body)
-        { 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(ApiCorrespondentsBody));
-            string exampleJson = null;
-            exampleJson = "{\n  \"owner\" : 6,\n  \"matching_algorithm\" : 0,\n  \"is_insensitive\" : true,\n  \"name\" : \"name\",\n  \"match\" : \"match\"\n}";
-            
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<ApiCorrespondentsBody>(exampleJson)
-                        : default(ApiCorrespondentsBody);            //TODO: Change the data returned
-            return new ObjectResult(example);
+        {
+            var newCorrespondent = new IO.Swagger.Models.Correspondent
+            {
+                Name = body.Name,
+                Match = body.Match,
+                MatchingAlgorithm = body.MatchingAlgorithm,
+                IsInsensitive = body.IsInsensitive,
+            };
+
+            return Ok(_correspondentLogic.CreateCorrespondent(
+                _mapper.Map<
+                    Correspondent,
+                    Paperless.BusinessLogic.Entities.Correspondent>(newCorrespondent)));
         }
 
         /// <summary>
@@ -76,12 +79,10 @@ namespace IO.Swagger.Controllers
         [Route("/api/correspondents/{id}")]
         [ValidateModelState]
         [SwaggerOperation("DeleteCorrespondent")]
-        public virtual IActionResult DeleteCorrespondent([FromRoute][Required]int? id)
-        { 
-            //TODO: Uncomment the next line to return response 204 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(204);
-
-            throw new NotImplementedException();
+        public virtual IActionResult DeleteCorrespondent([FromRoute][Required]long id)
+        {
+            _correspondentLogic.DeleteCorrespondent(id);
+            return Ok();
         }
 
         /// <summary>
@@ -129,8 +130,6 @@ namespace IO.Swagger.Controllers
         [SwaggerResponse(statusCode: 200, type: typeof(InlineResponse2001), description: "Success")]
         public virtual IActionResult UpdateCorrespondent([FromRoute][Required]int? id, [FromBody]CorrespondentsIdBody body)
         { 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(InlineResponse2001));
             string exampleJson = null;
             exampleJson = "{\n  \"owner\" : 5,\n  \"matching_algorithm\" : 6,\n  \"user_can_change\" : true,\n  \"document_count\" : 1,\n  \"is_insensitive\" : true,\n  \"name\" : \"name\",\n  \"match\" : \"match\",\n  \"id\" : 0,\n  \"last_correspondence\" : 5,\n  \"slug\" : \"slug\"\n}";
             
