@@ -68,7 +68,7 @@ namespace IO.Swagger
 
             services.AddSingleton<IConfiguration>(configuration);
 
-            var correspondentRepo = new CorrespondentRepository(configuration, "TestDBContext");
+            var repo = new CorrespondentRepository(configuration, "TestDbContext");
 
 
             services.AddSingleton<IMinIOServiceAgent>(
@@ -88,15 +88,11 @@ namespace IO.Swagger
                     "TestQueue"));
 
             //AppContext.SetSwitch("")
-            correspondentRepo.PopulateWithSampleData();
+            repo.PopulateWithSampleData();
             
-            services.AddSingleton<ICorrespondentRepository>(correspondentRepo);
-            services.AddSingleton<IDocTagRepository>(correspondentRepo);
-
-            var documentRepo = new DocumentRepository(configuration, "TestDBContext");
-            documentRepo.PopulateWithSampleData();
-
-            services.AddSingleton<IDocumentRepository>(documentRepo);
+            services.AddSingleton<ICorrespondentRepository>(repo);
+            services.AddSingleton<IDocTagRepository>(repo);
+            services.AddSingleton<IDocumentRepository>(repo);
             
             services.AddSingleton<IDocTagLogic, DocTagLogic>();
 

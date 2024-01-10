@@ -6,13 +6,14 @@ using Paperless.DAL.Interfaces;
 
 namespace Paperless.DAL.Sql
 {
-    public class CorrespondentRepository : DbContext, ICorrespondentRepository, IDocTagRepository
+    public class CorrespondentRepository : DbContext, ICorrespondentRepository, IDocTagRepository, IDocumentRepository
     {
         readonly string _contextString;
         readonly IConfiguration _config;
 
         public DbSet<Correspondent> Correspondents { get; set; }
         public DbSet<DocTag> DocTags { get; set; }
+        public DbSet<Document> Documents { get; set; }
 
         public CorrespondentRepository(IConfiguration configuration, string contextString)
         {
@@ -32,6 +33,16 @@ namespace Paperless.DAL.Sql
                     MatchingAlgorithm = 2,
                     IsInsensitive = true,
                     DocumentCount = 1,
+                    //LastCorrespondence = DateTime.Now // not working
+                });
+
+            for (int i = 0; i < 5; i++)
+                Documents.Add(new Document
+                {
+                    Title = $"TestDocument{i}",
+                    //Created = DateTime.Now,
+                    Content = $"TestContent{i}",
+                    Path = "C:/test/"
                     //LastCorrespondence = DateTime.Now // not working
                 });
 
@@ -104,6 +115,50 @@ namespace Paperless.DAL.Sql
         public ICollection<DocTag> GetDocTags()
         {
             return DocTags.ToArray();
+        }
+
+        public Document Create(Document entity)
+        {
+            Documents.Add(entity);
+            SaveChanges();
+            return entity;
+        }
+
+        public int DeleteDocument(Int64 id)
+        {
+            Document? doc = GetDocumentById(id);
+
+            if (doc != null)
+            {
+                Documents.Remove(doc);
+                SaveChanges();
+                return 0;
+            }
+            return -1;
+        }
+
+        public Document? GetDocumentById(Int64 id)
+        {
+            return Documents.Find(id);
+        }
+
+        public List<Document> GetDocuments()
+        {
+            return Documents.ToList();
+        }
+
+        public Document? Update(Int64 id, Document entity)
+        {
+            Document? doc = GetDocumentById(id);
+            if (doc != null)
+            {
+                entity.Id = id;
+                Documents.Remove(doc);
+                Documents.Add(entity);
+                SaveChanges();
+                return entity;
+            }
+            return null;
         }
     }
 }
