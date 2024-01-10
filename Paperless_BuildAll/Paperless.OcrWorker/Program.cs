@@ -2,14 +2,59 @@
 using Paperless.ServiceAgents;
 using Paperless.ServiceAgents.Interfaces;
 using Paperless.ServiceAgents.Options;
+using Microsoft.Extensions.Configuration;
+
+using dotenv.net;
+using Paperless.BusinessLogic.Interfaces;
+using Paperless.BusinessLogic;
+using RabbitMQ.Client;
+using Microsoft.Extensions.DependencyInjection;
+
+DotEnv.Load(options: new DotEnvOptions(envFilePaths: new[] { "../../.env" }));
 
 IHost host = Host.CreateDefaultBuilder(args)
+    .ConfigureAppConfiguration((hostingContext, config) => {
+        config.AddEnvironmentVariables();
+    })
     .ConfigureServices((hostContext, services) =>
     {
 
-        //Environment.SetEnvironmentVariable("LD_LIBRARY_PATH", "/usr/local/Cellar/leptonica/1.83.1/lib");
+
+
+        var configurationBuilder = new ConfigurationBuilder();
+
+        configurationBuilder.AddEnvironmentVariables();
+
+        IConfiguration configuration = configurationBuilder.Build();
+
+        // Rabbit MQ Settings
+
+        var rabbitMQConfig = hostContext.Configuration.GetSection("RabbitMQ");
+
+        var connectionFactory = new ConnectionFactory()
+        {
+            HostName = rabbitMQConfig["HostName"],
+            Port = 5672,
+            UserName = rabbitMQConfig["UserName"],
+            Password = rabbitMQConfig["Password"],
+        };
+
+        services.AddSingleton<ConnectionFactory>(connectionFactory);
+
+        services.AddSingleton<IRabbitMQService>(sp =>
+            new RabbitMQService(
+                sp.GetRequiredService<ConnectionFactory>(),
+                rabbitMQConfig["QueueName"] ?? "TestQueue"
+            )
+        );
+
+
 
         Console.WriteLine("Started OCR Worker");
+
+        services.AddSingleton<IConfiguration>(configuration);
+
+
         // register services
         services.Configure<MinIOOptions>(hostContext.Configuration.GetSection("MinIOOptions"));
         services.AddSingleton<IMinIOServiceAgent, MinIOServiceAgent>();

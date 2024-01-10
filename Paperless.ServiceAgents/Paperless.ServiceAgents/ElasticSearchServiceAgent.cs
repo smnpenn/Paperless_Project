@@ -4,6 +4,8 @@ using Elasticsearch.Net;
 using Nest;
 using Microsoft.Extensions.Options;
 using Paperless.ServiceAgents.Options;
+using Microsoft.Extensions.Configuration;
+
 
 namespace Paperless.ServiceAgents
 {
@@ -11,11 +13,16 @@ namespace Paperless.ServiceAgents
 	{
         private readonly ElasticClient _client;
 
-		public ElasticSearchServiceAgent(IOptions<ElasticSearchOptions> options)
+		public ElasticSearchServiceAgent(IConfiguration configuration)
 		{
-            var settings = new ConnectionSettings(new Uri("https://localhost:9200"))
-                .CertificateFingerprint("CD:B1:33:17:88:D2:F2:42:8C:E4:A1:1C:23:0E:DE:3A:86:D7:BE:91:7C:70:E9:B9:A0:81:90:22:82:3D:E9:CD")
-                .BasicAuthentication("elastic", "gwmdw9sSFnK0UyTNmjNO")
+            var elasticSearchUrl = Environment.GetEnvironmentVariable("ELASTICSEARCH_URL") ?? "https://localhost:9200";
+            var elasticUsername = Environment.GetEnvironmentVariable("ELASTICSEARCH_USERNAME");
+            var elasticPassword = Environment.GetEnvironmentVariable("ELASTICSEARCH_PASSWORD");
+            var elasticFingerprint = Environment.GetEnvironmentVariable("ELASTICSEARCH_CERT_FINGERPRINT");
+
+            var settings = new ConnectionSettings(new Uri(elasticSearchUrl))
+                .CertificateFingerprint(elasticFingerprint)
+                .BasicAuthentication(elasticUsername, elasticPassword)
                 .DefaultIndex("paperless-index")
                 .EnableApiVersioningHeader();
             _client = new ElasticClient(settings);
