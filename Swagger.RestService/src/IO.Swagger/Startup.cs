@@ -28,6 +28,9 @@ using Paperless.DAL.Sql;
 using Paperless.BusinessLogic;
 using RabbitMQ.Client;
 using Paperless.BusinessLogic.Interfaces;
+using Paperless.ServiceAgents.Interfaces;
+using Microsoft.Extensions.Options;
+using Paperless.ServiceAgents.Options;
 
 namespace IO.Swagger
 {
@@ -66,6 +69,12 @@ namespace IO.Swagger
             services.AddSingleton<IConfiguration>(configuration);
 
             var correspondentRepo = new CorrespondentRepository(configuration, "TestDBContext");
+
+
+            services.AddSingleton<IMinIOServiceAgent>(
+                new Paperless.ServiceAgents.MinIOServiceAgent(
+                    Options.Create(new MinIOOptions()
+                    )));
 
             services.AddSingleton<IRabbitMQService>(
                 new RabbitMQService(

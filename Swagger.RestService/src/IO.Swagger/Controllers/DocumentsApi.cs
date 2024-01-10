@@ -22,6 +22,7 @@ using Paperless.BusinessLogic;
 using Paperless.BusinessLogic.Interfaces;
 using AutoMapper;
 using Paperless.DAL.Interfaces;
+using Paperless.ServiceAgents.Interfaces;
 
 namespace IO.Swagger.Controllers
 {
@@ -33,28 +34,39 @@ namespace IO.Swagger.Controllers
     {
         private readonly IDocumentLogic documentLogic;
         private IMapper _mapper;
+        private DocumentValidator validator;
+        /// <summary>
+        /// Documents API Controller
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="mapper"></param>
+        /// <param name="rabbitMQService"></param>
+        /// <param name="minIOService"></param>
 
-        public DocumentsApiController(IDocumentRepository repository, IMapper mapper, IRabbitMQService rabbitMQService) 
+        public DocumentsApiController(IDocumentRepository repository, IMapper mapper, IRabbitMQService rabbitMQService, IMinIOServiceAgent minIOService) 
         { 
-            documentLogic = new DocumentLogic(repository, mapper, rabbitMQService);
+            documentLogic = new DocumentLogic(repository, mapper, rabbitMQService, minIOService);
             _mapper = mapper;
+            validator = new DocumentValidator();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="body"></param>
         /// <response code="200">Success</response>
         [HttpPost]
         [Route("/api/documents")]
         [ValidateModelState]
         [SwaggerOperation("UpdateDocument")]
-        public virtual IActionResult UpdateDocument()
-        { 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200);
+        public virtual IActionResult UpdateDocument([FromBody]Document body)
+        {
+            int res = documentLogic.SaveDocument(_mapper.Map<Paperless.BusinessLogic.Entities.Document>(body));
 
-            throw new NotImplementedException();
+            if(res == 0)
+                return Ok();
+            else
+                return BadRequest();
+
         }
 
         /// <summary>
@@ -80,32 +92,6 @@ namespace IO.Swagger.Controllers
         /// 
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="original"></param>
-        /// <response code="200">Success</response>
-        [HttpGet]
-        [Route("/api/documents/{id}/download")]
-        [ValidateModelState]
-        [SwaggerOperation("DownloadDocument")]
-        [SwaggerResponse(statusCode: 200, type: typeof(byte[]), description: "Success")]
-        public virtual IActionResult DownloadDocument([FromRoute][Required]int? id, [FromQuery]bool? original)
-        { 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(byte[]));
-            string exampleJson = null;
-            exampleJson = "\"\"";
-            
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<byte[]>(exampleJson)
-                        : default(byte[]);            //TODO: Change the data returned
-            return new ObjectResult(example);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="page"></param>
-        /// <param name="fullPerms"></param>
         /// <response code="200">Success</response>
         [HttpGet]
         [Route("/api/documents/{id}")]
@@ -134,15 +120,12 @@ namespace IO.Swagger.Controllers
         [SwaggerResponse(statusCode: 200, type: typeof(InlineResponse2007), description: "Success")]
         public virtual IActionResult GetDocumentMetadata([FromRoute][Required]int? id)
         { 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(InlineResponse2007));
-            string exampleJson = null;
-            exampleJson = "{\n  \"archive_size\" : 6,\n  \"archive_metadata\" : [ {\n    \"prefix\" : \"prefix\",\n    \"namespace\" : \"namespace\",\n    \"value\" : \"value\",\n    \"key\" : \"key\"\n  }, {\n    \"prefix\" : \"prefix\",\n    \"namespace\" : \"namespace\",\n    \"value\" : \"value\",\n    \"key\" : \"key\"\n  } ],\n  \"original_metadata\" : [ \"\", \"\" ],\n  \"original_filename\" : \"original_filename\",\n  \"original_mime_type\" : \"original_mime_type\",\n  \"archive_checksum\" : \"archive_checksum\",\n  \"original_checksum\" : \"original_checksum\",\n  \"lang\" : \"lang\",\n  \"media_filename\" : \"media_filename\",\n  \"has_archive_version\" : true,\n  \"archive_media_filename\" : \"archive_media_filename\",\n  \"original_size\" : 0\n}";
-            
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<InlineResponse2007>(exampleJson)
-                        : default(InlineResponse2007);            //TODO: Change the data returned
-            return new ObjectResult(example);
+            string res = documentLogic.GetDocumentMetadata((Int64)id);
+
+            if(res == null)
+                return NoContent();
+            else
+                return Ok(res);
         }
 
         /// <summary>
@@ -167,31 +150,22 @@ namespace IO.Swagger.Controllers
         /// 
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="body"></param>
         /// <response code="200">Success</response>
         [HttpPut]
         [Route("/api/documents/{id}")]
         [ValidateModelState]
         [SwaggerOperation("UpdateDocument")]
         [SwaggerResponse(statusCode: 200, type: typeof(InlineResponse2004), description: "Success")]
-        public virtual IActionResult UpdateDocument([FromRoute][Required]int? id)//, [FromBody]DocumentsIdBody body)
+        public virtual IActionResult UpdateDocument([FromRoute][Required]int? id, [FromBody] Document body)
         {
-            
-            documentLogic.PublishOCRJob(new Paperless.BusinessLogic.Entities.Document
-                    {
-                        Id = 1,
-                        Correspondent = 123,
-                        DocumentType = 456,
-                        Title = "Sample Document",
-                        Content = "This is a sample content",
-                        Created = DateTime.Now,
-                        CreatedDate = DateTime.Now,
-                        Modified = DateTime.Now,
-                        Added = DateTime.Now,
-                        OriginalFileName = "sample.txt",
-                        ArchivedFileName = "archived_sample.txt"
-                    });
 
-            return Ok();
+            int res = documentLogic.UpdateDocument((Int64)id, _mapper.Map<Paperless.BusinessLogic.Entities.Document>(body));
+
+            if (res == 0)
+                return Ok();
+            else
+                return BadRequest();
         }
 
     }

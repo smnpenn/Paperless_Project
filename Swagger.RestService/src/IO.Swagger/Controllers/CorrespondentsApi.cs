@@ -37,7 +37,8 @@ namespace IO.Swagger.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="_mapper"></param>
+        /// <param name="mapper"></param>
+        /// <param name="repository"></param>
         public CorrespondentsApiController(IMapper mapper, ICorrespondentRepository repository)
         {
             _mapper = mapper;

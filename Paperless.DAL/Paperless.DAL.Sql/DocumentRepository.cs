@@ -30,6 +30,7 @@ namespace Paperless.DAL.Sql
                     Title = $"TestDocument{i}",
                     //Created = DateTime.Now,
                     Content = $"TestContent{i}",
+                    Path = "C:/test/"
                     //LastCorrespondence = DateTime.Now // not working
                 });
 
@@ -38,7 +39,7 @@ namespace Paperless.DAL.Sql
 
         public void Create(Document entity)
         {
-            throw new NotImplementedException();
+            Documents.Add(entity);
         }
 
         public int DeleteDocument(Int64 id)
@@ -47,7 +48,7 @@ namespace Paperless.DAL.Sql
 
             if(doc != null)
             {
-                Documents.Remove(GetDocumentById(id));
+                Documents.Remove(doc);
                 SaveChanges();
                 return 0;
             }
@@ -64,9 +65,18 @@ namespace Paperless.DAL.Sql
             return Documents.ToList();
         }
 
-        public void Update(Document entity)
+        public int Update(Int64 id, Document entity)
         {
-            throw new NotImplementedException();
+            Document? doc = GetDocumentById(id);
+            if (doc != null)
+            {
+                entity.Id = id;
+                Documents.Remove(doc);
+                Documents.Add(entity);
+                SaveChanges();
+                return 0;
+            }
+            return -1;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
