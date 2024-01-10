@@ -14,6 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Paperless.ServiceAgents\Paperless.ServiceAgents.Interfaces\Paperless.ServiceAgents.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Paperless.ServiceAgents\Paperless.ServiceAgents\Paperless.ServiceAgents.csproj" />
     <ProjectReference Include="..\Paperless.BusinessLogic.Entities\Paperless.BusinessLogic.Entities.csproj" />
     <ProjectReference Include="..\Paperless.BusinessLogic.Interfaces\Paperless.BusinessLogic.Interfaces.csproj" />
     <ProjectReference Include="..\..\Paperless.DAL\Paperless.DAL.Interfaces\Paperless.DAL.Interfaces.csproj" />
