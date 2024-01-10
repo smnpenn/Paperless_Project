@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IO.Swagger", "..\MockServer\src\IO.Swagger\IO.Swagger.csproj", "{1CDEEB4C-9B53-4CC8-B36B-9148EB679947}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.BusinessLogic", "..\Paperless.BusinessLogic\Paperless.BusinessLogic\Paperless.BusinessLogic.csproj", "{EBE1116A-150A-44A9-9F07-25539294EAE6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.BusinessLogic.Entities", "..\Paperless.BusinessLogic\Paperless.BusinessLogic.Entities\Paperless.BusinessLogic.Entities.csproj", "{E0DE5BAC-6B9A-4B9B-9B5D-C7B73CEC088D}"
@@ -21,13 +19,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.DAL.Sql", "..\Pap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.DAL.Tests", "..\Paperless.DAL\Paperless.DAL.Tests\Paperless.DAL.Tests.csproj", "{006ED79D-E7B5-424A-8EF5-27C3460F52AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paperless.ServiceAgents", "..\Paperless.ServiceAgents\Paperless.ServiceAgents\Paperless.ServiceAgents.csproj", "{0C9E42CE-8413-41E8-BFFE-0274838E9929}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.ServiceAgents", "..\Paperless.ServiceAgents\Paperless.ServiceAgents\Paperless.ServiceAgents.csproj", "{0C9E42CE-8413-41E8-BFFE-0274838E9929}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paperless.ServiceAgents.Interfaces", "..\Paperless.ServiceAgents\Paperless.ServiceAgents.Interfaces\Paperless.ServiceAgents.Interfaces.csproj", "{48318B2D-6051-4FAA-A014-232F2B7A5FCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.ServiceAgents.Interfaces", "..\Paperless.ServiceAgents\Paperless.ServiceAgents.Interfaces\Paperless.ServiceAgents.Interfaces.csproj", "{48318B2D-6051-4FAA-A014-232F2B7A5FCF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paperless.ServiceAgents.Tests", "..\Paperless.ServiceAgents\Paperless.ServiceAgents.Tests\Paperless.ServiceAgents.Tests.csproj", "{F0F3DE7F-CCCA-4540-8C2A-27D857FC0A5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.ServiceAgents.Tests", "..\Paperless.ServiceAgents\Paperless.ServiceAgents.Tests\Paperless.ServiceAgents.Tests.csproj", "{F0F3DE7F-CCCA-4540-8C2A-27D857FC0A5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paperless.OcrWorker", "Paperless.OcrWorker\Paperless.OcrWorker.csproj", "{AAFF881E-6B36-4BB6-A6B4-C742B2830D58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paperless.OcrWorker", "Paperless.OcrWorker\Paperless.OcrWorker.csproj", "{AAFF881E-6B36-4BB6-A6B4-C742B2830D58}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IO.Swagger", "..\Swagger.RestService\src\IO.Swagger\IO.Swagger.csproj", "{052CE08E-AA0E-4D4B-A327-6DD71AF56370}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1CDEEB4C-9B53-4CC8-B36B-9148EB679947}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1CDEEB4C-9B53-4CC8-B36B-9148EB679947}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1CDEEB4C-9B53-4CC8-B36B-9148EB679947}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1CDEEB4C-9B53-4CC8-B36B-9148EB679947}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EBE1116A-150A-44A9-9F07-25539294EAE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EBE1116A-150A-44A9-9F07-25539294EAE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBE1116A-150A-44A9-9F07-25539294EAE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -87,6 +83,10 @@ Global
 		{AAFF881E-6B36-4BB6-A6B4-C742B2830D58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAFF881E-6B36-4BB6-A6B4-C742B2830D58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAFF881E-6B36-4BB6-A6B4-C742B2830D58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{052CE08E-AA0E-4D4B-A327-6DD71AF56370}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{052CE08E-AA0E-4D4B-A327-6DD71AF56370}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{052CE08E-AA0E-4D4B-A327-6DD71AF56370}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{052CE08E-AA0E-4D4B-A327-6DD71AF56370}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
