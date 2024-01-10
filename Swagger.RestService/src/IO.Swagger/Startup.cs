@@ -65,7 +65,7 @@ namespace IO.Swagger
 
             services.AddSingleton<IConfiguration>(configuration);
 
-            var repo = new CorrespondentRepository(configuration, "TestDBContext");
+            var correspondentRepo = new CorrespondentRepository(configuration, "TestDBContext");
 
             services.AddSingleton<IRabbitMQService>(
                 new RabbitMQService(
@@ -78,9 +78,14 @@ namespace IO.Swagger
                     },
                     "TestQueue"));
 
-            repo.PopulateWithSampleData();
+            //AppContext.SetSwitch("")
+            correspondentRepo.PopulateWithSampleData();
 
-            services.AddSingleton<ICorrespondentRepository>(repo);
+            services.AddSingleton<ICorrespondentRepository>(correspondentRepo);
+
+            var documentRepo = new DocumentRepository(configuration, "TestDBContext");
+            documentRepo.PopulateWithSampleData();
+            services.AddSingleton<IDocumentRepository>(documentRepo);
 
             // Add framework services.
             services
@@ -131,6 +136,7 @@ namespace IO.Swagger
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseRouting();
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             //TODO: Uncomment this if you need wwwroot folder
             // app.UseStaticFiles();

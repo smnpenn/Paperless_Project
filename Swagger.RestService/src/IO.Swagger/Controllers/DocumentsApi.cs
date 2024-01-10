@@ -20,6 +20,8 @@ using Microsoft.AspNetCore.Authorization;
 using IO.Swagger.Models;
 using Paperless.BusinessLogic;
 using Paperless.BusinessLogic.Interfaces;
+using AutoMapper;
+using Paperless.DAL.Interfaces;
 
 namespace IO.Swagger.Controllers
 {
@@ -30,10 +32,12 @@ namespace IO.Swagger.Controllers
     public class DocumentsApiController : ControllerBase
     {
         private readonly IDocumentLogic documentLogic;
+        private IMapper _mapper;
 
-        public DocumentsApiController(IDocumentLogic documentLogic) 
+        public DocumentsApiController(IDocumentRepository repository, IMapper mapper, IRabbitMQService rabbitMQService) 
         { 
-            this.documentLogic = documentLogic;
+            documentLogic = new DocumentLogic(repository, mapper, rabbitMQService);
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -63,11 +67,13 @@ namespace IO.Swagger.Controllers
         [ValidateModelState]
         [SwaggerOperation("DeleteDocument")]
         public virtual IActionResult DeleteDocument([FromRoute][Required]int? id)
-        { 
-            //TODO: Uncomment the next line to return response 204 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(204);
+        {
+            int res = documentLogic.DeleteDocument((Int64)id);
 
-            throw new NotImplementedException();
+            if(res == 0)
+                return Ok();
+            else
+                return NoContent();
         }
 
         /// <summary>
@@ -105,18 +111,15 @@ namespace IO.Swagger.Controllers
         [Route("/api/documents/{id}")]
         [ValidateModelState]
         [SwaggerOperation("GetDocument")]
-        [SwaggerResponse(statusCode: 200, type: typeof(InlineResponse2003), description: "Success")]
-        public virtual IActionResult GetDocument([FromRoute][Required]int? id, [FromQuery]int? page, [FromQuery]bool? fullPerms)
-        { 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(InlineResponse2003));
-            string exampleJson = null;
-            exampleJson = "{\n  \"owner\" : 7,\n  \"archive_serial_number\" : 2,\n  \"notes\" : [ {\n    \"note\" : \"note\",\n    \"created\" : \"created\",\n    \"document\" : 1,\n    \"id\" : 7,\n    \"user\" : 1\n  }, {\n    \"note\" : \"note\",\n    \"created\" : \"created\",\n    \"document\" : 1,\n    \"id\" : 7,\n    \"user\" : 1\n  } ],\n  \"added\" : \"added\",\n  \"created\" : \"created\",\n  \"title\" : \"title\",\n  \"content\" : \"content\",\n  \"tags\" : [ 5, 5 ],\n  \"storage_path\" : 5,\n  \"permissions\" : {\n    \"view\" : {\n      \"groups\" : [ 3, 3 ],\n      \"users\" : [ 9, 9 ]\n    }\n  },\n  \"archived_file_name\" : \"archived_file_name\",\n  \"modified\" : \"modified\",\n  \"correspondent\" : 6,\n  \"original_file_name\" : \"original_file_name\",\n  \"id\" : 0,\n  \"created_date\" : \"created_date\",\n  \"document_type\" : 1\n}";
-            
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<InlineResponse2003>(exampleJson)
-                        : default(InlineResponse2003);            //TODO: Change the data returned
-            return new ObjectResult(example);
+        [SwaggerResponse(statusCode: 200, type: typeof(Document), description: "Success")]
+        public virtual IActionResult GetDocument([FromRoute][Required]Int64 id)
+        {
+            Document res = _mapper.Map<Paperless.BusinessLogic.Entities.Document, Document>(documentLogic.GetDocumentById(id));
+
+            if(res == null)
+                return NoContent();
+            else
+                return Ok(res);
         }
 
         /// <summary>
@@ -150,18 +153,14 @@ namespace IO.Swagger.Controllers
         [Route("/api/documents")]
         [ValidateModelState]
         [SwaggerOperation("GetDocuments")]
-        [SwaggerResponse(statusCode: 200, type: typeof(InlineResponse2002), description: "Success")]
+        [SwaggerResponse(statusCode: 200, type: typeof(List<Document>), description: "Success")]
         public virtual IActionResult GetDocuments()
-        { 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(InlineResponse2002));
-            string exampleJson = null;
-            exampleJson = "{\n  \"next\" : 6,\n  \"all\" : [ 5, 5 ],\n  \"previous\" : 1,\n  \"count\" : 0,\n  \"results\" : [ {\n    \"owner\" : 4,\n    \"user_can_change\" : true,\n    \"archive_serial_number\" : 2,\n    \"notes\" : [ {\n      \"note\" : \"note\",\n      \"created\" : \"created\",\n      \"document\" : 1,\n      \"id\" : 7,\n      \"user\" : 1\n    }, {\n      \"note\" : \"note\",\n      \"created\" : \"created\",\n      \"document\" : 1,\n      \"id\" : 7,\n      \"user\" : 1\n    } ],\n    \"added\" : \"added\",\n    \"created\" : \"created\",\n    \"title\" : \"title\",\n    \"content\" : \"content\",\n    \"tags\" : [ 3, 3 ],\n    \"storage_path\" : 9,\n    \"archived_file_name\" : \"archived_file_name\",\n    \"modified\" : \"modified\",\n    \"correspondent\" : 2,\n    \"original_file_name\" : \"original_file_name\",\n    \"id\" : 5,\n    \"created_date\" : \"created_date\",\n    \"document_type\" : 7\n  }, {\n    \"owner\" : 4,\n    \"user_can_change\" : true,\n    \"archive_serial_number\" : 2,\n    \"notes\" : [ {\n      \"note\" : \"note\",\n      \"created\" : \"created\",\n      \"document\" : 1,\n      \"id\" : 7,\n      \"user\" : 1\n    }, {\n      \"note\" : \"note\",\n      \"created\" : \"created\",\n      \"document\" : 1,\n      \"id\" : 7,\n      \"user\" : 1\n    } ],\n    \"added\" : \"added\",\n    \"created\" : \"created\",\n    \"title\" : \"title\",\n    \"content\" : \"content\",\n    \"tags\" : [ 3, 3 ],\n    \"storage_path\" : 9,\n    \"archived_file_name\" : \"archived_file_name\",\n    \"modified\" : \"modified\",\n    \"correspondent\" : 2,\n    \"original_file_name\" : \"original_file_name\",\n    \"id\" : 5,\n    \"created_date\" : \"created_date\",\n    \"document_type\" : 7\n  } ]\n}";
-            
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<InlineResponse2002>(exampleJson)
-                        : default(InlineResponse2002);            //TODO: Change the data returned
-            return new ObjectResult(example);
+        {
+            var res = _mapper.Map<ICollection<Paperless.BusinessLogic.Entities.Document>, ICollection<Document>>(documentLogic.GetDocuments());
+            if(res.Count <= 0)
+                return NoContent();
+            else
+                return Ok(res);
         }
 
         /// <summary>
@@ -176,14 +175,7 @@ namespace IO.Swagger.Controllers
         [SwaggerResponse(statusCode: 200, type: typeof(InlineResponse2004), description: "Success")]
         public virtual IActionResult UpdateDocument([FromRoute][Required]int? id)//, [FromBody]DocumentsIdBody body)
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(InlineResponse2004));
-            //string exampleJson = null;
-            //exampleJson = "{\n  \"owner\" : 7,\n  \"user_can_change\" : true,\n  \"archive_serial_number\" : 2,\n  \"notes\" : [ \"\", \"\" ],\n  \"added\" : \"added\",\n  \"created\" : \"created\",\n  \"title\" : \"title\",\n  \"content\" : \"content\",\n  \"tags\" : [ 5, 5 ],\n  \"storage_path\" : 5,\n  \"archived_file_name\" : \"archived_file_name\",\n  \"modified\" : \"modified\",\n  \"correspondent\" : 6,\n  \"original_file_name\" : \"original_file_name\",\n  \"id\" : 0,\n  \"created_date\" : \"created_date\",\n  \"document_type\" : 1\n}";
-            //            var example = exampleJson != null
-            //            ? JsonConvert.DeserializeObject<InlineResponse2004>(exampleJson)
-            //            : default(InlineResponse2004);            //TODO: Change the data returned
-
+            
             documentLogic.PublishOCRJob(new Paperless.BusinessLogic.Entities.Document
                     {
                         Id = 1,

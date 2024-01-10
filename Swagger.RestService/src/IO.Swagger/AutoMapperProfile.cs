@@ -22,6 +22,7 @@ namespace IO.Swagger
             CreateMap<Paperless.BusinessLogic.Entities.DocTag, DocTag>();
 
             CreateMap<Paperless.DAL.Entities.Correspondent, Paperless.BusinessLogic.Entities.Correspondent>();
+            CreateMap<Paperless.DAL.Entities.Document, Paperless.BusinessLogic.Entities.Document>();
         }
     }
 }

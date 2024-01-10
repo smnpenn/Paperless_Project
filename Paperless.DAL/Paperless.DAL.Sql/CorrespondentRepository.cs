@@ -46,7 +46,7 @@ namespace Paperless.DAL.Sql
             throw new NotImplementedException();
         }
 
-        public Correspondent GetCorrespondentById(Int64 id)
+        public Correspondent? GetCorrespondentById(Int64 id)
         {
             return Correspondents.Find(id);
         }
