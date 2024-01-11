@@ -31,6 +31,10 @@ using Paperless.BusinessLogic.Interfaces;
 using Paperless.ServiceAgents.Interfaces;
 using Microsoft.Extensions.Options;
 using Paperless.ServiceAgents.Options;
+using Paperless.ServiceAgents;
+using Nest;
+using dotenv.net;
+
 
 namespace IO.Swagger
 {
@@ -52,6 +56,9 @@ namespace IO.Swagger
         {
             _hostingEnv = env;
             Configuration = configuration;
+
+            DotEnv.Load(options: new DotEnvOptions(envFilePaths: new[] { "../../../.env" }));
+
         }
 
         /// <summary>
@@ -66,10 +73,8 @@ namespace IO.Swagger
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
-            services.AddSingleton<IConfiguration>(configuration);
-
             var repo = new Repository(configuration, "TestDbContext");
-
+            services.AddSingleton<IConfiguration>(configuration);
 
             services.AddSingleton<IMinIOServiceAgent>(
                 new Paperless.ServiceAgents.MinIOServiceAgent(
@@ -89,7 +94,11 @@ namespace IO.Swagger
 
             //AppContext.SetSwitch("")
             repo.PopulateWithSampleData();
-            
+    
+            // Register ElasticSearchServiceAgent with settings
+            services.AddSingleton<IElasticSearchServiceAgent, ElasticSearchServiceAgent>();
+               
+
             services.AddSingleton<ICorrespondentRepository>(repo);
             services.AddSingleton<IDocTagRepository>(repo);
             services.AddSingleton<IDocumentRepository>(repo);

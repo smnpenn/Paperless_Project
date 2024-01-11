@@ -1,4 +1,6 @@
-﻿using Paperless.BusinessLogic.Interfaces;
+﻿using Nest;
+using Paperless.BusinessLogic.Interfaces;
+using Paperless.DAL.Interfaces;
 using Paperless.ServiceAgents.Interfaces;
 
 namespace Paperless.OcrWorker;
@@ -10,14 +12,16 @@ public class Worker : BackgroundService
     private readonly IOcrServiceAgent _ocrServiceAgent;
     private readonly IElasticSearchServiceAgent _elasticSearchServiceAgent;
     private readonly IRabbitMQService _rabbitMQService;
+    private readonly IDocumentRepository _documentRepository;
 
-    public Worker(ILogger<Worker> logger, IMinIOServiceAgent minIOServiceAgent, IOcrServiceAgent ocrServiceAgent, IElasticSearchServiceAgent elasticSearchServiceAgent, IRabbitMQService rabbitMQService)
+    public Worker(ILogger<Worker> logger, IMinIOServiceAgent minIOServiceAgent, IOcrServiceAgent ocrServiceAgent, IElasticSearchServiceAgent elasticSearchServiceAgent, IRabbitMQService rabbitMQService, IDocumentRepository documentRepository)
     {
         _logger = logger;
         _minIOServiceAgent = minIOServiceAgent;
         _ocrServiceAgent = ocrServiceAgent;
         _elasticSearchServiceAgent = elasticSearchServiceAgent;
         _rabbitMQService = rabbitMQService;
+        _documentRepository = documentRepository;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -38,13 +42,40 @@ public class Worker : BackgroundService
                             var ocrResult = _ocrServiceAgent.PerformOcrPdf(documentStream);
                             var documentToIndex = new
                             {
+                                Id = ocrJob.Id,
                                 Name = ocrJob.Title,
+                                Correspondent = ocrJob.Correspondent,
+                                DocumentType = ocrJob.DocumentType,
+                                Title = ocrJob.Title,
+                                Created = ocrJob.Created,
+                                Modified = ocrJob.Modified,
+                                Added = ocrJob.Added,
+                                Tags = ocrJob.Tags,
+                                Path = ocrJob.Path,
                                 Content = ocrResult
                             };
 
-                            await _elasticSearchServiceAgent.IndexDocumentAsync("paperless-index", documentToIndex);
+                            bool documentExists = await _elasticSearchServiceAgent.DocumentExistsAsync("paperless-index", ocrJob.Id.ToString()); // check if document with given id already exists in ES
 
-                            _logger.LogInformation("Processed and indexed document {DocumentName} at: {Time}", ocrJob.Title, DateTimeOffset.Now);
+                            if(documentExists)
+                            {
+                                await _elasticSearchServiceAgent.UpdateDocumentAsync("paperless-index", ocrJob.Id.ToString(), documentToIndex);
+                                _logger.LogInformation("Updated document {DocumentName} at: {Time}", ocrJob.Title, DateTimeOffset.Now);
+                            }
+                            else
+                            {
+                                await _elasticSearchServiceAgent.IndexDocumentAsync("paperless-index", documentToIndex);
+                                _logger.LogInformation("Processed and indexed document {DocumentName} at: {Time}", ocrJob.Title, DateTimeOffset.Now);
+
+                            }
+
+                            var exisitingDocument = _documentRepository.GetDocumentById(ocrJob.Id);
+                            if(exisitingDocument != null)
+                            {
+                                // Update the content of the file
+                                exisitingDocument.Content = ocrResult;
+                                _documentRepository.Update(ocrJob.Id, exisitingDocument);
+                            }
 
                         }
                         finally

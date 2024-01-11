@@ -9,6 +9,8 @@ using Paperless.BusinessLogic.Interfaces;
 using Paperless.BusinessLogic;
 using RabbitMQ.Client;
 using Microsoft.Extensions.DependencyInjection;
+using Paperless.DAL.Sql;
+using Paperless.DAL.Interfaces;
 
 DotEnv.Load(options: new DotEnvOptions(envFilePaths: new[] { "../../.env" }));
 
@@ -20,12 +22,18 @@ IHost host = Host.CreateDefaultBuilder(args)
     {
 
 
-
         var configurationBuilder = new ConfigurationBuilder();
 
         configurationBuilder.AddEnvironmentVariables();
 
-        IConfiguration configuration = configurationBuilder.Build();
+        IConfiguration configuration = new ConfigurationBuilder()
+                        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                        .Build();
+
+        var repo = new Repository(configuration, "TestDbContext");
+
+        services.AddSingleton<IDocumentRepository>(repo);
+
 
         // Rabbit MQ Settings
 
