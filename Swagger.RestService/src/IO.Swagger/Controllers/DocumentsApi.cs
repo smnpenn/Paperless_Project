@@ -23,6 +23,7 @@ using Paperless.BusinessLogic.Interfaces;
 using AutoMapper;
 using Paperless.DAL.Interfaces;
 using Paperless.ServiceAgents.Interfaces;
+using System.IO;
 
 namespace IO.Swagger.Controllers
 {
@@ -60,15 +61,32 @@ namespace IO.Swagger.Controllers
         [Route("/api/documents")]
         [ValidateModelState]
         [SwaggerOperation("UploadDocument")]
-        public virtual IActionResult UpdateDocument([FromBody]Document body)
+        public virtual IActionResult UploadDocument([FromBody]Document body)
         {
-            int res = documentLogic.SaveDocument(_mapper.Map<Paperless.BusinessLogic.Entities.Document>(body));
+            var newDocumentTags = new List<int?>();
 
-            if(res == 0)
+            foreach (var tag in HttpContext.Request.Form["tags"])
+            {
+                newDocumentTags.Add(int.Parse(tag));
+            }
+
+            var newDocument = new Document
+            {
+                Title = HttpContext.Request.Form["title"],
+                Created = DateTime.Parse(HttpContext.Request.Form["created"]),
+                DocumentType = int.Parse(HttpContext.Request.Form["document_type"]),
+                Tags = newDocumentTags,
+                Correspondent = int.Parse(HttpContext.Request.Form["correspondent"])
+            };
+
+            int res = documentLogic.SaveDocument(
+                _mapper.Map<Paperless.BusinessLogic.Entities.Document>(body), 
+                HttpContext.Request.Form.Files["file1"].OpenReadStream());
+            
+            if (res == 0)
                 return Ok();
             else
-                return BadRequest();
-
+                return NoContent();
         }
 
         /// <summary>

@@ -5,7 +5,7 @@ namespace Paperless.BusinessLogic.Interfaces
 {
 	public interface IDocumentLogic
 	{
-		int SaveDocument(Document document);
+		int SaveDocument(Document document, Stream fileStream);
         int UpdateDocument(Int64 id, Document document);
         int DeleteDocument(Int64 id);
 		public string? GetDocumentMetadata(Int64 id);

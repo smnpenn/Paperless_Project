@@ -26,20 +26,27 @@ namespace Paperless.BusinessLogic
             _documentValidator = new DocumentValidator();
 		}
 
-        public int SaveDocument(Document document)
+        public int SaveDocument(Document document, Stream fileStream)
         {
+            var tempFileName = "temp_recv_file";
+
+            using (var tempFileStream = new FileStream(tempFileName, FileMode.Create, FileAccess.Write))
+            {
+                fileStream.CopyTo(tempFileStream);
+            }
+
             if (!_documentValidator.Validate(document).IsValid)
             {
                 return -1;
             }
-            if (!File.Exists(document.Path))
+
+            if (!File.Exists(tempFileName))
             {
                 return -1;
             }
 
-            string fileName = Path.GetFileNameWithoutExtension(document.Path);
+            _minIOService.UploadDocument(tempFileName, document.Title);
 
-            _minIOService.UploadDocument(document.Path, fileName);
             Document doc = _mapper.Map<Document>(_repo.Create(_mapper.Map<DAL.Entities.Document>(document)));
             if(doc.DocumentType != null)
                 _repo.IncrementDocumentCount(doc.DocumentType);
