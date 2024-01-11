@@ -79,7 +79,7 @@ def test_delete_tag():
 def test_create_document():
     response = requests.post(BASE_URL + 'documents', 
         files = {
-            'file1': ('filename1.txt', open('test.py', 'rb'))
+            'file1': ('filename1.txt', open('HelloWorld.pdf', 'rb'))
         },
         data={
             "correspondent": 1,

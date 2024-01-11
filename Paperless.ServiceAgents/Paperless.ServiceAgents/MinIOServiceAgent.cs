@@ -47,6 +47,7 @@ namespace Paperless.ServiceAgents
             string contentType = "application/pdf";
             try
             {
+                //filePath = "C:/Users/Simon/source/repos/SWKOM/Paperless_Project/Swagger.RestService/src/IO.Swagger/" + filePath;
                 // Make a bucket on the server, if not already present.
                 var beArgs = new BucketExistsArgs()
                     .WithBucket(bucketName);

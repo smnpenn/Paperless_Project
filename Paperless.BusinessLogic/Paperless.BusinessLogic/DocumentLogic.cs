@@ -28,7 +28,7 @@ namespace Paperless.BusinessLogic
 
         public int SaveDocument(Document document, Stream fileStream)
         {
-            var tempFileName = "temp_recv_file";
+            var tempFileName = "temp_recv_file.pdf";
 
             using (var tempFileStream = new FileStream(tempFileName, FileMode.Create, FileAccess.Write))
             {

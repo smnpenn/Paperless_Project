@@ -14,9 +14,7 @@ namespace Paperless.BusinessLogic
             RuleFor(document => document.Correspondent).NotNull().WithMessage("Correspondent is required.");
 			RuleFor(document => document.DocumentType).NotNull().WithMessage("DocumentType must not be null.");
             RuleFor(document => document.Title).NotNull().WithMessage("Title must not be null.");
-            RuleFor(document => document.Content).NotNull().WithMessage("Content must not be null.");
             RuleFor(document => document.Tags).NotNull().WithMessage("Tags must not be null.");
-            RuleFor(document => document.Path).NotNull().WithMessage("Path must not be null.");
 
         }
     }

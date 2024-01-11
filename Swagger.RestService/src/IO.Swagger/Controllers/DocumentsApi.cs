@@ -61,7 +61,7 @@ namespace IO.Swagger.Controllers
         [Route("/api/documents")]
         [ValidateModelState]
         [SwaggerOperation("UploadDocument")]
-        public virtual IActionResult UploadDocument([FromBody]Document body)
+        public virtual IActionResult UploadDocument()
         {
             var newDocumentTags = new List<int?>();
 
@@ -70,17 +70,22 @@ namespace IO.Swagger.Controllers
                 newDocumentTags.Add(int.Parse(tag));
             }
 
+            var newDocumentDate = DateTime.Parse(HttpContext.Request.Form["created"]);
+            newDocumentDate = DateTime.SpecifyKind(newDocumentDate, DateTimeKind.Utc);
+
             var newDocument = new Document
             {
                 Title = HttpContext.Request.Form["title"],
-                Created = DateTime.Parse(HttpContext.Request.Form["created"]),
+                Created = newDocumentDate,
+                Modified = newDocumentDate,
+                Added = newDocumentDate,
                 DocumentType = int.Parse(HttpContext.Request.Form["document_type"]),
                 Tags = newDocumentTags,
                 Correspondent = int.Parse(HttpContext.Request.Form["correspondent"])
             };
 
             int res = documentLogic.SaveDocument(
-                _mapper.Map<Paperless.BusinessLogic.Entities.Document>(body), 
+                _mapper.Map<Paperless.BusinessLogic.Entities.Document>(newDocument), 
                 HttpContext.Request.Form.Files["file1"].OpenReadStream());
             
             if (res == 0)

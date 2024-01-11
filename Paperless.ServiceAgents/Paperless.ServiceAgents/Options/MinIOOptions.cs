@@ -12,8 +12,8 @@ namespace Paperless.ServiceAgents.Options
     {
         public const string MinIO = "MinIO";
         public string Url { get; } = "http://localhost:9001";
-        public string AccessKey { get; } = "WEVPIySbhlhHwwthdF7h";
-        public string SecretKey { get; } = "nxpS7or2CTvPjeeOTRFx7k4X5Zk12wDexhc5ORXF";
+        public string AccessKey { get; } = "EnwdfV8bxVx8sc5tG1UI";
+        public string SecretKey { get; } = "f1uyKKaZoyXLtCSt8aDrdauNfu6vWjCnEJaEfvNp";
         public string Api { get; } = "s3v4";
         public string Path { get; } = "auto";
     }
