@@ -41,6 +41,13 @@ public class Worker : BackgroundService
                             {
                                 Id = ocrJob.Id,
                                 Name = ocrJob.Title,
+                                Correspondent = ocrJob.Correspondent,
+                                DocumentType = ocrJob.DocumentType,
+                                Title = ocrJob.Title,
+                                Created = ocrJob.Created,
+                                Modified = ocrJob.Modified,
+                                Added = ocrJob.Added,
+                                Path = ocrJob.Path,
                                 Content = ocrResult
                             };
 

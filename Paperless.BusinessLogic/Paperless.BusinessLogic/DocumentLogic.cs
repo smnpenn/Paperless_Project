@@ -104,6 +104,22 @@ namespace Paperless.BusinessLogic
             _elasticSearchServiceAgent.DeleteDocumentAsync("paperless-index", id.ToString());
             return _repo.DeleteDocument(id);
         }
+
+        public async Task<IEnumerable<Document>> SearchDocument(string searchTerm, int? limit)
+        {
+            if(string.IsNullOrWhiteSpace(searchTerm))
+            {
+                throw new ArgumentException("Search term must be provided.");
+            }
+
+            var searchResults = await _elasticSearchServiceAgent.FuzzySearchAsync<Document>(
+            indexName: "paperless-index",
+            searchTerm: searchTerm,
+            fieldName: "content",
+            limit: limit);
+
+            return searchResults;
+        }
     }
 }
 

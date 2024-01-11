@@ -106,6 +106,24 @@ namespace Paperless.ServiceAgents
                 return false;
             }
         }
+
+
+        public async Task<IEnumerable<T>> FuzzySearchAsync<T>(string indexName, string searchTerm, string fieldName, int? limit) where T : class
+        {
+            var searchResponse = await _client.SearchAsync<T>(s => s
+                .Index(indexName)
+                .Query(q => q
+                    .Fuzzy(f => f
+                        .Field(fieldName)
+                        .Value(searchTerm)
+                        .Fuzziness(Fuzziness.Auto)
+                    )
+                )
+                .Size(limit ?? 10) // Default limit
+            );
+
+            return searchResponse.Documents;
+        }
     }
 }
 

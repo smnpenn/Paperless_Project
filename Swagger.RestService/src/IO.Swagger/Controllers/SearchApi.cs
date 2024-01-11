@@ -18,6 +18,12 @@ using IO.Swagger.Attributes;
 
 using Microsoft.AspNetCore.Authorization;
 using IO.Swagger.Models;
+using Paperless.ServiceAgents.Interfaces;
+using Paperless.BusinessLogic.Interfaces;
+using System.Threading.Tasks;
+using AutoMapper;
+using Paperless.BusinessLogic;
+using Paperless.DAL.Interfaces;
 
 namespace IO.Swagger.Controllers
 { 
@@ -26,7 +32,22 @@ namespace IO.Swagger.Controllers
     /// </summary>
     [ApiController]
     public class SearchApiController : ControllerBase
-    { 
+    {
+
+        private readonly IDocumentLogic _documentLogic;
+
+        /// <summary>
+        /// Documents API Controller
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="mapper"></param>
+        /// <param name="rabbitMQService"></param>
+        /// <param name="minIOService"></param>
+        /// <param name="elasticSearchServiceAgent"></param>
+        public SearchApiController(IDocumentRepository repository, IMapper mapper, IRabbitMQService rabbitMQService, IMinIOServiceAgent minIOService, IElasticSearchServiceAgent elasticSearchServiceAgent)
+        {
+            _documentLogic = new DocumentLogic(repository, mapper, rabbitMQService, minIOService, elasticSearchServiceAgent);
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -38,17 +59,10 @@ namespace IO.Swagger.Controllers
         [ValidateModelState]
         [SwaggerOperation("AutoComplete")]
         [SwaggerResponse(statusCode: 200, type: typeof(List<string>), description: "Success")]
-        public virtual IActionResult AutoComplete([FromQuery]string term, [FromQuery]int? limit)
-        { 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(List<string>));
-            string exampleJson = null;
-            exampleJson = "[ \"\", \"\" ]";
-            
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<List<string>>(exampleJson)
-                        : default(List<string>);            //TODO: Change the data returned
-            return new ObjectResult(example);
+        public async Task<IActionResult> Search(string term, int? limit)
+        {
+            var results = await _documentLogic.SearchDocument(term, limit);
+            return Ok(results);
         }
     }
 }

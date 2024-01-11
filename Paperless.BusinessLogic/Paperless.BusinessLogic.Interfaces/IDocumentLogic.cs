@@ -11,6 +11,8 @@ namespace Paperless.BusinessLogic.Interfaces
 		public string? GetDocumentMetadata(Int64 id);
         ICollection<Document> GetDocuments();
         Document? GetDocumentById(Int64 id);
-	}
+        Task<IEnumerable<Document>> SearchDocument(string searchTerm, int? limit);
+
+    }
 }
 
