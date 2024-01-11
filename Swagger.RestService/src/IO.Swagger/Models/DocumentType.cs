@@ -116,11 +116,6 @@ namespace IO.Swagger.Models
                     Id.Equals(other.Id)
                 ) && 
                 (
-                    Slug == other.Slug ||
-                    Slug != null &&
-                    Slug.Equals(other.Slug)
-                ) && 
-                (
                     Name == other.Name ||
                     Name != null &&
                     Name.Equals(other.Name)
@@ -134,11 +129,6 @@ namespace IO.Swagger.Models
                     MatchingAlgorithm == other.MatchingAlgorithm ||
                     MatchingAlgorithm != null &&
                     MatchingAlgorithm.Equals(other.MatchingAlgorithm)
-                ) && 
-                (
-                    IsInsensitive == other.IsInsensitive ||
-                    IsInsensitive != null &&
-                    IsInsensitive.Equals(other.IsInsensitive)
                 ) && 
                 (
                     DocumentCount == other.DocumentCount ||
@@ -159,16 +149,12 @@ namespace IO.Swagger.Models
                 // Suitable nullity checks etc, of course :)
                     if (Id != null)
                     hashCode = hashCode * 59 + Id.GetHashCode();
-                    if (Slug != null)
-                    hashCode = hashCode * 59 + Slug.GetHashCode();
                     if (Name != null)
                     hashCode = hashCode * 59 + Name.GetHashCode();
                     if (Match != null)
                     hashCode = hashCode * 59 + Match.GetHashCode();
                     if (MatchingAlgorithm != null)
                     hashCode = hashCode * 59 + MatchingAlgorithm.GetHashCode();
-                    if (IsInsensitive != null)
-                    hashCode = hashCode * 59 + IsInsensitive.GetHashCode();
                     if (DocumentCount != null)
                     hashCode = hashCode * 59 + DocumentCount.GetHashCode();
                 return hashCode;

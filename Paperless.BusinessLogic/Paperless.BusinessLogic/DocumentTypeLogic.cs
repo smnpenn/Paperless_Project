@@ -28,23 +28,30 @@ namespace Paperless.BusinessLogic
             if (!_validator.Validate(type).IsValid)
                 return -1;
 
-            int res = _repo.CreateType(_mapper.Map<DAL.Entities.DocumentType>(type));
-            return res;
+            type.DocumentCount = 0;
+            _repo.CreateType(_mapper.Map<DAL.Entities.DocumentType>(type));
+            return 0;
         }
 
         public int DeleteType(Int64 id)
         {
-            throw new NotImplementedException();
+            return _repo.DeleteType(id);
         }
 
         public ICollection<DocumentType> GetTypes()
         {
-            throw new NotImplementedException();
+            return _mapper.Map<
+                    ICollection<DAL.Entities.DocumentType>,
+                    ICollection<DocumentType>>(_repo.GetTypes());
         }
 
-        public int UpdateType(Int64 id, DocumentType type)
+        public int UpdateType(Int64 id, DocumentType newType)
         {
-            throw new NotImplementedException();
+            if (!_validator.Validate(newType).IsValid)
+                return -1;
+
+            int res = _repo.UpdateType(id, _mapper.Map<DAL.Entities.DocumentType>(newType));
+            return res;
         }
     }
 }

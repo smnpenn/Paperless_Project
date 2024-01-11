@@ -6,7 +6,7 @@ using Paperless.DAL.Interfaces;
 
 namespace Paperless.DAL.Sql
 {
-    public class CorrespondentRepository : DbContext, ICorrespondentRepository, IDocTagRepository, IDocumentRepository, IDocumentTypeRepository
+    public class Repository : DbContext, ICorrespondentRepository, IDocTagRepository, IDocumentRepository, IDocumentTypeRepository
     {
         readonly string _contextString;
         readonly IConfiguration _config;
@@ -16,7 +16,7 @@ namespace Paperless.DAL.Sql
         public DbSet<Document> Documents { get; set; }
         public DbSet<DocumentType> DocumentTypes { get; set; }
 
-        public CorrespondentRepository(IConfiguration configuration, string contextString)
+        public Repository(IConfiguration configuration, string contextString)
         {
             _config = configuration;
             _contextString = contextString;
@@ -131,6 +131,8 @@ namespace Paperless.DAL.Sql
 
             if (doc != null)
             {
+                if (doc.DocumentType != null)
+                    DecrementDocumentCount(doc.DocumentType);
                 Documents.Remove(doc);
                 SaveChanges();
                 return 0;
@@ -162,9 +164,14 @@ namespace Paperless.DAL.Sql
             return null;
         }
 
-        public DocumentType? GetDocumentTypeById(Int64 id)
+        public DocumentType? GetDocumentTypeById(Int64? id)
         {
             return DocumentTypes.Find(id);
+        }
+
+        public ICollection<DocumentType> GetTypes()
+        {
+            return DocumentTypes.ToList();
         }
 
         public void CreateType(DocumentType entity)
@@ -187,9 +194,39 @@ namespace Paperless.DAL.Sql
             return -1;
         }
 
-        public void DeleteType(DocumentType entity)
+        public int DeleteType(Int64 id)
         {
-            throw new NotImplementedException();
+            DocumentType? type = GetDocumentTypeById(id);
+
+            if (type != null)
+            {
+                DocumentTypes.Remove(type);
+                SaveChanges();
+                return 0;
+            }
+            return -1;
+        }
+
+        public void IncrementDocumentCount(Int64? id)
+        {
+            DocumentType? type = GetDocumentTypeById(id);
+
+            if(type != null)
+            {
+                type.DocumentCount++;
+                SaveChanges();
+            }
+        }
+
+        public void DecrementDocumentCount(Int64? id)
+        {
+            DocumentType? type = GetDocumentTypeById(id);
+
+            if (type != null)
+            {
+                type.DocumentCount--;
+                SaveChanges();
+            }
         }
     }
 }

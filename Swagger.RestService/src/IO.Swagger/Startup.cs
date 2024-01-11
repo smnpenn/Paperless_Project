@@ -68,7 +68,7 @@ namespace IO.Swagger
 
             services.AddSingleton<IConfiguration>(configuration);
 
-            var repo = new CorrespondentRepository(configuration, "TestDbContext");
+            var repo = new Repository(configuration, "TestDbContext");
 
 
             services.AddSingleton<IMinIOServiceAgent>(
@@ -93,8 +93,10 @@ namespace IO.Swagger
             services.AddSingleton<ICorrespondentRepository>(repo);
             services.AddSingleton<IDocTagRepository>(repo);
             services.AddSingleton<IDocumentRepository>(repo);
+            services.AddSingleton<IDocumentTypeRepository>(repo);
             
             services.AddSingleton<IDocTagLogic, DocTagLogic>();
+            services.AddSingleton<IDocumentTypeLogic, DocumentTypeLogic>();
 
             // Add framework services.
             services

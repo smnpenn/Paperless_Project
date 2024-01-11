@@ -21,6 +21,7 @@ using IO.Swagger.Models;
 using Paperless.DAL.Interfaces;
 using Paperless.BusinessLogic.Interfaces;
 using AutoMapper;
+using Paperless.BusinessLogic;
 
 namespace IO.Swagger.Controllers
 { 
@@ -73,35 +74,31 @@ namespace IO.Swagger.Controllers
         [ValidateModelState]
         [SwaggerOperation("DeleteDocumentType")]
         public virtual IActionResult DeleteDocumentType([FromRoute][Required]int? id)
-        { 
-            //TODO: Uncomment the next line to return response 204 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(204);
+        {
+            int res = _typeLogic.DeleteType((Int64)id);
 
-            throw new NotImplementedException();
+            if (res == 0)
+                return Ok();
+            else
+                return BadRequest();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="page"></param>
-        /// <param name="fullPerms"></param>
         /// <response code="200">Success</response>
         [HttpGet]
         [Route("/api/document_types")]
         [ValidateModelState]
         [SwaggerOperation("GetDocumentTypes")]
-        [SwaggerResponse(statusCode: 200, type: typeof(InlineResponse2008), description: "Success")]
-        public virtual IActionResult GetDocumentTypes([FromQuery]int? page, [FromQuery]bool? fullPerms)
-        { 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(InlineResponse2008));
-            string exampleJson = null;
-            exampleJson = "{\n  \"next\" : 6,\n  \"all\" : [ 5, 5 ],\n  \"previous\" : 1,\n  \"count\" : 0,\n  \"results\" : [ {\n    \"owner\" : 9,\n    \"matching_algorithm\" : 2,\n    \"document_count\" : 7,\n    \"is_insensitive\" : true,\n    \"permissions\" : {\n      \"view\" : {\n        \"groups\" : [ \"\", \"\" ],\n        \"users\" : [ \"\", \"\" ]\n      }\n    },\n    \"name\" : \"name\",\n    \"match\" : \"match\",\n    \"id\" : 5,\n    \"slug\" : \"slug\"\n  }, {\n    \"owner\" : 9,\n    \"matching_algorithm\" : 2,\n    \"document_count\" : 7,\n    \"is_insensitive\" : true,\n    \"permissions\" : {\n      \"view\" : {\n        \"groups\" : [ \"\", \"\" ],\n        \"users\" : [ \"\", \"\" ]\n      }\n    },\n    \"name\" : \"name\",\n    \"match\" : \"match\",\n    \"id\" : 5,\n    \"slug\" : \"slug\"\n  } ]\n}";
-            
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<InlineResponse2008>(exampleJson)
-                        : default(InlineResponse2008);            //TODO: Change the data returned
-            return new ObjectResult(example);
+        [SwaggerResponse(statusCode: 200, type: typeof(ICollection<DocumentType>), description: "Success")]
+        public virtual IActionResult GetDocumentTypes()
+        {
+            var res = _mapper.Map<ICollection<Paperless.BusinessLogic.Entities.DocumentType>, ICollection<DocumentType>>(_typeLogic.GetTypes());
+            if (res.Count <= 0)
+                return NoContent();
+            else
+                return Ok(res);
         }
 
         /// <summary>
@@ -114,18 +111,14 @@ namespace IO.Swagger.Controllers
         [Route("/api/document_types/{id}")]
         [ValidateModelState]
         [SwaggerOperation("UpdateDocumentType")]
-        [SwaggerResponse(statusCode: 200, type: typeof(InlineResponse20010), description: "Success")]
-        public virtual IActionResult UpdateDocumentType([FromRoute][Required]int? id, [FromBody]DocumentTypesIdBody body)
-        { 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(InlineResponse20010));
-            string exampleJson = null;
-            exampleJson = "{\n  \"owner\" : 5,\n  \"matching_algorithm\" : 6,\n  \"user_can_change\" : true,\n  \"document_count\" : 1,\n  \"is_insensitive\" : true,\n  \"name\" : \"name\",\n  \"match\" : \"match\",\n  \"id\" : 0,\n  \"slug\" : \"slug\"\n}";
-            
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<InlineResponse20010>(exampleJson)
-                        : default(InlineResponse20010);            //TODO: Change the data returned
-            return new ObjectResult(example);
+        public virtual IActionResult UpdateDocumentType([FromRoute][Required]int? id, [FromBody]DocumentType body)
+        {
+            int res = _typeLogic.UpdateType((Int64)id, _mapper.Map<Paperless.BusinessLogic.Entities.DocumentType>(body));
+
+            if (res == 0)
+                return Ok();
+            else
+                return BadRequest();
         }
     }
 }
