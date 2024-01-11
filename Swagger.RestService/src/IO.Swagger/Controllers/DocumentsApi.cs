@@ -46,9 +46,9 @@ namespace IO.Swagger.Controllers
         /// <param name="minIOService"></param>
         /// <param name="elasticSearchServiceAgent"></param>
 
-        public DocumentsApiController(IDocumentRepository repository, IMapper mapper, IRabbitMQService rabbitMQService, IMinIOServiceAgent minIOService, IElasticSearchServiceAgent elasticSearchServiceAgent) 
+        public DocumentsApiController(IDocumentLogic documentLogic, IMapper mapper) 
         { 
-            documentLogic = new DocumentLogic(repository, mapper, rabbitMQService, minIOService, elasticSearchServiceAgent);
+            this.documentLogic = documentLogic;
             _mapper = mapper;
             validator = new DocumentValidator();
         }
@@ -63,35 +63,53 @@ namespace IO.Swagger.Controllers
         [SwaggerOperation("UploadDocument")]
         public virtual IActionResult UploadDocument()
         {
-            var newDocumentTags = new List<int?>();
+            Document newDocument = null;
+            Stream newDocumentFile = null;
 
-            foreach (var tag in HttpContext.Request.Form["tags"])
+            try
             {
-                newDocumentTags.Add(int.Parse(tag));
+                var newDocumentTags = new List<int?>();
+
+                foreach (var tag in HttpContext.Request.Form["tags"])
+                {
+                    newDocumentTags.Add(int.Parse(tag));
+                }
+
+                var newDocumentDate = DateTime.Parse(HttpContext.Request.Form["created"]);
+                newDocumentDate = DateTime.SpecifyKind(newDocumentDate, DateTimeKind.Utc);
+
+                newDocument = new Document
+                {
+                    Title = HttpContext.Request.Form["title"],
+                    Created = newDocumentDate,
+                    Modified = newDocumentDate,
+                    Added = newDocumentDate,
+                    DocumentType = int.Parse(HttpContext.Request.Form["document_type"]),
+                    Tags = newDocumentTags,
+                    Correspondent = int.Parse(HttpContext.Request.Form["correspondent"])
+                };
+
+                newDocumentFile = HttpContext.Request.Form.Files["file1"].OpenReadStream();
+            }
+            catch (Exception ex)
+            {
+                // log error: exception
+                return BadRequest();
             }
 
-            var newDocumentDate = DateTime.Parse(HttpContext.Request.Form["created"]);
-            newDocumentDate = DateTime.SpecifyKind(newDocumentDate, DateTimeKind.Utc);
-
-            var newDocument = new Document
+            try
             {
-                Title = HttpContext.Request.Form["title"],
-                Created = newDocumentDate,
-                Modified = newDocumentDate,
-                Added = newDocumentDate,
-                DocumentType = int.Parse(HttpContext.Request.Form["document_type"]),
-                Tags = newDocumentTags,
-                Correspondent = int.Parse(HttpContext.Request.Form["correspondent"])
-            };
+                documentLogic.SaveDocument(
+                    _mapper.Map<Paperless.BusinessLogic.Entities.Document>(newDocument),
+                    newDocumentFile);
+            }
+            catch (Exception ex)
+            {
+                // log error: exception
+                return StatusCode(500);
+            }
 
-            int res = documentLogic.SaveDocument(
-                _mapper.Map<Paperless.BusinessLogic.Entities.Document>(newDocument), 
-                HttpContext.Request.Form.Files["file1"].OpenReadStream());
-            
-            if (res == 0)
-                return Ok();
-            else
-                return NoContent();
+            return Ok();
         }
 
         /// <summary>
@@ -105,12 +123,17 @@ namespace IO.Swagger.Controllers
         [SwaggerOperation("DeleteDocument")]
         public virtual IActionResult DeleteDocument([FromRoute][Required]int? id)
         {
-            int res = documentLogic.DeleteDocument((Int64)id);
+            try
+            {
+                if (documentLogic.DeleteDocument((Int64)id) == false) return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                // log error: exception
+                return StatusCode(500);
+            }
 
-            if(res == 0)
-                return Ok();
-            else
-                return NoContent();
+            return Ok();
         }
 
         /// <summary>

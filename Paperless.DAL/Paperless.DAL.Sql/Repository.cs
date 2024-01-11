@@ -126,20 +126,19 @@ namespace Paperless.DAL.Sql
             return entity;
         }
 
-        public int DeleteDocument(Int64 id)
+        public bool DeleteDocument(Int64 id)
         {
             Document? doc = GetDocumentById(id);
 
-            if (doc != null)
-            {
+            if (doc == null) return false;
 
-                if (doc.DocumentType != null)
-                    DecrementDocumentCount(doc.DocumentType);
-                Documents.Remove(doc);
-                SaveChanges();
-                return 0;
-            }
-            return -1;
+            if (doc.DocumentType != null)
+                DecrementDocumentCount(doc.DocumentType);
+
+            Documents.Remove(doc);
+            SaveChanges();
+
+            return true;
         }
 
         public Document? GetDocumentById(Int64 id)

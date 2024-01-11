@@ -44,9 +44,9 @@ namespace IO.Swagger.Controllers
         /// <param name="rabbitMQService"></param>
         /// <param name="minIOService"></param>
         /// <param name="elasticSearchServiceAgent"></param>
-        public SearchApiController(IDocumentRepository repository, IMapper mapper, IRabbitMQService rabbitMQService, IMinIOServiceAgent minIOService, IElasticSearchServiceAgent elasticSearchServiceAgent)
+        public SearchApiController(IDocumentLogic documentLogic)
         {
-            _documentLogic = new DocumentLogic(repository, mapper, rabbitMQService, minIOService, elasticSearchServiceAgent);
+            _documentLogic = documentLogic;
         }
         /// <summary>
         /// 
