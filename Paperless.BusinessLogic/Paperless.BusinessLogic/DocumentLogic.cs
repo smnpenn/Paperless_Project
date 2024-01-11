@@ -41,6 +41,8 @@ namespace Paperless.BusinessLogic
 
             _minIOService.UploadDocument(document.Path, fileName);
             Document doc = _mapper.Map<Document>(_repo.Create(_mapper.Map<DAL.Entities.Document>(document)));
+            if(doc.DocumentType != null)
+                _repo.IncrementDocumentCount(doc.DocumentType);
             _rabbitMQService.SendDocumentToQueue(doc);
 
             return 0;
@@ -62,6 +64,15 @@ namespace Paperless.BusinessLogic
                 return -1;
 
             string fileName = Path.GetFileNameWithoutExtension(newDoc.Path);
+
+            if(newDoc.DocumentType != doc.DocumentType)
+            {
+                if (doc.DocumentType != null)
+                    _repo.DecrementDocumentCount(doc.DocumentType);
+
+                if (newDoc.DocumentType != null)
+                    _repo.IncrementDocumentCount(newDoc.DocumentType);
+            }
 
             Document updatedDoc = _mapper.Map<Document>(_repo.Update(id, _mapper.Map<DAL.Entities.Document>(newDoc)));
             _minIOService.UploadDocument(updatedDoc.Path, fileName);

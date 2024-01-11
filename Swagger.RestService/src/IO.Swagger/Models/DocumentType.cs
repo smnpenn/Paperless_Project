@@ -34,13 +34,6 @@ namespace IO.Swagger.Models
         public long? Id { get; set; }
 
         /// <summary>
-        /// Gets or Sets Slug
-        /// </summary>
-
-        [DataMember(Name="slug")]
-        public string Slug { get; set; }
-
-        /// <summary>
         /// Gets or Sets Name
         /// </summary>
 
@@ -62,13 +55,6 @@ namespace IO.Swagger.Models
         public long? MatchingAlgorithm { get; set; }
 
         /// <summary>
-        /// Gets or Sets IsInsensitive
-        /// </summary>
-
-        [DataMember(Name="is_insensitive")]
-        public bool? IsInsensitive { get; set; }
-
-        /// <summary>
         /// Gets or Sets DocumentCount
         /// </summary>
 
@@ -84,11 +70,9 @@ namespace IO.Swagger.Models
             var sb = new StringBuilder();
             sb.Append("class DocumentType {\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Slug: ").Append(Slug).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Match: ").Append(Match).Append("\n");
             sb.Append("  MatchingAlgorithm: ").Append(MatchingAlgorithm).Append("\n");
-            sb.Append("  IsInsensitive: ").Append(IsInsensitive).Append("\n");
             sb.Append("  DocumentCount: ").Append(DocumentCount).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -132,11 +116,6 @@ namespace IO.Swagger.Models
                     Id.Equals(other.Id)
                 ) && 
                 (
-                    Slug == other.Slug ||
-                    Slug != null &&
-                    Slug.Equals(other.Slug)
-                ) && 
-                (
                     Name == other.Name ||
                     Name != null &&
                     Name.Equals(other.Name)
@@ -150,11 +129,6 @@ namespace IO.Swagger.Models
                     MatchingAlgorithm == other.MatchingAlgorithm ||
                     MatchingAlgorithm != null &&
                     MatchingAlgorithm.Equals(other.MatchingAlgorithm)
-                ) && 
-                (
-                    IsInsensitive == other.IsInsensitive ||
-                    IsInsensitive != null &&
-                    IsInsensitive.Equals(other.IsInsensitive)
                 ) && 
                 (
                     DocumentCount == other.DocumentCount ||
@@ -175,16 +149,12 @@ namespace IO.Swagger.Models
                 // Suitable nullity checks etc, of course :)
                     if (Id != null)
                     hashCode = hashCode * 59 + Id.GetHashCode();
-                    if (Slug != null)
-                    hashCode = hashCode * 59 + Slug.GetHashCode();
                     if (Name != null)
                     hashCode = hashCode * 59 + Name.GetHashCode();
                     if (Match != null)
                     hashCode = hashCode * 59 + Match.GetHashCode();
                     if (MatchingAlgorithm != null)
                     hashCode = hashCode * 59 + MatchingAlgorithm.GetHashCode();
-                    if (IsInsensitive != null)
-                    hashCode = hashCode * 59 + IsInsensitive.GetHashCode();
                     if (DocumentCount != null)
                     hashCode = hashCode * 59 + DocumentCount.GetHashCode();
                 return hashCode;

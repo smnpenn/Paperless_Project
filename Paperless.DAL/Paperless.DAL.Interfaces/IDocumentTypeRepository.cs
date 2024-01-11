@@ -4,9 +4,11 @@ namespace Paperless.DAL.Interfaces
 {
     public interface IDocumentTypeRepository
     {
-        DocumentType GetDocumentTypeById(Int64 id);
-        public void Create(DocumentType entity);
-        public void Update(DocumentType entity);
-        public void Delete(DocumentType entity);
+        DocumentType? GetDocumentTypeById(Int64? id);
+        public ICollection<DocumentType> GetTypes();
+        public void CreateType(DocumentType entity);
+        public int UpdateType(Int64 id, DocumentType entity);
+        public int DeleteType(Int64 id);
+        
     }
 }

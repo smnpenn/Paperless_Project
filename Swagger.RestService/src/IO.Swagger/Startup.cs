@@ -73,10 +73,8 @@ namespace IO.Swagger
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
-
             var repo = new Repository(configuration, "TestDbContext");
             services.AddSingleton<IConfiguration>(configuration);
-
 
             services.AddSingleton<IMinIOServiceAgent>(
                 new Paperless.ServiceAgents.MinIOServiceAgent(
@@ -96,9 +94,7 @@ namespace IO.Swagger
 
             //AppContext.SetSwitch("")
             repo.PopulateWithSampleData();
-
-
-            
+    
             // Register ElasticSearchServiceAgent with settings
             services.AddSingleton<IElasticSearchServiceAgent, ElasticSearchServiceAgent>();
                
@@ -106,8 +102,10 @@ namespace IO.Swagger
             services.AddSingleton<ICorrespondentRepository>(repo);
             services.AddSingleton<IDocTagRepository>(repo);
             services.AddSingleton<IDocumentRepository>(repo);
+            services.AddSingleton<IDocumentTypeRepository>(repo);
             
             services.AddSingleton<IDocTagLogic, DocTagLogic>();
+            services.AddSingleton<IDocumentTypeLogic, DocumentTypeLogic>();
 
             // Add framework services.
             services
