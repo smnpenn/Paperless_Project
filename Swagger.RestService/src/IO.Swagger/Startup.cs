@@ -74,7 +74,7 @@ namespace IO.Swagger
                 .Build();
 
 
-            var repo = new CorrespondentRepository(configuration, "TestDbContext");
+            var repo = new Repository(configuration, "TestDbContext");
             services.AddSingleton<IConfiguration>(configuration);
 
 

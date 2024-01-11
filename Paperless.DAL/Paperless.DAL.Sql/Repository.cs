@@ -6,7 +6,7 @@ using Paperless.DAL.Interfaces;
 
 namespace Paperless.DAL.Sql
 {
-    public class CorrespondentRepository : DbContext, ICorrespondentRepository, IDocTagRepository, IDocumentRepository
+    public class Repository : DbContext, ICorrespondentRepository, IDocTagRepository, IDocumentRepository
     {
         readonly string _contextString;
         readonly IConfiguration _config;
@@ -15,7 +15,7 @@ namespace Paperless.DAL.Sql
         public DbSet<DocTag> DocTags { get; set; }
         public DbSet<Document> Documents { get; set; }
 
-        public CorrespondentRepository(IConfiguration configuration, string contextString)
+        public Repository(IConfiguration configuration, string contextString)
         {
             _config = configuration;
             _contextString = contextString;

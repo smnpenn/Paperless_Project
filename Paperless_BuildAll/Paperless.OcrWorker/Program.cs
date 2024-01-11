@@ -30,7 +30,7 @@ IHost host = Host.CreateDefaultBuilder(args)
                         .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                         .Build();
 
-        var repo = new CorrespondentRepository(configuration, "TestDbContext");
+        var repo = new Repository(configuration, "TestDbContext");
 
         services.AddSingleton<IDocumentRepository>(repo);
 
