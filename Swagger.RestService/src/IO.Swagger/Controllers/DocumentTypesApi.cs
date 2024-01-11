@@ -18,6 +18,9 @@ using IO.Swagger.Attributes;
 
 using Microsoft.AspNetCore.Authorization;
 using IO.Swagger.Models;
+using Paperless.DAL.Interfaces;
+using Paperless.BusinessLogic.Interfaces;
+using AutoMapper;
 
 namespace IO.Swagger.Controllers
 { 
@@ -26,7 +29,21 @@ namespace IO.Swagger.Controllers
     /// </summary>
     [ApiController]
     public class DocumentTypesApiController : ControllerBase
-    { 
+    {
+        IDocumentTypeLogic _typeLogic;
+        IMapper _mapper;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="typeLogic"></param>
+        /// <param name="mapper"></param>
+        public DocumentTypesApiController(IDocumentTypeLogic typeLogic, IMapper mapper)
+        {
+            _typeLogic = typeLogic;
+            _mapper = mapper;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -36,18 +53,14 @@ namespace IO.Swagger.Controllers
         [Route("/api/document_types")]
         [ValidateModelState]
         [SwaggerOperation("CreateDocumentType")]
-        [SwaggerResponse(statusCode: 200, type: typeof(InlineResponse2009), description: "Success")]
-        public virtual IActionResult CreateDocumentType([FromBody]ApiDocumentTypesBody body)
-        { 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(InlineResponse2009));
-            string exampleJson = null;
-            exampleJson = "{\n  \"owner\" : 1,\n  \"matching_algorithm\" : 6,\n  \"user_can_change\" : true,\n  \"is_insensitive\" : true,\n  \"name\" : \"name\",\n  \"match\" : \"match\",\n  \"id\" : 0,\n  \"slug\" : \"slug\"\n}";
-            
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<InlineResponse2009>(exampleJson)
-                        : default(InlineResponse2009);            //TODO: Change the data returned
-            return new ObjectResult(example);
+        public virtual IActionResult CreateDocumentType([FromBody]DocumentType body)
+        {
+            int res = _typeLogic.CreateType(_mapper.Map<Paperless.BusinessLogic.Entities.DocumentType>(body));
+
+            if (res == 0)
+                return Ok();
+            else
+                return BadRequest();
         }
 
         /// <summary>

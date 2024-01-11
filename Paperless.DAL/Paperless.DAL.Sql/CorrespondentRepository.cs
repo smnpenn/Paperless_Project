@@ -6,7 +6,7 @@ using Paperless.DAL.Interfaces;
 
 namespace Paperless.DAL.Sql
 {
-    public class CorrespondentRepository : DbContext, ICorrespondentRepository, IDocTagRepository, IDocumentRepository
+    public class CorrespondentRepository : DbContext, ICorrespondentRepository, IDocTagRepository, IDocumentRepository, IDocumentTypeRepository
     {
         readonly string _contextString;
         readonly IConfiguration _config;
@@ -14,6 +14,7 @@ namespace Paperless.DAL.Sql
         public DbSet<Correspondent> Correspondents { get; set; }
         public DbSet<DocTag> DocTags { get; set; }
         public DbSet<Document> Documents { get; set; }
+        public DbSet<DocumentType> DocumentTypes { get; set; }
 
         public CorrespondentRepository(IConfiguration configuration, string contextString)
         {
@@ -159,6 +160,36 @@ namespace Paperless.DAL.Sql
                 return entity;
             }
             return null;
+        }
+
+        public DocumentType? GetDocumentTypeById(Int64 id)
+        {
+            return DocumentTypes.Find(id);
+        }
+
+        public void CreateType(DocumentType entity)
+        {
+            DocumentTypes.Add(entity);
+            SaveChanges();
+        }
+
+        public int UpdateType(Int64 id, DocumentType entity)
+        {
+            DocumentType? type = GetDocumentTypeById(id);
+            if (type != null)
+            {
+                entity.Id = id;
+                DocumentTypes.Remove(type);
+                DocumentTypes.Add(entity);
+                SaveChanges();
+                return 0;
+            }
+            return -1;
+        }
+
+        public void DeleteType(DocumentType entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

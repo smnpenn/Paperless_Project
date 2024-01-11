@@ -34,13 +34,6 @@ namespace IO.Swagger.Models
         public long? Id { get; set; }
 
         /// <summary>
-        /// Gets or Sets Slug
-        /// </summary>
-
-        [DataMember(Name="slug")]
-        public string Slug { get; set; }
-
-        /// <summary>
         /// Gets or Sets Name
         /// </summary>
 
@@ -62,13 +55,6 @@ namespace IO.Swagger.Models
         public long? MatchingAlgorithm { get; set; }
 
         /// <summary>
-        /// Gets or Sets IsInsensitive
-        /// </summary>
-
-        [DataMember(Name="is_insensitive")]
-        public bool? IsInsensitive { get; set; }
-
-        /// <summary>
         /// Gets or Sets DocumentCount
         /// </summary>
 
@@ -84,11 +70,9 @@ namespace IO.Swagger.Models
             var sb = new StringBuilder();
             sb.Append("class DocumentType {\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Slug: ").Append(Slug).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Match: ").Append(Match).Append("\n");
             sb.Append("  MatchingAlgorithm: ").Append(MatchingAlgorithm).Append("\n");
-            sb.Append("  IsInsensitive: ").Append(IsInsensitive).Append("\n");
             sb.Append("  DocumentCount: ").Append(DocumentCount).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
