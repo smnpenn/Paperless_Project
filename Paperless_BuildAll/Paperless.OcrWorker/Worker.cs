@@ -1,4 +1,5 @@
-﻿using Paperless.BusinessLogic.Interfaces;
+﻿using Nest;
+using Paperless.BusinessLogic.Interfaces;
 using Paperless.ServiceAgents.Interfaces;
 
 namespace Paperless.OcrWorker;
@@ -38,13 +39,24 @@ public class Worker : BackgroundService
                             var ocrResult = _ocrServiceAgent.PerformOcrPdf(documentStream);
                             var documentToIndex = new
                             {
+                                Id = ocrJob.Id,
                                 Name = ocrJob.Title,
                                 Content = ocrResult
                             };
 
-                            await _elasticSearchServiceAgent.IndexDocumentAsync("paperless-index", documentToIndex);
+                            bool documentExists = await _elasticSearchServiceAgent.DocumentExistsAsync("paperless-index", ocrJob.Id.ToString()); // check if document with given id already exists in ES
 
-                            _logger.LogInformation("Processed and indexed document {DocumentName} at: {Time}", ocrJob.Title, DateTimeOffset.Now);
+                            if(documentExists)
+                            {
+                                await _elasticSearchServiceAgent.UpdateDocumentAsync("paperless-index", ocrJob.Id.ToString(), documentToIndex);
+                                _logger.LogInformation("Updated document {DocumentName} at: {Time}", ocrJob.Title, DateTimeOffset.Now);
+                            }
+                            else
+                            {
+                                await _elasticSearchServiceAgent.IndexDocumentAsync("paperless-index", documentToIndex);
+                                _logger.LogInformation("Processed and indexed document {DocumentName} at: {Time}", ocrJob.Title, DateTimeOffset.Now);
+
+                            }
 
                         }
                         finally

@@ -12,25 +12,30 @@ namespace Paperless.BusinessLogic
 		private readonly IRabbitMQService _rabbitMQService;
         private readonly IMinIOServiceAgent _minIOService;
         private readonly DocumentValidator _documentValidator;
+        private readonly IElasticSearchServiceAgent _elasticSearchServiceAgent;
         private IDocumentRepository _repo;
         IMapper _mapper;
 
-		public DocumentLogic(IDocumentRepository repository, IMapper mapper, IRabbitMQService rabbitMQService, IMinIOServiceAgent minIOService)
+		public DocumentLogic(IDocumentRepository repository, IMapper mapper, IRabbitMQService rabbitMQService, IMinIOServiceAgent minIOService, IElasticSearchServiceAgent elasticSearchServiceAgent)
 		{
             _repo = repository;
             _mapper = mapper;
 			_rabbitMQService = rabbitMQService;
             _minIOService = minIOService;
+            _elasticSearchServiceAgent = elasticSearchServiceAgent;
             _documentValidator = new DocumentValidator();
 		}
 
         public int SaveDocument(Document document)
         {
             if (!_documentValidator.Validate(document).IsValid)
+            {
                 return -1;
-
-            if(!File.Exists(document.Path)) 
+            }
+            if (!File.Exists(document.Path))
+            {
                 return -1;
+            }
 
             string fileName = Path.GetFileNameWithoutExtension(document.Path);
 
@@ -96,6 +101,7 @@ namespace Paperless.BusinessLogic
 
         public int DeleteDocument(long id)
         {
+            _elasticSearchServiceAgent.DeleteDocumentAsync("paperless-index", id.ToString());
             return _repo.DeleteDocument(id);
         }
     }

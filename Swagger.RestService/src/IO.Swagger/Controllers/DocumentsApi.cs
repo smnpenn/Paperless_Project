@@ -35,6 +35,7 @@ namespace IO.Swagger.Controllers
         private readonly IDocumentLogic documentLogic;
         private IMapper _mapper;
         private DocumentValidator validator;
+        private IElasticSearchServiceAgent elasticSearchServiceAgent;
         /// <summary>
         /// Documents API Controller
         /// </summary>
@@ -42,10 +43,11 @@ namespace IO.Swagger.Controllers
         /// <param name="mapper"></param>
         /// <param name="rabbitMQService"></param>
         /// <param name="minIOService"></param>
+        /// <param name="elasticSearchServiceAgent"></param>
 
-        public DocumentsApiController(IDocumentRepository repository, IMapper mapper, IRabbitMQService rabbitMQService, IMinIOServiceAgent minIOService) 
+        public DocumentsApiController(IDocumentRepository repository, IMapper mapper, IRabbitMQService rabbitMQService, IMinIOServiceAgent minIOService, IElasticSearchServiceAgent elasticSearchServiceAgent) 
         { 
-            documentLogic = new DocumentLogic(repository, mapper, rabbitMQService, minIOService);
+            documentLogic = new DocumentLogic(repository, mapper, rabbitMQService, minIOService, elasticSearchServiceAgent);
             _mapper = mapper;
             validator = new DocumentValidator();
         }
