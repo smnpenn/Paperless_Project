@@ -13,7 +13,7 @@ namespace Paperless.ServiceAgents.Interfaces
 
         Task<bool> DeleteDocumentAsync(string indexName, string documentId);
 
-        Task<IEnumerable<T>> FuzzySearchAsync<T>(string indexName, string searchTerm, string fieldName, int? limit) where T : class;
+        Task<IEnumerable<T>> FuzzySearchAsync<T>(string indexName, string searchTerm, string[] fieldNames, int? limit) where T : class;
 
     }
 }

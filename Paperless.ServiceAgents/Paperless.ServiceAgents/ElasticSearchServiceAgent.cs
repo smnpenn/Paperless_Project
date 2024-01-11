@@ -108,19 +108,20 @@ namespace Paperless.ServiceAgents
         }
 
 
-        public async Task<IEnumerable<T>> FuzzySearchAsync<T>(string indexName, string searchTerm, string fieldName, int? limit) where T : class
+        public async Task<IEnumerable<T>> FuzzySearchAsync<T>(string indexName, string searchTerm, string[] fieldNames, int? limit) where T : class
         {
             var searchResponse = await _client.SearchAsync<T>(s => s
                 .Index(indexName)
                 .Query(q => q
-                    .Fuzzy(f => f
-                        .Field(fieldName)
-                        .Value(searchTerm)
-                        .Fuzziness(Fuzziness.Auto)
-                    )
-                )
-                .Size(limit ?? 10) // Default limit
-            );
+                    .MultiMatch(mm => mm
+                        .Fields(fields => fields.Fields(fieldNames))
+                            .Query(searchTerm)
+                            .Type(TextQueryType.BestFields) // You can change the type as needed
+                            .Fuzziness(Fuzziness.Auto)
+            )
+        )
+        .Size(limit ?? 10) // Default limit
+    );
 
             return searchResponse.Documents;
         }

@@ -115,7 +115,7 @@ namespace Paperless.BusinessLogic
             var searchResults = await _elasticSearchServiceAgent.FuzzySearchAsync<Document>(
             indexName: "paperless-index",
             searchTerm: searchTerm,
-            fieldName: "content",
+            fieldNames: new[] { "content", "title", "path" }, // specified fields for search
             limit: limit);
 
             return searchResults;

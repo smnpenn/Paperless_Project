@@ -47,6 +47,7 @@ public class Worker : BackgroundService
                                 Created = ocrJob.Created,
                                 Modified = ocrJob.Modified,
                                 Added = ocrJob.Added,
+                                Tags = ocrJob.Tags,
                                 Path = ocrJob.Path,
                                 Content = ocrResult
                             };
