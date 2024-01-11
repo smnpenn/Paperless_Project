@@ -149,14 +149,21 @@ namespace Paperless.DAL.Sql
 
         public Document? Update(Int64 id, Document entity)
         {
-            Document? doc = GetDocumentById(id);
-            if (doc != null)
+            var existingDocument = GetDocumentById(id);
+            if (existingDocument != null)
             {
-                entity.Id = id;
-                Documents.Remove(doc);
-                Documents.Add(entity);
+                existingDocument.Title = entity.Title;
+                existingDocument.Content = entity.Content;
+                existingDocument.Modified = entity.Modified;
+                existingDocument.Added = entity.Added;
+                existingDocument.Correspondent = entity.Correspondent;
+                existingDocument.DocumentType = entity.DocumentType;
+                existingDocument.Tags = entity.Tags;
+                existingDocument.Path = entity.Path;
+
+                Documents.Update(existingDocument);
                 SaveChanges();
-                return entity;
+                return existingDocument;
             }
             return null;
         }

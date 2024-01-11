@@ -1,5 +1,6 @@
 ﻿using Nest;
 using Paperless.BusinessLogic.Interfaces;
+using Paperless.DAL.Interfaces;
 using Paperless.ServiceAgents.Interfaces;
 
 namespace Paperless.OcrWorker;
@@ -11,14 +12,16 @@ public class Worker : BackgroundService
     private readonly IOcrServiceAgent _ocrServiceAgent;
     private readonly IElasticSearchServiceAgent _elasticSearchServiceAgent;
     private readonly IRabbitMQService _rabbitMQService;
+    private readonly IDocumentRepository _documentRepository;
 
-    public Worker(ILogger<Worker> logger, IMinIOServiceAgent minIOServiceAgent, IOcrServiceAgent ocrServiceAgent, IElasticSearchServiceAgent elasticSearchServiceAgent, IRabbitMQService rabbitMQService)
+    public Worker(ILogger<Worker> logger, IMinIOServiceAgent minIOServiceAgent, IOcrServiceAgent ocrServiceAgent, IElasticSearchServiceAgent elasticSearchServiceAgent, IRabbitMQService rabbitMQService, IDocumentRepository documentRepository)
     {
         _logger = logger;
         _minIOServiceAgent = minIOServiceAgent;
         _ocrServiceAgent = ocrServiceAgent;
         _elasticSearchServiceAgent = elasticSearchServiceAgent;
         _rabbitMQService = rabbitMQService;
+        _documentRepository = documentRepository;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -64,6 +67,14 @@ public class Worker : BackgroundService
                                 await _elasticSearchServiceAgent.IndexDocumentAsync("paperless-index", documentToIndex);
                                 _logger.LogInformation("Processed and indexed document {DocumentName} at: {Time}", ocrJob.Title, DateTimeOffset.Now);
 
+                            }
+
+                            var exisitingDocument = _documentRepository.GetDocumentById(ocrJob.Id);
+                            if(exisitingDocument != null)
+                            {
+                                // Update the content of the file
+                                exisitingDocument.Content = ocrResult;
+                                _documentRepository.Update(ocrJob.Id, exisitingDocument);
                             }
 
                         }

@@ -73,9 +73,9 @@ namespace IO.Swagger
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
-            services.AddSingleton<IConfiguration>(configuration);
 
             var repo = new CorrespondentRepository(configuration, "TestDbContext");
+            services.AddSingleton<IConfiguration>(configuration);
 
 
             services.AddSingleton<IMinIOServiceAgent>(
