@@ -23,6 +23,7 @@ using Paperless.BusinessLogic.Interfaces;
 using AutoMapper;
 using Paperless.DAL.Interfaces;
 using Paperless.ServiceAgents.Interfaces;
+using System.IO;
 
 namespace IO.Swagger.Controllers
 {
@@ -45,9 +46,9 @@ namespace IO.Swagger.Controllers
         /// <param name="minIOService"></param>
         /// <param name="elasticSearchServiceAgent"></param>
 
-        public DocumentsApiController(IDocumentRepository repository, IMapper mapper, IRabbitMQService rabbitMQService, IMinIOServiceAgent minIOService, IElasticSearchServiceAgent elasticSearchServiceAgent) 
+        public DocumentsApiController(IDocumentLogic documentLogic, IMapper mapper) 
         { 
-            documentLogic = new DocumentLogic(repository, mapper, rabbitMQService, minIOService, elasticSearchServiceAgent);
+            this.documentLogic = documentLogic;
             _mapper = mapper;
             validator = new DocumentValidator();
         }
@@ -60,15 +61,55 @@ namespace IO.Swagger.Controllers
         [Route("/api/documents")]
         [ValidateModelState]
         [SwaggerOperation("UploadDocument")]
-        public virtual IActionResult UpdateDocument([FromBody]Document body)
+        public virtual IActionResult UploadDocument()
         {
-            int res = documentLogic.SaveDocument(_mapper.Map<Paperless.BusinessLogic.Entities.Document>(body));
+            Document newDocument = null;
+            Stream newDocumentFile = null;
 
-            if(res == 0)
-                return Ok();
-            else
+            try
+            {
+                var newDocumentTags = new List<int?>();
+
+                foreach (var tag in HttpContext.Request.Form["tags"])
+                {
+                    newDocumentTags.Add(int.Parse(tag));
+                }
+
+                var newDocumentDate = DateTime.Parse(HttpContext.Request.Form["created"]);
+                newDocumentDate = DateTime.SpecifyKind(newDocumentDate, DateTimeKind.Utc);
+
+                newDocument = new Document
+                {
+                    Title = HttpContext.Request.Form["title"],
+                    Created = newDocumentDate,
+                    Modified = newDocumentDate,
+                    Added = newDocumentDate,
+                    DocumentType = int.Parse(HttpContext.Request.Form["document_type"]),
+                    Tags = newDocumentTags,
+                    Correspondent = int.Parse(HttpContext.Request.Form["correspondent"])
+                };
+
+                newDocumentFile = HttpContext.Request.Form.Files["file1"].OpenReadStream();
+            }
+            catch (Exception ex)
+            {
+                // log error: exception
                 return BadRequest();
+            }
 
+            try
+            {
+                documentLogic.SaveDocument(
+                    _mapper.Map<Paperless.BusinessLogic.Entities.Document>(newDocument),
+                    newDocumentFile);
+            }
+            catch (Exception ex)
+            {
+                // log error: exception
+                return StatusCode(500);
+            }
+
+            return Ok();
         }
 
         /// <summary>
@@ -82,12 +123,17 @@ namespace IO.Swagger.Controllers
         [SwaggerOperation("DeleteDocument")]
         public virtual IActionResult DeleteDocument([FromRoute][Required]int? id)
         {
-            int res = documentLogic.DeleteDocument((Int64)id);
+            try
+            {
+                if (documentLogic.DeleteDocument((Int64)id) == false) return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                // log error: exception
+                return StatusCode(500);
+            }
 
-            if(res == 0)
-                return Ok();
-            else
-                return NoContent();
+            return Ok();
         }
 
         /// <summary>
@@ -105,7 +151,7 @@ namespace IO.Swagger.Controllers
             Document res = _mapper.Map<Paperless.BusinessLogic.Entities.Document, Document>(documentLogic.GetDocumentById(id));
 
             if(res == null)
-                return NoContent();
+                return BadRequest();
             else
                 return Ok(res);
         }
@@ -125,7 +171,7 @@ namespace IO.Swagger.Controllers
             string res = documentLogic.GetDocumentMetadata((Int64)id);
 
             if(res == null)
-                return NoContent();
+                return BadRequest();
             else
                 return Ok(res);
         }
@@ -141,11 +187,21 @@ namespace IO.Swagger.Controllers
         [SwaggerResponse(statusCode: 200, type: typeof(List<Document>), description: "Success")]
         public virtual IActionResult GetDocuments()
         {
-            var res = _mapper.Map<ICollection<Paperless.BusinessLogic.Entities.Document>, ICollection<Document>>(documentLogic.GetDocuments());
-            if(res.Count <= 0)
-                return NoContent();
-            else
-                return Ok(res);
+            ICollection<Document> result = null;
+
+            try
+            {
+                result = _mapper.Map<ICollection<Paperless.BusinessLogic.Entities.Document>, ICollection<Document>>(documentLogic.GetDocuments());
+
+                if (result.Count == 0) return NoContent();
+            }
+            catch (Exception ex)
+            {
+                // log error
+                return BadRequest();
+            }
+
+            return Ok(result);
         }
 
         /// <summary>
@@ -161,13 +217,17 @@ namespace IO.Swagger.Controllers
         [SwaggerResponse(statusCode: 200, type: typeof(InlineResponse2004), description: "Success")]
         public virtual IActionResult UpdateDocument([FromRoute][Required]int? id, [FromBody] Document body)
         {
+            try
+            {
+                documentLogic.UpdateDocument((Int64)id, _mapper.Map<Paperless.BusinessLogic.Entities.Document>(body));
+            }
+            catch (Exception ex) 
+            { 
+                // log error
+                return StatusCode(500);
+            }
 
-            int res = documentLogic.UpdateDocument((Int64)id, _mapper.Map<Paperless.BusinessLogic.Entities.Document>(body));
-
-            if (res == 0)
-                return Ok();
-            else
-                return BadRequest();
+            return Ok();
         }
 
     }

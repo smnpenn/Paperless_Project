@@ -9,10 +9,10 @@ namespace Paperless.BusinessLogic
 {
 	public class RabbitMQService : IRabbitMQService
 	{
-        private readonly ConnectionFactory _connectionFactory;
+        private readonly IConnectionFactory _connectionFactory;
         private readonly string _queueName;
 
-		public RabbitMQService(ConnectionFactory connectionFactory, string queueName)
+		public RabbitMQService(IConnectionFactory connectionFactory, string queueName)
 		{
             _connectionFactory = connectionFactory;
             _queueName = queueName;
@@ -23,7 +23,7 @@ namespace Paperless.BusinessLogic
             using (var connection = _connectionFactory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: _queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
+                channel.QueueDeclare(queue: _queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
 
                 BasicGetResult result = channel.BasicGet(_queueName, autoAck: true);
                 if(result != null)
@@ -47,7 +47,7 @@ namespace Paperless.BusinessLogic
             using (var connection = _connectionFactory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: _queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
+                channel.QueueDeclare(queue: _queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
 
                 var documentData = JsonConvert.SerializeObject(document);
                 var body = Encoding.UTF8.GetBytes(documentData);
@@ -58,10 +58,6 @@ namespace Paperless.BusinessLogic
             }
         }
 
-        public void SendDocumentToQueue(DAL.Entities.Document document)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
 

@@ -39,10 +39,10 @@ namespace IO.Swagger.Controllers
         /// </summary>
         /// <param name="mapper"></param>
         /// <param name="repository"></param>
-        public CorrespondentsApiController(IMapper mapper, ICorrespondentRepository repository)
+        public CorrespondentsApiController(IMapper mapper, ICorrespondentLogic correspondentLogic)
         {
             _mapper = mapper;
-            _correspondentLogic = new CorrespondentLogic(repository, _mapper);
+            _correspondentLogic = correspondentLogic;
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace IO.Swagger.Controllers
         [SwaggerResponse(statusCode: 200, type: typeof(ApiCorrespondentsBody), description: "Success")]
         public virtual IActionResult CreateCorrespondent([FromBody]ApiCorrespondentsBody body)
         {
-            var newCorrespondent = new IO.Swagger.Models.Correspondent
+            var newCorrespondent = new Correspondent
             {
                 Name = body.Name,
                 Match = body.Match,
@@ -103,19 +103,8 @@ namespace IO.Swagger.Controllers
                 ICollection<Paperless.BusinessLogic.Entities.Correspondent>, 
                 ICollection<Correspondent>>(
                     _correspondentLogic.GetCorrespondents());
+            
             return Ok(cor);
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(InlineResponse200));
-            /*
-            string exampleJson = null;
-            exampleJson = "{\n  \"next\" : 6,\n  \"all\" : [ 5, 5 ],\n  \"previous\" : 1,\n  \"count\" : 0,\n  \"results\" : [ {\n    \"owner\" : 9,\n    \"matching_algorithm\" : 2,\n    \"document_count\" : 7,\n    \"is_insensitive\" : true,\n    \"permissions\" : {\n      \"view\" : {\n        \"groups\" : [ \"\", \"\" ],\n        \"users\" : [ \"\", \"\" ]\n      }\n    },\n    \"name\" : \"name\",\n    \"match\" : \"match\",\n    \"id\" : 5,\n    \"last_correspondence\" : \"last_correspondence\",\n    \"slug\" : \"slug\"\n  }, {\n    \"owner\" : 9,\n    \"matching_algorithm\" : 2,\n    \"document_count\" : 7,\n    \"is_insensitive\" : true,\n    \"permissions\" : {\n      \"view\" : {\n        \"groups\" : [ \"\", \"\" ],\n        \"users\" : [ \"\", \"\" ]\n      }\n    },\n    \"name\" : \"name\",\n    \"match\" : \"match\",\n    \"id\" : 5,\n    \"last_correspondence\" : \"last_correspondence\",\n    \"slug\" : \"slug\"\n  } ]\n}";
-            
-                        var example = exampleJson != null
-                        ? JsonConvert.DeserializeObject<InlineResponse200>(exampleJson)
-                        : default(InlineResponse200);            //TODO: Change the data returned
-            return new ObjectResult(example);
-            */
-            
         }
 
         /// <summary>

@@ -83,7 +83,7 @@ namespace IO.Swagger
 
             services.AddSingleton<IRabbitMQService>(
                 new RabbitMQService(
-            new ConnectionFactory
+                    new ConnectionFactory
                     {
                         HostName = "localhost",
                         Port = 5672,
@@ -106,6 +106,8 @@ namespace IO.Swagger
             
             services.AddSingleton<IDocTagLogic, DocTagLogic>();
             services.AddSingleton<IDocumentTypeLogic, DocumentTypeLogic>();
+            services.AddSingleton<IDocumentLogic, DocumentLogic>();
+            services.AddSingleton<ICorrespondentLogic, CorrespondentLogic>();
 
             // Add framework services.
             services

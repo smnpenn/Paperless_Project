@@ -1,67 +1,110 @@
+using Moq;
 using Newtonsoft.Json;
 using Paperless.BusinessLogic;
 using Paperless.BusinessLogic.Entities;
 using RabbitMQ.Client;
+using System.Text;
 
 namespace Paperless.BusinessLogic.Tests
 {
     public class Tests
     {
+
+        private Mock<IModel> _mockModel;
+        private Mock<IConnection> _mockConnection;
+        private Mock<IConnectionFactory> _mockConnectionFactory;
+        private RabbitMQService _rabbitMQService;
+
         [SetUp]
         public void Setup()
         {
-        }
+            _mockModel = new Mock<IModel>();
+            _mockConnection = new Mock<IConnection>();
+            _mockConnectionFactory = new Mock<IConnectionFactory>();
 
-        [Test]
-        public void Test1()
-        {
-            Assert.Pass();
+            _mockConnectionFactory.Setup(f => f.CreateConnection()).Returns(_mockConnection.Object);
+            _mockConnection.Setup(c => c.CreateModel()).Returns(_mockModel.Object);
+
+            _rabbitMQService = new RabbitMQService(_mockConnectionFactory.Object, "TestQueue");
+
         }
 
         [Test]
         public void SendDocumentToQueue_ShouldSendMessageToQueue()
         {
-            Document testDocument = new Document
-            {
-                Id = 1,
-                Correspondent = 123,
-                DocumentType = 456,
-                Title = "Sample Document",
-                Content = "This is a sample content",
-                Created = DateTime.Now,
-                Modified = DateTime.Now,
-                Added = DateTime.Now
-            };
+            var testDocument = new Document { Id = 1, Content = "test", Correspondent = 1, Created = DateTime.Now, Modified = DateTime.Now, Added = DateTime.Now, DocumentType = 2, Path = "C:/test", Title = "Test" };
 
-            string testQueueName = "TestQueue";
-            string rabbitMQHost = "localhost";
-            int rabbitMQPort = 5672;
-            string rabbitMQUsername = "admin";
-            string rabbitMQPassword = "admin";
+            _rabbitMQService.SendDocumentToQueue(testDocument);
 
-            var factory = new ConnectionFactory
-            {
-                HostName = rabbitMQHost,
-                Port = rabbitMQPort,
-                UserName = rabbitMQUsername,
-                Password = rabbitMQPassword
-            };
-
-            var rabbitMQService = new RabbitMQService(factory, testQueueName);
-
-            string documentData = SerializeDocument(testDocument);
-
-            // rabbitMQService.SendDocumentToQueue(documentData);
-
-            // Observe the RabbitMQ management interface for the result.
-            Console.WriteLine("Document sent to the queue. Check RabbitMQ management interface for the result.");
-
+            _mockModel.Verify(m => m.BasicPublish(
+                It.IsAny<string>(),
+                "TestQueue",
+                false,
+                null,
+                It.Is<ReadOnlyMemory<byte>>(body => VerifyDocumentBody(body, testDocument))
+            ), Times.Once);
         }
 
-        private string SerializeDocument(Document document)
+        [Test]
+        public void RetrieveOCRJob_ShouldRetrieveDocumentFromQueue()
         {
-            var json = JsonConvert.SerializeObject(document);
-            return json;
+            var expectedDocument = new Document { Id = 1, Content = "test", Correspondent = 1, Created = DateTime.Now, Modified = DateTime.Now, Added = DateTime.Now, DocumentType = 2, Path = "C:/test", Title = "Test" };
+
+            SetupMockBasicGet(expectedDocument);
+
+            var result = _rabbitMQService.RetrieveOCRJob();
+
+            Assert.AreEqual(expectedDocument.Id, result.Id );
         }
+
+        [Test]
+        public void RetrieveOCRJob_QueueEmpty_ShouldReturnNull()
+        {
+            _mockModel.Setup(m => m.BasicGet("TestQueue", true)).Returns((BasicGetResult)null);
+
+            var result = _rabbitMQService.RetrieveOCRJob();
+            Assert.IsNull(result);
+
+        }
+
+        [Test]
+        public void RetrieveOCRJob_WhenExceptionOccurs_ShouldThrowException()
+        {
+            // Arrange
+            _mockConnectionFactory.Setup(f => f.CreateConnection())
+                                  .Throws(new Exception("Test exception"));
+
+            // Act & Assert
+            Assert.Throws<Exception>(() => _rabbitMQService.RetrieveOCRJob());
+        }
+
+        private void SetupMockBasicGet(Document document)
+        {
+            var fakeGetResult = new BasicGetResult(
+                0, false, "", "TestQueue", 0, null,
+                Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(document))
+            );
+            _mockModel.Setup(m => m.BasicGet("TestQueue", true)).Returns(fakeGetResult);
+        }
+
+
+        private bool VerifyDocumentBody(ReadOnlyMemory<byte> body, Document expectedDocument)
+        {
+            var jsonString = Encoding.UTF8.GetString(body.ToArray());
+            var document = JsonConvert.DeserializeObject<Document>(jsonString);
+            return document != null &&
+                document.Id == expectedDocument.Id &&
+                document.Correspondent == expectedDocument.Correspondent &&
+                document.DocumentType == expectedDocument.DocumentType &&
+                document.Title == expectedDocument.Title &&
+                document.Content == expectedDocument.Content &&
+                document.Created == expectedDocument.Created &&
+                document.Modified == expectedDocument.Modified &&
+                document.Added == expectedDocument.Added &&
+           true;
+        }
+
+
+
     }
 }

@@ -4,6 +4,7 @@ using Paperless.BusinessLogic.Entities;
 using Paperless.DAL.Interfaces;
 using AutoMapper;
 using Paperless.ServiceAgents.Interfaces;
+using Paperless.BusinessLogic.Exceptions;
 
 namespace Paperless.BusinessLogic
 {
@@ -26,46 +27,44 @@ namespace Paperless.BusinessLogic
             _documentValidator = new DocumentValidator();
 		}
 
-        public int SaveDocument(Document document)
+        public void SaveDocument(Document document, Stream fileStream)
         {
+            var tempFileName = "temp_recv_file.pdf";
+
+            using (var tempFileStream = new FileStream(tempFileName, FileMode.Create, FileAccess.Write))
+            {
+                fileStream.CopyTo(tempFileStream);
+            }
+
             if (!_documentValidator.Validate(document).IsValid)
             {
-                return -1;
+                throw new DocumentLogicException("failed to validate document");
             }
-            if (!File.Exists(document.Path))
+
+            if (!File.Exists(tempFileName))
             {
-                return -1;
+                throw new DocumentLogicException("failed to create temporary file");
             }
 
-            string fileName = Path.GetFileNameWithoutExtension(document.Path);
+            _minIOService.UploadDocument(tempFileName, document.Title);
 
-            _minIOService.UploadDocument(document.Path, fileName);
             Document doc = _mapper.Map<Document>(_repo.Create(_mapper.Map<DAL.Entities.Document>(document)));
             if(doc.DocumentType != null)
                 _repo.IncrementDocumentCount(doc.DocumentType);
             _rabbitMQService.SendDocumentToQueue(doc);
-
-            return 0;
         }
 
-        public int UpdateDocument(Int64 id, Document newDoc)
+        public void UpdateDocument(Int64 id, Document newDoc)
         {
             Document? doc = _mapper.Map<
                             DAL.Entities.Document?,
                             Document?>(_repo.GetDocumentById(id));
 
-            if (doc == null)
-                return -1;
+            if (doc == null) throw new DocumentLogicException($"{id} is not a document");
 
-            if (!_documentValidator.Validate(newDoc).IsValid)
-                return -1;
+            if (!_documentValidator.Validate(newDoc).IsValid) throw new DocumentLogicException("invalid document");
 
-            if (!File.Exists(newDoc.Path))
-                return -1;
-
-            string fileName = Path.GetFileNameWithoutExtension(newDoc.Path);
-
-            if(newDoc.DocumentType != doc.DocumentType)
+            if (newDoc.DocumentType != doc.DocumentType)
             {
                 if (doc.DocumentType != null)
                     _repo.DecrementDocumentCount(doc.DocumentType);
@@ -75,9 +74,7 @@ namespace Paperless.BusinessLogic
             }
 
             Document updatedDoc = _mapper.Map<Document>(_repo.Update(id, _mapper.Map<DAL.Entities.Document>(newDoc)));
-            _minIOService.UploadDocument(updatedDoc.Path, fileName);
             _rabbitMQService.SendDocumentToQueue(updatedDoc);
-            return 0;
         }
 
         public ICollection<Document> GetDocuments()
@@ -110,10 +107,23 @@ namespace Paperless.BusinessLogic
             return metadata;
         }
 
-        public int DeleteDocument(long id)
+        public bool DeleteDocument(long id)
         {
-            _elasticSearchServiceAgent.DeleteDocumentAsync("paperless-index", id.ToString());
-            return _repo.DeleteDocument(id);
+            try
+            {
+                var deleteTask = _elasticSearchServiceAgent.DeleteDocumentAsync("paperless-index", id.ToString());
+                deleteTask.Wait();
+                if (deleteTask.Result == false) return false;
+
+                if (_repo.DeleteDocument(id) == false) return false;
+            }
+            catch (Exception ex)
+            {
+                // log error
+                throw new DocumentLogicException("failed to delete document", ex);
+            }
+            
+            return true;
         }
 
         public async Task<IEnumerable<Document>> SearchDocument(string searchTerm, int? limit)

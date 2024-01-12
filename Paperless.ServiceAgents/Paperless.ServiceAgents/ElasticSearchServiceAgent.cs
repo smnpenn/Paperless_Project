@@ -13,10 +13,14 @@ namespace Paperless.ServiceAgents
 	{
         private readonly ElasticClient _client;
 
+        private readonly IElasticClient _clientES;
 
-        
+        public ElasticSearchServiceAgent(IElasticClient client)
+        {
+            _clientES = client ?? throw new ArgumentNullException(nameof(_clientES));
+        }
 
-		public ElasticSearchServiceAgent()
+        public ElasticSearchServiceAgent()
 		{
             var elasticSearchUrl = Environment.GetEnvironmentVariable("ELASTICSEARCH_URL") ?? "https://localhost:9200";
             var elasticUsername = Environment.GetEnvironmentVariable("ELASTICSEARCH_USERNAME");
@@ -116,7 +120,7 @@ namespace Paperless.ServiceAgents
                     .MultiMatch(mm => mm
                         .Fields(fields => fields.Fields(fieldNames))
                             .Query(searchTerm)
-                            .Type(TextQueryType.BestFields) // You can change the type as needed
+                            .Type(TextQueryType.BestFields)
                             .Fuzziness(Fuzziness.Auto)
             )
         )

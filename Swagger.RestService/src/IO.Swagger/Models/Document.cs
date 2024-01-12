@@ -90,7 +90,7 @@ namespace IO.Swagger.Models
         public DateTime? Added { get; set; }
 
         [DataMember(Name ="path")]
-        public  string Path { get; set; }
+        public  string? Path { get; set; }
 
 
         /// <summary>
