@@ -137,9 +137,11 @@ def test_document_type_amount(amount: int):
 
 @test
 def test_search():
-    response = requests.get(BASE_URL + 'search/autocomplete')
+    response = requests.get(BASE_URL + 'search/autocomplete?term=Hello Workd&limit=500')
 
     assert response.status_code == 200
+
+    assert "Hello Workd" in response.json()[0]["content"]
 
 if __name__ == '__main__':
     test_five_correspondents()
