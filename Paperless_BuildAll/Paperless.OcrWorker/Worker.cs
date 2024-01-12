@@ -75,6 +75,7 @@ public class Worker : BackgroundService
                                 // Update the content of the file
                                 exisitingDocument.Content = ocrResult;
                                 _documentRepository.Update(ocrJob.Id, exisitingDocument);
+                                _logger.LogInformation("Update document in Repository successful.");
                             }
 
                         }

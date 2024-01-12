@@ -13,6 +13,8 @@ using System.Net.Mime;
 using System.Security.AccessControl;
 using System.Globalization;
 using Minio.DataModel;
+using Microsoft.Extensions.Logging;
+using Paperless.ServiceAgents.Exceptions;
 
 namespace Paperless.ServiceAgents
 {
@@ -22,9 +24,12 @@ namespace Paperless.ServiceAgents
         IOptions<MinIOOptions> options;
         string bucketName = "paperless.documents";
 
-        public MinIOServiceAgent(IOptions<MinIOOptions> options) 
+        private readonly ILogger<MinIOServiceAgent> _logger;
+
+        public MinIOServiceAgent(IOptions<MinIOOptions> options, ILogger<MinIOServiceAgent> logger) 
         { 
             this.options = options;
+            _logger = logger;
             try
             {
                 client = new MinioClient()
@@ -32,10 +37,12 @@ namespace Paperless.ServiceAgents
                                   .WithCredentials(options.Value.AccessKey, options.Value.SecretKey)
                                   .WithSSL(false)
                                   .Build();
+                _logger.LogInformation("Successfully created MinIOClient");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error while creating MinIoClient");
+                _logger.LogError("Error while creating MinIoClient");
+                throw new MinIOServiceAgentException("Error while creating MinIOClient", ex);
             }
            
         }
@@ -65,36 +72,18 @@ namespace Paperless.ServiceAgents
                     .WithObject(fileName + ".pdf")
                     .WithContentType(contentType);
                 await client.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
-                Console.WriteLine("Successfully uploaded " + filePath);
+                _logger.LogInformation("Successfully uploaded " + filePath);
             }
-            catch (MinioException e)
+            catch (Exception ex)
             {
-                Console.WriteLine("File Upload Error: {0}", e.Message);
+                _logger.LogError("File Upload Error");
+                throw new MinIOServiceAgentException("File Upload Error", ex);
             }
         }
 
         //Get Document by Objectname
         public async Task<Stream> GetDocument(string objectName)
         {
-            /*
-            try
-            {
-                var args = new GetObjectArgs()
-                    .WithBucket(bucketName)
-                    .WithObject(objectName)
-                    .WithFile(objectName);
-                var stat = await client.GetObjectAsync(args).ConfigureAwait(false);
-                Console.WriteLine($"Downloaded the file {objectName} in bucket {bucketName}");
-                Console.WriteLine($"Stat details of object {objectName} in bucket {bucketName}\n" + stat);
-                Console.WriteLine();
-                return stat;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"[Bucket]  Exception: {e}");
-                return null;
-            }
-            */
 
             try
             {
@@ -114,12 +103,14 @@ namespace Paperless.ServiceAgents
                     await client.GetObjectAsync(getArgs).ConfigureAwait(false);
 
                     memoryStream.Position = 0;
+                    _logger.LogInformation("Fetching document was successful");
                     return memoryStream;
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine($"[Bucket]  Exception: {e}");
+                _logger.LogError($"[Bucket]  Exception: {e}");
+                throw new MinIOServiceAgentException("Getting document failed", e);
             }
 
             return null;
@@ -135,12 +126,13 @@ namespace Paperless.ServiceAgents
                     .WithObject(objectName);
 
                 await client.RemoveObjectAsync(args).ConfigureAwait(false);
-                Console.WriteLine($"Removed object {objectName} from bucket {bucketName} successfully");
-                Console.WriteLine();
+                _logger.LogInformation($"Removed object {objectName} from bucket {bucketName} successfully");
             }
             catch (Exception e)
             {
-                Console.WriteLine($"[Bucket-Object]  Exception: {e}");
+                _logger.LogError($"[Bucket-Object]  Exception: {e}");
+                throw new MinIOServiceAgentException("Deleting document failed", e);
+
             }
         }
     }
