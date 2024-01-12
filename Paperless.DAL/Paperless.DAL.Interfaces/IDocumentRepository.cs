@@ -4,7 +4,7 @@ namespace Paperless.DAL.Interfaces
 {
     public interface IDocumentRepository
     {
-        List<Document> GetDocuments();
+        ICollection<Document> GetDocuments();
         Document? GetDocumentById(Int64 id);
         public Document Create(Document entity);
         public Document? Update(Int64 id, Document entity);

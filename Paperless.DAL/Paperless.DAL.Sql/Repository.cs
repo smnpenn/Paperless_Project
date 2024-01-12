@@ -159,7 +159,7 @@ namespace Paperless.DAL.Sql
             return Documents.Find(id);
         }
 
-        public List<Document> GetDocuments()
+        public ICollection<Document> GetDocuments()
         {
             return Documents.ToList();
         }

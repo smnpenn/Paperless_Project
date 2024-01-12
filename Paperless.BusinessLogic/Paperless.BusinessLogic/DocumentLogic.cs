@@ -62,7 +62,7 @@ namespace Paperless.BusinessLogic
 
             if (doc == null) throw new DocumentLogicException($"{id} is not a document");
 
-            if (!_documentValidator.Validate(newDoc).IsValid) throw new DocumentLogicException("invalid document");
+            if (newDoc == null || !_documentValidator.Validate(newDoc).IsValid) throw new DocumentLogicException("invalid document");
 
             if (newDoc.DocumentType != doc.DocumentType)
             {
