@@ -34,7 +34,7 @@ public class Worker : BackgroundService
 
                 if(ocrJob != null)
                 {
-                    var documentStream = await _minIOServiceAgent.GetDocument(Path.GetFileName(ocrJob.Path));
+                    var documentStream = await _minIOServiceAgent.GetDocument(Path.GetFileName(ocrJob.Title + ".pdf"));
                     if(documentStream != null)
                     {
                         try
