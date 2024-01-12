@@ -151,7 +151,7 @@ namespace IO.Swagger.Controllers
             Document res = _mapper.Map<Paperless.BusinessLogic.Entities.Document, Document>(documentLogic.GetDocumentById(id));
 
             if(res == null)
-                return NoContent();
+                return BadRequest();
             else
                 return Ok(res);
         }
@@ -171,7 +171,7 @@ namespace IO.Swagger.Controllers
             string res = documentLogic.GetDocumentMetadata((Int64)id);
 
             if(res == null)
-                return NoContent();
+                return BadRequest();
             else
                 return Ok(res);
         }
@@ -187,11 +187,21 @@ namespace IO.Swagger.Controllers
         [SwaggerResponse(statusCode: 200, type: typeof(List<Document>), description: "Success")]
         public virtual IActionResult GetDocuments()
         {
-            var res = _mapper.Map<ICollection<Paperless.BusinessLogic.Entities.Document>, ICollection<Document>>(documentLogic.GetDocuments());
-            if(res.Count <= 0)
-                return NoContent();
-            else
-                return Ok(res);
+            ICollection<Document> result = null;
+
+            try
+            {
+                result = _mapper.Map<ICollection<Paperless.BusinessLogic.Entities.Document>, ICollection<Document>>(documentLogic.GetDocuments());
+
+                if (result.Count == 0) return NoContent();
+            }
+            catch (Exception ex)
+            {
+                // log error
+                return BadRequest();
+            }
+
+            return Ok(result);
         }
 
         /// <summary>
@@ -207,13 +217,17 @@ namespace IO.Swagger.Controllers
         [SwaggerResponse(statusCode: 200, type: typeof(InlineResponse2004), description: "Success")]
         public virtual IActionResult UpdateDocument([FromRoute][Required]int? id, [FromBody] Document body)
         {
+            try
+            {
+                documentLogic.UpdateDocument((Int64)id, _mapper.Map<Paperless.BusinessLogic.Entities.Document>(body));
+            }
+            catch (Exception ex) 
+            { 
+                // log error
+                return StatusCode(500);
+            }
 
-            int res = documentLogic.UpdateDocument((Int64)id, _mapper.Map<Paperless.BusinessLogic.Entities.Document>(body));
-
-            if (res == 0)
-                return Ok();
-            else
-                return BadRequest();
+            return Ok();
         }
 
     }
