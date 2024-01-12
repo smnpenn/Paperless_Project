@@ -18,8 +18,6 @@ namespace Paperless.ServiceAgents.Tests
 
         private Mock<IElasticSearchServiceAgent> _mockElasticSearchServiceAgent;
 
-
-
         [SetUp]
         public void Setup()
         {
@@ -55,7 +53,6 @@ namespace Paperless.ServiceAgents.Tests
             var result = await _mockElasticSearchServiceAgent.Object.UpdateDocumentAsync("paperless-test-index", "1", document);
             Assert.IsTrue(result);
         }
-
 
 
         [Test]

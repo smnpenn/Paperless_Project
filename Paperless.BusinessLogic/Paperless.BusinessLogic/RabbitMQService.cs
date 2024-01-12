@@ -9,10 +9,10 @@ namespace Paperless.BusinessLogic
 {
 	public class RabbitMQService : IRabbitMQService
 	{
-        private readonly ConnectionFactory _connectionFactory;
+        private readonly IConnectionFactory _connectionFactory;
         private readonly string _queueName;
 
-		public RabbitMQService(ConnectionFactory connectionFactory, string queueName)
+		public RabbitMQService(IConnectionFactory connectionFactory, string queueName)
 		{
             _connectionFactory = connectionFactory;
             _queueName = queueName;
@@ -58,10 +58,6 @@ namespace Paperless.BusinessLogic
             }
         }
 
-        public void SendDocumentToQueue(DAL.Entities.Document document)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
 
