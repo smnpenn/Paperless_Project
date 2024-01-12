@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Npgsql;
 using Paperless.DAL.Entities;
 using Paperless.DAL.Interfaces;
+using Paperless.DAL.Sql.Exceptions;
 
 namespace Paperless.DAL.Sql
 {
@@ -25,8 +26,16 @@ namespace Paperless.DAL.Sql
 
         public void PopulateWithSampleData()
         {
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
+            try
+            {
+                Database.EnsureDeleted();
+                Database.EnsureCreated();
+            }
+            catch (Exception ex) 
+            {
+                // log error
+                throw new DALException("cant ensure the database is created. is the database running? is the connectionstring valid?", ex);
+            }
 
             for (int i = 0; i < 5; i++)
                 Correspondents.Add(new Correspondent 
@@ -61,6 +70,10 @@ namespace Paperless.DAL.Sql
         public void Delete(Int64 id)
         {
             var temp = Correspondents.Find(id);
+
+            if (temp == null)
+                throw new DALException("correspondent to be deleted was not found");
+
             Correspondents.Remove(temp);
             SaveChanges();
         }
