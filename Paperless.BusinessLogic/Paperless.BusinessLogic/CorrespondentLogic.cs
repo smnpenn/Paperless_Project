@@ -2,6 +2,7 @@
 using Paperless.BusinessLogic.Interfaces;
 using Paperless.DAL.Interfaces;
 using AutoMapper;
+using Paperless.BusinessLogic.Exceptions;
 
 namespace Paperless.BusinessLogic
 {
@@ -23,7 +24,14 @@ namespace Paperless.BusinessLogic
 
         public void DeleteCorrespondent(long id)
         {
-            _repo.Delete(id);
+            try
+            {
+                _repo.Delete(id);
+            }
+            catch (Exception ex) 
+            {
+                throw new CorrespondentLogicException("failed to delete correspondent.", ex);
+            }
         }
 
         public Correspondent GetCorrespondent(long id)

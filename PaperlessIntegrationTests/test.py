@@ -1,4 +1,4 @@
-import requests, json
+import requests
 
 IIS_BASE_URL = 'http://localhost:50352/api/'
 CONSOLEAPP_BASE_URL = 'http://localhost:5000/api/'
@@ -6,6 +6,16 @@ BASE_URL = CONSOLEAPP_BASE_URL
 
 print('using base url: ', BASE_URL)
 
+def test(function_to_test):
+    def wrapper(*args, **kwargs):
+        function_to_test(*args, **kwargs)
+        if len(args) == 0:
+            print(function_to_test.__name__, 'passed')
+        else:
+            print(function_to_test.__name__, 'with args', args, 'passed')
+    return wrapper
+
+@test
 def test_five_correspondents():
     response = requests.get(BASE_URL + 'correspondents')
 
@@ -15,8 +25,7 @@ def test_five_correspondents():
 
     assert len(response_data) == 5
 
-    print('test_five_correspondents passed')
-
+@test
 def test_create_correspondent():
     new_correspondent = {
         'name': 'created_cor',
@@ -32,15 +41,13 @@ def test_create_correspondent():
 
     assert response.text == '6'
 
-    print('test_create_correspondent passed')
-
+@test
 def test_delete_correspondent():
     response = requests.delete(BASE_URL + 'correspondents/3')
 
     assert response.status_code == 200
 
-    print('test_delete_correspondent passed')
-
+@test
 def test_create_tag():
     new_tag = {
         "name": "created tag",
@@ -57,9 +64,8 @@ def test_create_tag():
     assert response.status_code == 200
     
     assert response.text == '1'
-    
-    print('test_create_tag passed')
 
+@test
 def test_tag_amount(amount: int):
     response = requests.get(BASE_URL + 'tags')
 
@@ -67,15 +73,13 @@ def test_tag_amount(amount: int):
 
     assert len(response.json()) == amount
 
-    print('test_tag_amount (', amount, ') passed')
-
+@test
 def test_delete_tag():
     response = requests.delete(BASE_URL + 'tags/1')
 
     assert response.status_code == 200
 
-    print('test_delete_tag passed')
-
+@test
 def test_create_document():
     response = requests.post(BASE_URL + 'documents', 
         files = {
@@ -91,14 +95,15 @@ def test_create_document():
 
     assert response.status_code == 200
 
-    print('test_create_document passed')
-
+@test
 def test_document_amount(amount: int):
-    #response = requests.get(BASE_URL + 'documents')
+    response = requests.get(BASE_URL + 'documents')
 
-    print('test_document_amount (', amount, ') passed')
+    assert response.status_code == 200
 
+    assert len(response.json()) == amount
 
+@test
 def test_create_document_types():    
     sample_document_type_1 = {
         "name": "TestType1",
@@ -121,8 +126,7 @@ def test_create_document_types():
 
     assert response.status_code == 200
 
-    print('test_create_document_types passed')
-
+@test
 def test_document_type_amount(amount: int):
     response = requests.get(BASE_URL + 'document_types')
 
@@ -131,8 +135,13 @@ def test_document_type_amount(amount: int):
     if response.status_code != 204:
         assert len(response.json()) == amount
 
-    print('test_document_amount (', amount, ') passed')
+@test
+def test_search():
+    response = requests.get(BASE_URL + 'search/autocomplete?term=Hello Workd&limit=500')
 
+    assert response.status_code == 200
+
+    assert "Hello Workd" in response.json()[0]["content"]
 
 if __name__ == '__main__':
     test_five_correspondents()
@@ -143,7 +152,10 @@ if __name__ == '__main__':
     test_tag_amount(1)
     test_delete_tag()
     test_tag_amount(0)
+    test_document_amount(5)
     test_create_document()
+    test_document_amount(6)
     test_document_type_amount(0)
     test_create_document_types()
     test_document_type_amount(2)
+    test_search()
