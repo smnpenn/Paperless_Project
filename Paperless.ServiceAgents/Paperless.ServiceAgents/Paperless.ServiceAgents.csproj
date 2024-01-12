@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Paperless.ServiceAgents.Interfaces\Paperless.ServiceAgents.Interfaces.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
+  </ItemGroup>
+
 </Project>
