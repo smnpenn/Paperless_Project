@@ -20,8 +20,6 @@ IHost host = Host.CreateDefaultBuilder(args)
     })
     .ConfigureServices((hostContext, services) =>
     {
-
-
         var configurationBuilder = new ConfigurationBuilder();
 
         configurationBuilder.AddEnvironmentVariables();
@@ -33,6 +31,8 @@ IHost host = Host.CreateDefaultBuilder(args)
         var repo = new Repository(configuration, "TestDbContext");
 
         services.AddSingleton<IDocumentRepository>(repo);
+
+        services.AddLogging(builder => builder.AddConsole()); 
 
 
         // Rabbit MQ Settings

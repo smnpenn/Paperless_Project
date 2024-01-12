@@ -45,6 +45,8 @@ namespace IO.Swagger
     {
         private readonly IWebHostEnvironment _hostingEnv;
 
+        private readonly ILogger<Startup> _logger;
+
         private IConfiguration Configuration { get; }
 
         /// <summary>
@@ -78,10 +80,8 @@ namespace IO.Swagger
             services.AddSingleton<IConfiguration>(configuration);
 
 
-            services.AddSingleton<IMinIOServiceAgent>(
-                new Paperless.ServiceAgents.MinIOServiceAgent(
-                    Options.Create(new MinIOOptions()
-                    )));
+            services.AddSingleton<IOptions<MinIOOptions>>(Options.Create(new MinIOOptions()));
+            services.AddSingleton<IMinIOServiceAgent, MinIOServiceAgent>();
 
             services.AddSingleton<IRabbitMQService>(
                 new RabbitMQService(

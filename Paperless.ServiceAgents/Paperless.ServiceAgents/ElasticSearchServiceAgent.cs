@@ -18,16 +18,15 @@ namespace Paperless.ServiceAgents
 
         private readonly IElasticClient _clientES;
 
-        private readonly ILogger<ElasticSearchServiceAgent> _logger;
+        private readonly ILogger _logger;
 
         public ElasticSearchServiceAgent(IElasticClient client, ILogger<ElasticSearchServiceAgent> logger)
         {
             _clientES = client ?? throw new ArgumentNullException(nameof(_clientES));
             _logger = logger;
-
         }
 
-        public ElasticSearchServiceAgent()
+        public ElasticSearchServiceAgent(ILogger<ElasticSearchServiceAgent> logger)
 		{
             var elasticSearchUrl = Environment.GetEnvironmentVariable("ELASTICSEARCH_URL") ?? "https://localhost:9200";
             var elasticUsername = Environment.GetEnvironmentVariable("ELASTICSEARCH_USERNAME");
@@ -40,6 +39,7 @@ namespace Paperless.ServiceAgents
                 .DefaultIndex("paperless-index")
                 .EnableApiVersioningHeader();
             _client = new ElasticClient(settings);
+            _logger = logger;
 		}
 
         // index document
@@ -51,17 +51,17 @@ namespace Paperless.ServiceAgents
                 var response = await _client.IndexDocumentAsync(document);
                 if (response.IsValid)
                 {
-                    _logger.LogInformation("Document index successfully");
+                    _logger?.LogInformation("Document index successfully");
                     return true;
                 }
                 else
                 {
-                    _logger.LogError($"Failed to index document: {response.OriginalException.Message}");
+                    _logger?.LogError($"Failed to index document: {response.OriginalException.Message}");
                     return false;
                 }
             } catch(Exception ex)
             {
-                _logger.LogError($"Failed to index document");
+                _logger?.LogError($"Failed to index document");
                 throw new ElasticSearchExceptions("Indexing was not successful", ex);
             }
         }
@@ -73,11 +73,11 @@ namespace Paperless.ServiceAgents
             try
             {
                 var response = await _client.DocumentExistsAsync(DocumentPath<object>.Id(documentId), d => d.Index(indexName));
-                _logger.LogInformation($"Successfully fetched document");
+                _logger?.LogInformation($"Successfully fetched document");
                 return response.Exists;
             } catch(Exception ex)
             {
-                _logger.LogError($"Failed to fetch document");
+                _logger?.LogError($"Failed to fetch document");
                 throw new ElasticSearchExceptions("Fetching document was not successful", ex);
             }
         }
@@ -90,17 +90,17 @@ namespace Paperless.ServiceAgents
 
                 if (response.IsValid)
                 {
-                    _logger.LogInformation("Document updated successfully");
+                    _logger?.LogInformation("Document updated successfully");
                     return true;
                 }
                 else
                 {
-                    _logger.LogError($"Response was not valid: {response.OriginalException.Message}");
+                    _logger?.LogError($"Response was not valid: {response.OriginalException.Message}");
                     throw new ElasticSearchExceptions("Updating document was not successful");
                 }
             }catch (Exception ex)
             {
-                _logger.LogError($"{ex.Message}");
+                _logger?.LogError($"{ex.Message}");
                 throw new ElasticSearchExceptions("Updating document was not successful", ex);
             }
         }
@@ -120,11 +120,11 @@ namespace Paperless.ServiceAgents
                         )
                     )
                 );
-                _logger.LogInformation($"Found document based on searchstring");
+                _logger?.LogInformation($"Found document based on searchstring");
                 return searchResponse.Documents;
             } catch ( Exception ex )
             {
-                _logger.LogError($"{ex.Message}");
+                _logger?.LogError($"{ex.Message}");
                 throw new ElasticSearchExceptions("Search was not successful", ex);
             }
         }
@@ -150,7 +150,7 @@ namespace Paperless.ServiceAgents
                 }
             }catch ( Exception ex )
             {
-                _logger.LogError($"{ex.Message}");
+                _logger?.LogError($"{ex.Message}");
                 throw new ElasticSearchExceptions("Deleting document was not successful", ex);
             }
         }
@@ -172,11 +172,11 @@ namespace Paperless.ServiceAgents
                          )
                     .Size(limit ?? 10) // Default limit
                  );
-                _logger.LogInformation($"Found document based on searchstring");
+                _logger?.LogInformation($"Found document based on searchstring");
                 return searchResponse.Documents;
             } catch(Exception ex)
             {
-                _logger.LogError($"{ex.Message}");
+                _logger?.LogError($"{ex.Message}");
                 throw new ElasticSearchExceptions("FuzzySearch was not successful", ex);
             }
         }

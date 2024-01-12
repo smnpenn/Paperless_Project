@@ -60,12 +60,12 @@ public class Worker : BackgroundService
                             if(documentExists)
                             {
                                 await _elasticSearchServiceAgent.UpdateDocumentAsync("paperless-index", ocrJob.Id.ToString(), documentToIndex);
-                                _logger.LogInformation("Updated document {DocumentName} at: {Time}", ocrJob.Title, DateTimeOffset.Now);
+                                _logger?.LogInformation("Updated document {DocumentName} at: {Time}", ocrJob.Title, DateTimeOffset.Now);
                             }
                             else
                             {
                                 await _elasticSearchServiceAgent.IndexDocumentAsync("paperless-index", documentToIndex);
-                                _logger.LogInformation("Processed and indexed document {DocumentName} at: {Time}", ocrJob.Title, DateTimeOffset.Now);
+                                _logger?.LogInformation("Processed and indexed document {DocumentName} at: {Time}", ocrJob.Title, DateTimeOffset.Now);
 
                             }
 
@@ -75,7 +75,7 @@ public class Worker : BackgroundService
                                 // Update the content of the file
                                 exisitingDocument.Content = ocrResult;
                                 _documentRepository.Update(ocrJob.Id, exisitingDocument);
-                                _logger.LogInformation("Update document in Repository successful.");
+                                _logger?.LogInformation("Update document in Repository successful.") ;
                             }
 
                         }
@@ -86,20 +86,20 @@ public class Worker : BackgroundService
                     }
                     else
                     {
-                        _logger.LogWarning("Document {DocumentName} not found or could not be opened.", ocrJob.Title);
+                        _logger?.LogWarning("Document {DocumentName} not found or could not be opened.", ocrJob.Title);
 
                     }
                 }
                 else
                 {
                     // No OCR job found, wait before checking again
-                    _logger.LogInformation("No OCR jobs found in queue. Waiting for next check...");
+                    _logger?.LogInformation("No OCR jobs found in queue. Waiting for next check...");
                     await Task.Delay(10000, stoppingToken);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error processing OCR job");
+                _logger?.LogError(ex, "Error processing OCR job");
                 // Delay after an error before the next attempt
                 await Task.Delay(5000, stoppingToken);
             }
