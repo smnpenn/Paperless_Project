@@ -67,6 +67,7 @@ namespace IO.Swagger
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLogging(builder => builder.AddConsole());
             services.AddAutoMapper(typeof(AutoMapperProfile));
 
             IConfiguration configuration = new ConfigurationBuilder()
@@ -75,6 +76,7 @@ namespace IO.Swagger
 
             var repo = new Repository(configuration, "TestDbContext");
             services.AddSingleton<IConfiguration>(configuration);
+
 
             services.AddSingleton<IMinIOServiceAgent>(
                 new Paperless.ServiceAgents.MinIOServiceAgent(

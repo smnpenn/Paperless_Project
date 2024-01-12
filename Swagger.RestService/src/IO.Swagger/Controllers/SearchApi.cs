@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Paperless.BusinessLogic;
 using Paperless.DAL.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace IO.Swagger.Controllers
 { 
@@ -33,7 +34,7 @@ namespace IO.Swagger.Controllers
     [ApiController]
     public class SearchApiController : ControllerBase
     {
-
+        ILogger _log;
         private readonly IDocumentLogic _documentLogic;
 
         /// <summary>
@@ -44,8 +45,9 @@ namespace IO.Swagger.Controllers
         /// <param name="rabbitMQService"></param>
         /// <param name="minIOService"></param>
         /// <param name="elasticSearchServiceAgent"></param>
-        public SearchApiController(IDocumentLogic documentLogic)
+        public SearchApiController(ILogger<SearchApiController> logger, IDocumentLogic documentLogic)
         {
+            _log = logger;
             _documentLogic = documentLogic;
         }
         /// <summary>
@@ -61,6 +63,7 @@ namespace IO.Swagger.Controllers
         [SwaggerResponse(statusCode: 200, type: typeof(List<string>), description: "Success")]
         public async Task<IActionResult> Search(string term, int? limit)
         {
+            _log.LogInformation("searching for doc");
             var results = await _documentLogic.SearchDocument(term, limit);
             return Ok(results);
         }

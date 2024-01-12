@@ -24,6 +24,7 @@ using AutoMapper;
 using Paperless.DAL.Interfaces;
 using Paperless.ServiceAgents.Interfaces;
 using System.IO;
+using Microsoft.Extensions.Logging;
 
 namespace IO.Swagger.Controllers
 {
@@ -33,10 +34,12 @@ namespace IO.Swagger.Controllers
     [ApiController]
     public class DocumentsApiController : ControllerBase
     {
+        ILogger _log;
         private readonly IDocumentLogic documentLogic;
         private IMapper _mapper;
         private DocumentValidator validator;
         private IElasticSearchServiceAgent elasticSearchServiceAgent;
+
         /// <summary>
         /// Documents API Controller
         /// </summary>
@@ -46,8 +49,9 @@ namespace IO.Swagger.Controllers
         /// <param name="minIOService"></param>
         /// <param name="elasticSearchServiceAgent"></param>
 
-        public DocumentsApiController(IDocumentLogic documentLogic, IMapper mapper) 
+        public DocumentsApiController(ILogger<DocumentsApiController> logger, IDocumentLogic documentLogic, IMapper mapper) 
         { 
+            _log = logger;
             this.documentLogic = documentLogic;
             _mapper = mapper;
             validator = new DocumentValidator();
@@ -93,9 +97,11 @@ namespace IO.Swagger.Controllers
             }
             catch (Exception ex)
             {
-                // log error: exception
+                _log.LogError(ex.Message);
                 return BadRequest();
             }
+
+            _log.LogInformation("trying to upload document");
 
             try
             {
@@ -105,7 +111,7 @@ namespace IO.Swagger.Controllers
             }
             catch (Exception ex)
             {
-                // log error: exception
+                _log.LogError(ex.Message);
                 return StatusCode(500);
             }
 
@@ -129,7 +135,7 @@ namespace IO.Swagger.Controllers
             }
             catch (Exception ex)
             {
-                // log error: exception
+                _log.LogError(ex.Message);
                 return StatusCode(500);
             }
 
@@ -197,7 +203,7 @@ namespace IO.Swagger.Controllers
             }
             catch (Exception ex)
             {
-                // log error
+                _log.LogError(ex.Message);
                 return BadRequest();
             }
 
@@ -222,8 +228,8 @@ namespace IO.Swagger.Controllers
                 documentLogic.UpdateDocument((Int64)id, _mapper.Map<Paperless.BusinessLogic.Entities.Document>(body));
             }
             catch (Exception ex) 
-            { 
-                // log error
+            {
+                _log.LogError(ex.Message);
                 return StatusCode(500);
             }
 

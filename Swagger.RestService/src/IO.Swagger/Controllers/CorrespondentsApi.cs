@@ -22,6 +22,7 @@ using Paperless.BusinessLogic.Interfaces;
 using Paperless.BusinessLogic;
 using AutoMapper;
 using Paperless.DAL.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace IO.Swagger.Controllers
 { 
@@ -31,6 +32,7 @@ namespace IO.Swagger.Controllers
     [ApiController]
     public class CorrespondentsApiController : ControllerBase
     {
+        ILogger _log;
         ICorrespondentLogic _correspondentLogic;
         IMapper _mapper;
 
@@ -39,10 +41,11 @@ namespace IO.Swagger.Controllers
         /// </summary>
         /// <param name="mapper"></param>
         /// <param name="repository"></param>
-        public CorrespondentsApiController(IMapper mapper, ICorrespondentLogic correspondentLogic)
+        public CorrespondentsApiController(ILogger<CorrespondentsApiController> logger, IMapper mapper, ICorrespondentLogic correspondentLogic)
         {
-            _mapper = mapper;
+            _log = logger;
             _correspondentLogic = correspondentLogic;
+            _mapper = mapper;
         }
 
         /// <summary>

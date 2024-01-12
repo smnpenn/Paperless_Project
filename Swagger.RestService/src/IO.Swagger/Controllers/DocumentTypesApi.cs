@@ -22,6 +22,7 @@ using Paperless.DAL.Interfaces;
 using Paperless.BusinessLogic.Interfaces;
 using AutoMapper;
 using Paperless.BusinessLogic;
+using Microsoft.Extensions.Logging;
 
 namespace IO.Swagger.Controllers
 { 
@@ -31,6 +32,7 @@ namespace IO.Swagger.Controllers
     [ApiController]
     public class DocumentTypesApiController : ControllerBase
     {
+        ILogger _log;
         IDocumentTypeLogic _typeLogic;
         IMapper _mapper;
 
@@ -39,8 +41,9 @@ namespace IO.Swagger.Controllers
         /// </summary>
         /// <param name="typeLogic"></param>
         /// <param name="mapper"></param>
-        public DocumentTypesApiController(IDocumentTypeLogic typeLogic, IMapper mapper)
+        public DocumentTypesApiController(ILogger<DocumentTypesApiController> logger, IDocumentTypeLogic typeLogic, IMapper mapper)
         {
+            _log = logger;
             _typeLogic = typeLogic;
             _mapper = mapper;
         }

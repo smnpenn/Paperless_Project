@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authorization;
 using IO.Swagger.Models;
 using Paperless.BusinessLogic.Interfaces;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 
 namespace IO.Swagger.Controllers
 { 
@@ -29,11 +30,13 @@ namespace IO.Swagger.Controllers
     [ApiController]
     public class TagsApiController : ControllerBase
     {
+        ILogger _log;
         IDocTagLogic _docTagLogic;
         IMapper _mapper;
 
-        public TagsApiController(IDocTagLogic docTagLogic, IMapper mapper)
+        public TagsApiController(ILogger<TagsApiController> logger, IDocTagLogic docTagLogic, IMapper mapper)
         {
+            _log = logger;
             _docTagLogic = docTagLogic;
             _mapper = mapper;
         }
